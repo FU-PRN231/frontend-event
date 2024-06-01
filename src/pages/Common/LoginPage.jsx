@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase/firebase.config";
 import {
   activeAccount,
@@ -18,7 +18,6 @@ import { toast } from "react-toastify";
 import { decode } from "../../utils/jwtUtil";
 import { author, login } from "../../redux/features/authSlice";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-import { setShop } from "../../redux/features/shopSlice";
 import OtpModal from "./Account/OtpModal";
 import ForgotPasswordModal from "./Account/ForgotPasswordModal";
 const LoginSchema = Yup.object().shape({
@@ -117,13 +116,8 @@ const LoginPage = () => {
         dispatch(author(decode(localStorage.getItem("accessToken")).role));
         if (fetchAccount.isSuccess) {
           const userAccount = fetchAccount.result?.account;
-          const shopData = await getShopByAccountId(userAccount.id);
-          if (shopData.isSuccess) {
-            dispatch(login(userAccount));
-            dispatch(setShop(shopData.result?.items[0]));
-            toast.success("Đăng nhập thành công");
-            navigate("/");
-          }
+          dispatch(login(userAccount));
+          toast.success("Đăng nhập thành công");
           navigate("/");
         }
       }
@@ -171,16 +165,9 @@ const LoginPage = () => {
                       );
                       if (fetchAccount.isSuccess) {
                         const userAccount = fetchAccount.result?.account;
-                        console.log(userAccount);
-                        const shopData = await getShopByAccountId(
-                          userAccount.id
-                        );
-                        if (shopData.isSuccess) {
-                          dispatch(login(userAccount));
-                          dispatch(setShop(shopData.result.items[0]));
-                          toast.success("Đăng nhập thành công");
-                          navigate("/management-shop");
-                        }
+                        dispatch(login(userAccount));
+                        toast.success("Đăng nhập thành công");
+                        navigate("/");
                       }
                     } else {
                       for (var i = 0; i < data.messages.length; i++) {
@@ -253,7 +240,7 @@ const LoginPage = () => {
                       Đăng nhập
                     </button>
                     <button
-                      className="w-full mb-6"
+                      className="w-full mb-6 text-black py-2 bg-base-300 rounded-md"
                       onClick={handleGoogleSignIn}
                     >
                       <i className="fa-brands fa-google mx-2"></i> Đăng nhập với
@@ -282,11 +269,10 @@ const LoginPage = () => {
               />
               <div className="absolute hidden bottom-10 right-6 p-6 bg-white bg-opacity-40 backdrop-blur-sm rounded drop-shadow-lg md:block">
                 <span className="text-black italic text-xl">
-                  Moda
+                  Event Booking
                   <br />
-                  Đem lại cho bạn trải nghiệm mua sắm vô cùng tiện lợi.
+                  Đem lại cho bạn trải nghiệm đặt vé vô cùng tiện lợi.
                   <br />
-                  Giải pháp mua đồ 2nd tại thị trường Việt Nam
                 </span>
               </div>
             </div>
@@ -297,9 +283,11 @@ const LoginPage = () => {
           <div className="flex items-center justify-center min-h-screen bg-base2">
             <div className="relative flex flex-col m-6 space-y-8 bg-white shadow-2xl rounded-2xl md:flex-row md:space-y-0">
               <div className="flex flex-col justify-center px-8 md:p-14">
-                <span className="mb-3 text-4xl font-bold">Welcome back</span>
+                <span className="mb-3 text-4xl font-bold">
+                  Chào mừng bạn trở lại
+                </span>
                 <span className="font-light text-gray-400 mb-2">
-                  Welcome back! Please enter your details
+                  Vui lòng nhập thông tin để đăng ký tài khoản
                 </span>
                 <Formik
                   initialValues={{
@@ -361,7 +349,7 @@ const LoginPage = () => {
                           type="email"
                           name="email"
                           prefix={<MailOutlined />}
-                          placeholder="Enter your email"
+                          placeholder="Nhập email của bạn"
                         />
                         {errors.email && touched.email && (
                           <div className="text-red-500">{errors.email}</div>
@@ -370,11 +358,11 @@ const LoginPage = () => {
 
                       <div className="py-2 flex justify-start">
                         <div className="flex flex-col justify-between  mr-5">
-                          <span className="mb-2 text-md mr-6">First Name</span>
+                          <span className="mb-2 text-md mr-6">Tên</span>
                           <Field
                             className="w-full mr-2 p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
                             name="firstName"
-                            placeholder=" First name"
+                            placeholder=" Tên của bạn"
                           />
                           {errors.firstName && (
                             <div className="text-red-500">
@@ -388,11 +376,13 @@ const LoginPage = () => {
                           )}
                         </div>
                         <div className="flex flex-col justify-between ">
-                          <span className="mb-2 text-md mr-6">Last Name</span>
+                          <span className="mb-2 text-md mr-6">
+                            Họ và tên đệm
+                          </span>
                           <Field
                             className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
                             name="lastName"
-                            placeholder="Last name"
+                            placeholder="Họ và tên đệm"
                           />
                           {errors.lastName && (
                             <div className="text-red-500">
@@ -407,11 +397,11 @@ const LoginPage = () => {
                         </div>
                       </div>
                       <div className="py-2">
-                        <span className="mb-2 text-md">Phone Number</span>
+                        <span className="mb-2 text-md">Số điện thoại</span>
                         <Field
                           className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
                           name="phoneNumber"
-                          placeholder="Enter your phone number"
+                          placeholder="Nhập số điện thoại của bạn"
                         />
                         {errors.phoneNumber && (
                           <div className="text-red-500">
@@ -425,13 +415,13 @@ const LoginPage = () => {
                         )}
                       </div>
                       <div className="py-2">
-                        <span className="mb-2 text-md">Password</span>
+                        <span className="mb-2 text-md">Mật khẩu</span>
                         <Field
                           className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
                           type="password"
                           name="password"
                           prefix={<LockOutlined />}
-                          placeholder="Enter your password"
+                          placeholder="Mật khẩu của bạn"
                         />
                         {errors.password && (
                           <div className="text-red-500">{errors.password}</div>
@@ -441,13 +431,13 @@ const LoginPage = () => {
                         )}
                       </div>
                       <div className="py-2">
-                        <span className="mb-2 text-md">Confirm Password</span>
+                        <span className="mb-2 text-md">Nhập lại mật khẩu</span>
                         <Field
                           className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
                           type="password"
                           name="repassword"
                           prefix={<LockOutlined />}
-                          placeholder="Confirm password"
+                          placeholder="Nhập lại mật khẩu"
                         />
                         {errors.repassword && (
                           <div className="text-red-500">
@@ -466,17 +456,17 @@ const LoginPage = () => {
                         disabled={isSubmitting}
                         loading={isLoading}
                       >
-                        Sign Up
+                        Đăng ký tài khoản
                       </button>
                       <div className="text-center text-gray-400">
-                        I have an account?
+                        Tôi đã có tài khoản ?
                         <a
                           style={{ cursor: "pointer" }}
                           onClick={() => setIsSignUp(false)}
                           className="font-bold text-black hover:text-baseGreen"
                         >
                           {" "}
-                          Login
+                          Đăng nhập ngay
                         </a>
                       </div>
                     </Form>
