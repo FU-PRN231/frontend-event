@@ -6,8 +6,13 @@ const Footer = () => {
       <div className="flex flex-col md:flex md:flex-row">
         <div className="px-5">
           <div className="flex items-center gap-2 mb-5">
-            <h1 className="text-2xl font-bold text-primary">Event Booking</h1>
+            <h1 className="text-2xl font-bold text-primary">Moda</h1>
           </div>
+          <p className="opacity-50 mb-5">
+            "Dọn dẹp - Kiếm tiền - Mua sắm"
+            <br />
+            Tất cả trong một
+          </p>
         </div>
         <div className="px-5 ">
           <h2 className="text-xl mb-5 text-primary">Về chúng tôi</h2>
@@ -33,9 +38,7 @@ const Footer = () => {
             <li className="mb-2">
               Đại Học FPT Hồ Chí Minh, Quận 9, Thành Phố Hồ Chí Minh
             </li>
-            <li className="mb-2">
-              Email: eventbooking.platform.contact@gmail.com
-            </li>
+            <li className="mb-2">Email: moda.platform.contact@gmail.com</li>
             <li className="mb-2">Phone: +84 366 967 957</li>
           </ul>
         </div>
