@@ -1,9 +1,8 @@
+# React + Vite
 
-# frontend-event-1
-CHECK NODE VERSION: nvm use v20.11.1
-SET UP PROJECT
-1.npm install react-scripts
-2. npm install/ npm i
-3. npm start
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+Currently, two official plugins are available:
 
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
