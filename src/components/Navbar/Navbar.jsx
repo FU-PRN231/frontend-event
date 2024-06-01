@@ -10,7 +10,7 @@ const NavBar = () => {
   const dispatch = useDispatch();
   const [expand, setExpand] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
-  const [roleName, setRoleName] = useState(null);
+  const roleName = useSelector((state) => state.user?.role || "");
   const navigate = useNavigate();
   useEffect(() => {
     const scrollHandler = () => {
@@ -20,6 +20,7 @@ const NavBar = () => {
     return () => window.removeEventListener("scroll", scrollHandler);
   }, []);
 
+<<<<<<< HEAD
   useEffect(() => {
     // if (localStorage.getItem("accessToken")) {
     //   setRoleName(decode(localStorage.getItem("accessToken")).role);
@@ -27,6 +28,8 @@ const NavBar = () => {
     //}, [localStorage.getItem("accessToken")]);
   }, []);
 
+=======
+>>>>>>> 763d3f25031e5429494b92a3f9cf4eb95ee0ac5c
   const handleLogOut = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
@@ -34,7 +37,6 @@ const NavBar = () => {
     navigate("/");
     toast.success("Đăng xuất thành công");
   };
-  console.log(roleName);
   const renderDropDown = () => {
     return (
       <div className="dropdown dropdown-end">

@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar } from "../../../redux/features/sidebarSlice";
+import { useSelector } from "react-redux";
 import { NavLink, useLocation } from "react-router-dom";
-import { decode } from "../../../utils/jwtUtil";
 
 const SideBar = () => {
-  const isOpen = useSelector((state) => state.sidebar?.isOpen);
   const roleName = useSelector((state) => state.user?.role || "");
 
   const location = useLocation();

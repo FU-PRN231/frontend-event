@@ -1,14 +1,10 @@
+<<<<<<< HEAD
 import { useDispatch, useSelector } from "react-redux";
+=======
+>>>>>>> 763d3f25031e5429494b92a3f9cf4eb95ee0ac5c
 import { NavLink } from "react-router-dom";
 import { toggleSidebar } from "../../../redux/features/sidebarSlice";
 const ManagementHeader = () => {
-  const dispatch = useDispatch();
-
-  const handleToggleSidebar = () => {
-    dispatch(toggleSidebar());
-  };
-  const isOpen = useSelector((state) => state.sidebar?.isOpen);
-
   return (
     <>
       <header className="navbar bg-base-100 text-grey py-4">
