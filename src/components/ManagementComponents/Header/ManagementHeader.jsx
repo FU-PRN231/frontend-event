@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar } from "../../../redux/features/sidebarSlice";
 import { NavLink } from "react-router-dom";
+import { toggleSidebar } from "../../../redux/features/sidebarSlice";
 const ManagementHeader = () => {
   const dispatch = useDispatch();
 
@@ -22,7 +21,7 @@ const ManagementHeader = () => {
           </label>
           <NavLink to={"/"}>
             <span className="mx-10 normal-case text-xl font-bold text-primary">
-              MODA
+              Event Booking
             </span>
           </NavLink>
         </div>

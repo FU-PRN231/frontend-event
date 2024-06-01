@@ -2,8 +2,8 @@ import React from "react";
 import { Navigate, useRoutes } from "react-router-dom";
 import CommonLayout from "../layouts/CommonLayout";
 import ManagementLayOut from "../layouts/ManagementLayout/ManagementLayOut";
-import LoginPage from "../pages/Common/LoginPage";
 import ErrorPage from "../pages/Common/ErrorPage";
+import LoginPage from "../pages/Common/LoginPage";
 import VerifyPayment from "../pages/Common/VerifyPayment";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
 

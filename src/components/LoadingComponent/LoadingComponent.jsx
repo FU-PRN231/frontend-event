@@ -69,7 +69,9 @@ const LoadingComponent = ({ isLoading }) => {
   return isLoading ? (
     <LoadingContainer>
       <LoadingSpinner />
-      <LoadingText>Moda đang tải dữ liệu bạn chờ xíu nhé...</LoadingText>
+      <LoadingText>
+        EventBooking đang tải dữ liệu bạn chờ xíu nhé...
+      </LoadingText>
     </LoadingContainer>
   ) : null;
 };

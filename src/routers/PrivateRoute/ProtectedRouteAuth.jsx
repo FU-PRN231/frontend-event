@@ -1,6 +1,5 @@
-import { toast } from "react-toastify";
-import { decode } from "../../utils/jwtUtil";
 import { Navigate } from "react-router-dom";
+import { decode } from "../../utils/jwtUtil";
 
 const ProtectedRouteAuth = ({ children }) => {
   const role = decode(localStorage.getItem("accessToken"));
@@ -12,3 +11,4 @@ const ProtectedRouteAuth = ({ children }) => {
 };
 
 export default ProtectedRouteAuth;
+//

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../redux/features/authSlice";
 import { toast } from "react-toastify";
-import { decode } from "../../utils/jwtUtil";
-import { clothTypeLabels } from "../../utils/constant";
+import { logout } from "../../redux/features/authSlice";
 import { isEmptyObject } from "../../utils/util";
 
 const NavBar = () => {
@@ -23,10 +21,11 @@ const NavBar = () => {
   }, []);
 
   useEffect(() => {
-    if (localStorage.getItem("accessToken")) {
-      setRoleName(decode(localStorage.getItem("accessToken")).role);
-    }
-  }, [localStorage.getItem("accessToken")]);
+    // if (localStorage.getItem("accessToken")) {
+    //   setRoleName(decode(localStorage.getItem("accessToken")).role);
+    // }
+    //}, [localStorage.getItem("accessToken")]);
+  }, []);
 
   const handleLogOut = () => {
     localStorage.removeItem("accessToken");
