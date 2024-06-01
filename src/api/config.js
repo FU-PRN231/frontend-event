@@ -1,3 +1,3 @@
-const baseUrl = "https://moda-api.azurewebsites.net";
+const baseUrl = "https://fpt-event.azurewebsites.net";
 
 export { baseUrl };
