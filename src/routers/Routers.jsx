@@ -27,9 +27,9 @@ function Routers() {
     {
       path: "admin",
       element: (
-        // <ProtectedRouteAdmin>
-        <ManagementLayOut />
-        // </ProtectedRouteAdmin>
+        <ProtectedRouteAdmin>
+          <ManagementLayOut />
+        </ProtectedRouteAdmin>
       ),
       children: [
         { index: true, element: <Navigate to="dashboard" replace /> },

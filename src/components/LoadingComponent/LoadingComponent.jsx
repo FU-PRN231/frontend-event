@@ -69,9 +69,13 @@ const LoadingComponent = ({ isLoading }) => {
   return isLoading ? (
     <LoadingContainer>
       <LoadingSpinner />
+<<<<<<< HEAD
       <LoadingText>
         EventBooking đang tải dữ liệu bạn chờ xíu nhé...
       </LoadingText>
+=======
+      <LoadingText>Cóc Event đang tải dữ liệu bạn chờ xíu nhé...</LoadingText>
+>>>>>>> eade8aef5e66ae79bae934d7e7383fd152b9f359
     </LoadingContainer>
   ) : null;
 };

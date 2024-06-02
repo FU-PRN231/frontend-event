@@ -17,7 +17,7 @@ const ManagementHeader = () => {
           </label>
           <NavLink to={"/"}>
             <span className="mx-10 normal-case text-xl font-bold text-primary">
-              Event Booking
+              Cóc Event
             </span>
           </NavLink>
         </div>
