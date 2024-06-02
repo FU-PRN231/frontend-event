@@ -115,7 +115,7 @@ const LoginPage = () => {
         );
         dispatch(author(decode(localStorage.getItem("accessToken")).role));
         if (fetchAccount.isSuccess) {
-          const userAccount = fetchAccount.result?.account;
+          const userAccount = fetchAccount.result;
           dispatch(login(userAccount));
           toast.success("Đăng nhập thành công");
           navigate("/");
@@ -136,7 +136,7 @@ const LoginPage = () => {
         <div className="flex items-center justify-center min-h-screen bg-base2">
           <div className="relative flex flex-col m-6 space-y-8 shadow-2xl rounded-2xl md:flex-row md:space-y-0">
             <div className="flex flex-col justify-center p-8 md:p-14">
-              <span className="mb-3 text-4xl font-bold">Event Booking</span>
+              <span className="mb-3 text-4xl font-bold">Cóc Event</span>
               <span className="font-light text-gray-400 mb-8">
                 Bạn vui lòng nhập các thông tin chi tiết để đăng nhập
               </span>
@@ -164,7 +164,7 @@ const LoginPage = () => {
                         author(decode(localStorage.getItem("accessToken")).role)
                       );
                       if (fetchAccount.isSuccess) {
-                        const userAccount = fetchAccount.result?.account;
+                        const userAccount = fetchAccount.result;
                         dispatch(login(userAccount));
                         toast.success("Đăng nhập thành công");
                         navigate("/");
@@ -269,7 +269,7 @@ const LoginPage = () => {
               />
               <div className="absolute hidden bottom-10 right-6 p-6 bg-white bg-opacity-40 backdrop-blur-sm rounded drop-shadow-lg md:block">
                 <span className="text-black italic text-xl">
-                  Event Booking
+                  Cóc Event
                   <br />
                   Đem lại cho bạn trải nghiệm đặt vé vô cùng tiện lợi.
                   <br />

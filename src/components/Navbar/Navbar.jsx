@@ -20,7 +20,7 @@ const NavBar = () => {
     };
     window.addEventListener("scroll", scrollHandler);
     return () => window.removeEventListener("scroll", scrollHandler);
-  }, []);
+  }, [roleName]);
 
   const handleLogOut = () => {
     localStorage.removeItem("accessToken");
@@ -86,7 +86,7 @@ const NavBar = () => {
           to="/"
           className="flex items-center gap-2 no-underline text-primary"
         >
-          <span className="text-2xl font-medium">Event Booking</span>
+          <span className="text-2xl font-medium">Cóc Event</span>
         </NavLink>
 
         <div className="hidden md:flex items-center gap-4">

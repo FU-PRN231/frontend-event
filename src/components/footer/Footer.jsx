@@ -6,12 +6,11 @@ const Footer = () => {
       <div className="flex flex-col md:flex md:flex-row">
         <div className="px-5">
           <div className="flex items-center gap-2 mb-5">
-            <h1 className="text-2xl font-bold text-primary">Moda</h1>
+            <h1 className="text-2xl font-bold text-primary">Cóc Event</h1>
           </div>
           <p className="opacity-50 mb-5">
-            "Dọn dẹp - Kiếm tiền - Mua sắm"
+            "Đặt lịch cùng chúng tôi để có những trải nghiệm tuyệt vời nhất!"
             <br />
-            Tất cả trong một
           </p>
         </div>
         <div className="px-5 ">
