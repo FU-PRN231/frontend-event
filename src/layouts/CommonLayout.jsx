@@ -7,7 +7,9 @@ const CommonLayout = () => {
   return (
     <>
       <NavBar />
-      <Outlet />
+      <div className="container my-10">
+        <Outlet />
+      </div>
 
       <Footer />
     </>
