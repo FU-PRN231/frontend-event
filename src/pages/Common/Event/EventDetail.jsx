@@ -13,6 +13,7 @@ import "slick-carousel/slick/slick-theme.css";
 import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../redux/features/cartSlice";
+import { toast } from "react-toastify";
 
 const EventDetail = () => {
   const { id } = useParams();
@@ -191,12 +192,12 @@ const EventDetail = () => {
                   <span className="mr-2 text-gray-700">Số vé còn lại:</span>
                   <span
                     className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${
-                      seatRank.remainingCapacity > 0
+                      seatRank.quantity > 0
                         ? "text-green-800 bg-green-200"
                         : "text-red-800 bg-red-200"
                     }`}
                   >
-                    {seatRank.remainingCapacity}
+                    {seatRank.quantity}
                   </span>
                 </div>
                 <p className="text-gray-700 mb-2">
@@ -209,7 +210,11 @@ const EventDetail = () => {
 
               <span
                 className="px-4 text-center py-2 my-4 bg-indigo-600 text-white rounded-lg cursor-pointer hover:bg-indigo-700 transition-colors duration-300"
-                onClick={() => dispatch(addToCart(seatRank))}
+                onClick={() => {
+                  dispatch(addToCart(seatRank));
+                  toast.success("Đã thêm vé vào giỏ hàng");
+                }}
+                disabled={seatRank.quantity <= 0}
               >
                 Book Now
               </span>
