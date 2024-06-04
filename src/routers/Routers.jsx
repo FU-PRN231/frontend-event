@@ -2,20 +2,16 @@ import React from "react";
 import { Navigate, useRoutes } from "react-router-dom";
 import CommonLayout from "../layouts/CommonLayout";
 import ManagementLayOut from "../layouts/ManagementLayout/ManagementLayOut";
+import Cart from "../pages/Common/Cart";
 import ErrorPage from "../pages/Common/ErrorPage";
+import EventDetail from "../pages/Common/Event/EventDetail";
+import Home from "../pages/Common/Home";
 import LoginPage from "../pages/Common/LoginPage";
 import VerifyPayment from "../pages/Common/VerifyPayment";
 import CheckInPage from "../pages/PM/CheckInPage";
-<<<<<<< HEAD
+import CreateEventForm from "../pages/PM/CreateEventForm";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
-=======
-import CreateEventForm from "../pages/PM/CreateEventForm";
-import Home from "../pages/Common/Home";
-import EventDetail from "../pages/Common/Event/EventDetail";
-import Cart from "../pages/Common/Cart";
-
->>>>>>> 85c18ab7b06a32b8543f1d8db19a1f32c907def7
 function Routers() {
   const routing = useRoutes([
     {

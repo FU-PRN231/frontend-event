@@ -39,7 +39,7 @@ export const addSponsor = async (eventId, sponsorDtos) => {
 export const getAllEvent = async (pageNumber, pageSize) => {
   try {
     const res = await axios.get(
-      `${baseUrl}/Event/get-all-event?pageNumber=${pageNumber}&pageSize=${pageSize}`
+      `${baseUrl}/api/Event/get-all-event?pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
     return res.data;
   } catch (err) {

@@ -15,7 +15,7 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
     try {
       const eventsData = await getAllEvent(1, 100);
       console.log(eventsData);
-      setEvents(eventsData.events);
+      setEvents(eventsData.result.items);
     } catch (error) {
       console.error("Error fetching events:", error);
     }
@@ -24,7 +24,7 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
   useEffect(() => {
     fetchEvents();
   }, []);
-
+  console.log("events", events);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSponsorData({ ...sponsorData, [name]: value });
