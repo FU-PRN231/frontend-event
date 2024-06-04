@@ -73,10 +73,23 @@ function differenceInDays(ngayGio1, ngayGio2) {
 function isEmptyObject(v) {
   return !!v && v.constructor === Object && Object.keys(v).length === 0;
 }
+function calculateCountdown  (eventDate)  {
+  const now = new Date();
+  const eventDateObj = new Date(eventDate);
+  const diff = eventDateObj - now;
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / 1000 / 60) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  return `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
+};
 export {
   formatPrice,
   formatDateTime,
   formatDate,
   differenceInDays,
   isEmptyObject,
+  calculateCountdown
 };

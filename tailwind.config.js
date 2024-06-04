@@ -3,9 +3,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      // fontFamily: {
-      //   montserrat: ["Montserrat", "sans-serif"],
-      // },
+      fontFamily: {
+        montserrat: ["Montserrat", "sans-serif"],
+      },
       colors: {
         mainColor: "#0284c7",
         primary: "#0c4a6e",

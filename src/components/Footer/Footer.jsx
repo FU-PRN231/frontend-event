@@ -37,7 +37,7 @@ const Footer = () => {
             <li className="mb-2">
               Đại Học FPT Hồ Chí Minh, Quận 9, Thành Phố Hồ Chí Minh
             </li>
-            <li className="mb-2">Email: moda.platform.contact@gmail.com</li>
+            <li className="mb-2">Email: coc-event.contact@gmail.com</li>
             <li className="mb-2">Phone: +84 366 967 957</li>
           </ul>
         </div>
