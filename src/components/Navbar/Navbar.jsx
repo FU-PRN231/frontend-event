@@ -118,7 +118,12 @@ const NavBar = () => {
               <i className="fa-solid fa-bars"></i>{" "}
             </button>
           </div>
-
+          <Link
+            to="/cart"
+            className="hidden md:block  font-semibold no-underline text-primary  hover:text-gray-500"
+          >
+            Giỏ hàng
+          </Link>
           {user ? (
             renderDropDown()
           ) : (
@@ -153,7 +158,12 @@ const NavBar = () => {
                 {clothTypeLabels[key]}
               </NavLink>
             ))} */}
-
+            <Link
+              to="/cart"
+              className="hidden md:block  font-semibold no-underline text-primary  hover:text-gray-500"
+            >
+              Giỏ hàng
+            </Link>
             {isEmptyObject(user) ||
               (user == null && (
                 <Link

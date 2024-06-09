@@ -10,6 +10,7 @@ import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
 import Home from "../pages/Common/Home";
 import EventDetail from "../pages/Common/Event/EventDetail";
+import Cart from "../pages/Common/Cart";
 
 function Routers() {
   const routing = useRoutes([
@@ -26,6 +27,7 @@ function Routers() {
         { path: "verify-payment/*", element: <VerifyPayment /> },
         { path: "check-in", element: <CheckInPage /> },
         { path: "event/:id", element: <EventDetail /> },
+        { path: "cart", element: <Cart /> },
       ],
     },
     {
