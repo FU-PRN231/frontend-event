@@ -45,7 +45,7 @@ const EventDetail = () => {
   if (!eventData) {
     return <LoadingComponent isLoading={true} />;
   }
-
+  console.log(eventData);
   const settings = {
     dots: true,
     infinite: true,
