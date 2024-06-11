@@ -70,21 +70,6 @@ function Routers() {
         },
       ],
     },
-    // //sponsor
-    // {
-    //   path: "sponsor",
-    //   element: (
-    //     <ProtectedRouteAdmin>
-    //       <ManagementLayOut />
-    //     </ProtectedRouteAdmin>
-    //   ),
-    //   children: [
-    //     { index: true, element: <Navigate to="dashboard" replace /> },
-    //     {
-    //       path: "dashboard",
-    //     },
-    //   ],
-    // },
   ]);
   return routing;
 }

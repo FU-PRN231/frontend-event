@@ -17,18 +17,21 @@ const Home = () => {
   const images = [
     {
       url: "https://images.pexels.com/photos/976862/pexels-photo-976862.jpeg?cs=srgb&dl=pexels-joshsorenson-976862.jpg&fm=jpg",
-      title: "Event 1",
-      description: "Description for Event 1",
+      title: "Ánh sáng rực rỡ",
+      description:
+        "Những tia sáng lung linh, tỏa khắp không gian, tựa những vì sao lấp lánh trên bầu trời đêm.",
     },
     {
       url: "https://images.pexels.com/photos/2020432/pexels-photo-2020432.jpeg?cs=srgb&dl=pexels-phreewil-2020432.jpg&fm=jpg",
-      title: "Event 2",
-      description: "Description for Event 2",
+      title: "Điệu nhảy của sắc màu",
+      description:
+        "Các sắc màu đan xen, nhảy múa trong từng nhịp điệu, tạo nên một bữa tiệc đa sắc đầy cuốn hút.",
     },
     {
       url: "https://wallpapers.com/images/hd/stage-light-background-kn0w04juezldy7et.jpg",
-      title: "Event 3",
-      description: "Description for Event 3",
+      title: "Sân khấu ánh sáng",
+      description:
+        "Ánh đèn sân khấu chớp nhoáng, mời gọi khán giả bước vào thế giới kỳ diệu của nghệ thuật.",
     },
   ];
   const settings = {

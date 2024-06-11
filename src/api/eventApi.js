@@ -15,6 +15,7 @@ export const getAllEvent = async (pageNumber, pageSize) => {
 export const getEventById = async (id) => {
   try {
     const res = await axios.get(`${baseUrl}/api/Event/get-event-by-id/${id}`);
+
     return res.data;
   } catch (err) {
     return null;
