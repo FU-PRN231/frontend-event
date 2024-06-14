@@ -7,6 +7,7 @@ import ErrorPage from "../pages/Common/ErrorPage";
 import EventDetail from "../pages/Common/Event/EventDetail";
 import Home from "../pages/Common/Home";
 import LoginPage from "../pages/Common/LoginPage";
+import SurveyForm from "../pages/Common/Survey/SurveyForm";
 import VerifyPayment from "../pages/Common/VerifyPayment";
 import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
@@ -28,6 +29,7 @@ function Routers() {
         { path: "check-in", element: <CheckInPage /> },
         { path: "event/:id", element: <EventDetail /> },
         { path: "cart", element: <Cart /> },
+        { path: "survey", element: <SurveyForm /> },
       ],
     },
     {
