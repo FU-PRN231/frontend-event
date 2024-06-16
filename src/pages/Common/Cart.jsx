@@ -66,6 +66,12 @@ const Cart = () => {
                 <div className="flex items-center">
                   <div>
                     <div className="flex ">
+                      <strong className="text-lg mr-2">Event:</strong>
+                      <h3 className="text-lg  text-gray-900">
+                        {item.event?.title}
+                      </h3>
+                    </div>
+                    <div className="flex ">
                       <strong className="text-lg mr-2">Hạng vé:</strong>
                       <h3 className="text-lg  text-gray-900">{item.name}</h3>
                     </div>

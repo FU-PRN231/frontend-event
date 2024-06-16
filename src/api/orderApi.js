@@ -12,3 +12,19 @@ export const createOrderWithPament = async (order) => {
     return null;
   }
 };
+export const getAllOrderByAccountId = async (id, pageNumber, pageSize) => {
+  try {
+    const response = await axios.get(
+      `${baseUrl}/order/get-all-order-by-accountId/${id}/${pageNumber}/${pageSize}`
+    );
+    return response.data;
+  } catch (error) {}
+};
+export const getAllOrderDetailsByOrderId = async (id, pageNumber, pageSize) => {
+  try {
+    const response = await axios.get(
+      `${baseUrl}/order/get-all-order-detail-by-order-id/${id}/${pageNumber}/${pageSize}`
+    );
+    return response.data;
+  } catch (error) {}
+};

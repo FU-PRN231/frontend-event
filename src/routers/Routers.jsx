@@ -11,6 +11,7 @@ import CreateEventForm from "../pages/PM/CreateEventForm";
 import Home from "../pages/Common/Home";
 import EventDetail from "../pages/Common/Event/EventDetail";
 import Cart from "../pages/Common/Cart";
+import PersonalInformation from "../pages/Common/PersonalInformation";
 
 function Routers() {
   const routing = useRoutes([
@@ -28,6 +29,7 @@ function Routers() {
         { path: "check-in", element: <CheckInPage /> },
         { path: "event/:id", element: <EventDetail /> },
         { path: "cart", element: <Cart /> },
+        { path: "personal-information", element: <PersonalInformation /> },
       ],
     },
     {
