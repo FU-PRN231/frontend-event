@@ -25,7 +25,6 @@ const PersonalInformation = () => {
     const data = await getAllOrderByAccountId(user.id, 1, 100);
     if (data.isSuccess) {
       setOrders(data.result.items);
-      console.log(data.result.items);
     }
   };
 
@@ -42,7 +41,7 @@ const PersonalInformation = () => {
     fetchOrderDetails();
   }, [isOrderDetail, orderDetailId]);
   const handleClick = (item) => {
-    setOrderDetailId(item.id);
+    setOrderDetailId(item.order?.id);
     setIsOrderDetail(true);
   };
   const renderOrderItems = (order) => {
@@ -52,12 +51,10 @@ const PersonalInformation = () => {
         className="cursor-pointer"
         onClick={() => handleClick(item)}
       >
-        <td>{item.id}</td>
-        <td>{item.address}</td>
-        <td>{orderLabels[order.status]}</td>
-        <td>{formatPrice(order.total)}</td>
-        <td>{formatPrice(order.deliveryCost)}</td>
-        <td>{formatDateTime(order.orderTime)}</td>
+        <td>{item.order?.id}</td>
+        <td>{orderLabels[item.order?.paymentStatus]}</td>
+        <td>{formatPrice(item.order?.total)}</td>
+        <td>{formatDateTime(item?.order?.purchaseDate)}</td>
       </tr>
     ));
   };
@@ -106,10 +103,8 @@ const PersonalInformation = () => {
                     <thead>
                       <tr>
                         <th>Mã đơn hàng</th>
-                        <th>Địa chỉ</th>
                         <th>Trạng thái</th>
                         <th>Tổng tiền</th>
-                        <th>Phí giao hàng</th>
                         <th>Thời gian đặt</th>
                       </tr>
                     </thead>
@@ -141,11 +136,10 @@ const PersonalInformation = () => {
                   <p>
                     <strong>Mã đơn hàng:</strong> {data.order?.id}
                   </p>
+
                   <p>
-                    <strong>Địa chỉ:</strong> {data.order?.address}
-                  </p>
-                  <p>
-                    <strong>Số điện thoại:</strong> {data.order?.phoneNumber}
+                    <strong>Số điện thoại:</strong>{" "}
+                    {data.order?.account?.phoneNumber}
                   </p>
                   <p>
                     <strong>Trạng thái:</strong>{" "}
@@ -155,12 +149,8 @@ const PersonalInformation = () => {
                     <strong>Tổng tiền:</strong> {formatPrice(data.order?.total)}
                   </p>
                   <p>
-                    <strong>Phí giao hàng:</strong>{" "}
-                    {formatPrice(data.order?.deliveryCost)}
-                  </p>
-                  <p>
                     <strong>Thời gian đặt hàng:</strong>{" "}
-                    {formatDateTime(data.order?.orderTime)}
+                    {formatDateTime(data.order?.purchaseDate)}
                   </p>
                 </div>
               </div>
@@ -168,41 +158,24 @@ const PersonalInformation = () => {
                 <table className="table w-full">
                   <thead>
                     <tr>
-                      <th>Sản phẩm</th>
+                      <th>Tên event</th>
+                      <th>Hạng ghế</th>
                       <th>Số lượng</th>
-                      <th>Size</th>
                       <th>Đơn giá</th>
                       <th>Tổng tiền</th>
                     </tr>
                   </thead>
                   <tbody>
                     {data.orderDetails &&
-                      data.orderDetails.length > 0 &&
-                      data.orderDetails.map((orderDetail) => (
-                        <tr key={orderDetail.id}>
-                          <td>{orderDetail.productStock.product.name}</td>
-                          <td>{orderDetail.quantity}</td>
+                      data.orderDetails?.length > 0 &&
+                      data.orderDetails.map((item) => (
+                        <tr key={item.id}>
+                          <td>{item.seatRank?.event?.title}</td>
+                          <td>{item?.seatRank?.name}</td>
+                          <td>{item.quantity}</td>
+                          <td>{formatPrice(item.seatRank?.price)}</td>
                           <td>
-                            {orderDetail.productStock.clothingSize !== null
-                              ? `${
-                                  clothingSizeLabels[
-                                    orderDetail.productStock.clothingSize
-                                  ]
-                                }`
-                              : `${
-                                  shoeSizeLabels[
-                                    orderDetail.productStock.shoeSize
-                                  ]
-                                }`}
-                          </td>
-                          <td>
-                            {formatPrice(orderDetail.productStock?.price)}
-                          </td>
-                          <td>
-                            {formatPrice(
-                              orderDetail.quantity *
-                                orderDetail.productStock.price
-                            )}
+                            {formatPrice(item.seatRank?.price * item.quantity)}
                           </td>
                         </tr>
                       ))}
