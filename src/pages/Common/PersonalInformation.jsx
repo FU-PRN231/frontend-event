@@ -8,6 +8,8 @@ import { orderLabels } from "../../utils/constant";
 import { formatDateTime, formatPrice } from "../../utils/util";
 import { clothingSizeLabels, shoeSizeLabels } from "../../utils/constant";
 import PersonalModal from "./Account/PersonalModal";
+import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
+import { message } from "antd";
 const PersonalInformation = () => {
   const { user } = useSelector((state) => state.user || {});
   const [orders, setOrders] = useState([]);
@@ -15,6 +17,7 @@ const PersonalInformation = () => {
   const [orderDetailId, setOrderDetailId] = useState(null);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [data, setData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const userMap = {
     name: `${user.firstName} ${user.lastName}`,
     email: `${user.email}`,
@@ -22,9 +25,17 @@ const PersonalInformation = () => {
     address: `${user.address}`,
   };
   const fetchOrders = async () => {
-    const data = await getAllOrderByAccountId(user.id, 1, 100);
-    if (data.isSuccess) {
-      setOrders(data.result.items);
+    try {
+      setIsLoading(true);
+
+      const data = await getAllOrderByAccountId(user.id, 1, 100);
+      if (data.isSuccess) {
+        setOrders(data.result.items);
+      }
+    } catch (error) {
+      message.error("Đã xảy ra lỗi, vui lòng thử lại sau");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -32,17 +43,23 @@ const PersonalInformation = () => {
     fetchOrders();
   }, [user]);
   const fetchOrderDetails = async () => {
-    const data = await getAllOrderDetailsByOrderId(orderDetailId, 1, 100);
-    if (data.isSuccess) {
-      setData(data.result);
+    try {
+      setIsLoading(true);
+      const data = await getAllOrderDetailsByOrderId(orderDetailId, 1, 100);
+      if (data.isSuccess) {
+        setData(data.result);
+      }
+    } catch (error) {
+      message.error("Đã xảy ra lỗi, vui lòng thử lại sau");
+    } finally {
+      setIsLoading(false);
     }
   };
-  useEffect(() => {
-    fetchOrderDetails();
-  }, [isOrderDetail, orderDetailId]);
+
   const handleClick = (item) => {
     setOrderDetailId(item.order?.id);
     setIsOrderDetail(true);
+    fetchOrderDetails();
   };
   const renderOrderItems = (order) => {
     return orders.map((item) => (
@@ -60,6 +77,7 @@ const PersonalInformation = () => {
   };
   return (
     <div className="container mx-auto py-8">
+      <LoadingComponent isLoading={isLoading} title={"Đang tải dữ liệu"} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="col-span-1 bg-white shadow-md rounded-box p-6">
           <div className="flex justify-between">
