@@ -33,13 +33,13 @@ export const addSponsor = async (eventId, sponsorDtos) => {
     return res.data;
   } catch (err) {
     console.error("Error adding sponsor:", err);
-    return null;
+    throw err;
   }
 };
 export const getAllEvent = async (pageNumber, pageSize) => {
   try {
     const res = await axios.get(
-      `${baseUrl}/api/Event/get-all-event?pageNumber=${pageNumber}&pageSize=${pageSize}`
+      `${baseUrl}/event/get-all-event?pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
     return res.data;
   } catch (err) {

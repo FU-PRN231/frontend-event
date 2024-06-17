@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { addSponsor, getAllEvent } from "../../api/sponsorApi";
+
 const AddSponsorForm = ({ onSponsorAdded }) => {
   const [sponsorData, setSponsorData] = useState({
     name: "",
@@ -14,7 +15,6 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
   const fetchEvents = async () => {
     try {
       const eventsData = await getAllEvent(1, 100);
-      console.log(eventsData);
       setEvents(eventsData.result.items);
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -24,7 +24,7 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
   useEffect(() => {
     fetchEvents();
   }, []);
-  console.log("events", events);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSponsorData({ ...sponsorData, [name]: value });
@@ -38,24 +38,22 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("EventId", selectedEventId);
-    formData.append("SponsorDtos", JSON.stringify([sponsorData]));
-
     try {
-      const res = await addSponsor(selectedEventId, formData);
+      const res = await addSponsor(selectedEventId, [sponsorData]);
       if (res) {
         onSponsorAdded();
       }
     } catch (error) {
       console.error("Error adding sponsor:", error);
+      if (error.response) {
+        console.error("Error response data:", error.response.data);
+      }
     }
   };
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <form onSubmit={handleSubmit}>
-        {/* Event dropdown */}
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"

@@ -1,3 +1,6 @@
+import axios from "axios";
+import { baseUrl } from "./config";
+
 export const getAllSurveys = async () => {
   try {
     const res = await axios.get(`${baseUrl}/survey/get-all-survey`);
@@ -7,18 +10,7 @@ export const getAllSurveys = async () => {
     return null;
   }
 };
-//get all account
-export const getAllAccount = async (pageIndex, pageSize) => {
-  try {
-    const res = await axios.post(
-      `${baseUrl}/account/get-all-account?pageIndex=${pageIndex}&pageSize=${pageSize}`,
-      []
-    );
-    return res.data;
-  } catch (err) {
-    return null;
-  }
-};
+
 // Insert survey form
 export const insertSurveyForm = async (data) => {
   try {
