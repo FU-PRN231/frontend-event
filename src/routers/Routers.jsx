@@ -13,9 +13,6 @@ import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
-import Home from "../pages/Common/Home";
-import EventDetail from "../pages/Common/Event/EventDetail";
-import Cart from "../pages/Common/Cart";
 import PersonalInformation from "../pages/Common/PersonalInformation";
 import ManageUser from "../pages/CommonManager/ManageUser";
 
