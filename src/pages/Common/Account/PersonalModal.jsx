@@ -13,7 +13,6 @@ const validationSchema = Yup.object({
   firstName: Yup.string().required("Họ là bắt buộc"),
   lastName: Yup.string().required("Tên là bắt buộc"),
   phoneNumber: Yup.string().required("Số điện thoại là bắt buộc"),
-  address: Yup.string().required("Địa chỉ là bắt buộc"),
 });
 
 const PersonalModal = ({ onClose }) => {
@@ -32,7 +31,6 @@ const PersonalModal = ({ onClose }) => {
               firstName: user.firstName,
               lastName: user.lastName,
               phoneNumber: user.phoneNumber,
-              address: user.address,
             }}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -137,24 +135,6 @@ const PersonalModal = ({ onClose }) => {
                   />
                   <ErrorMessage
                     name="phoneNumber"
-                    component="div"
-                    className="text-error mt-1"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="address" className="label font-semibold">
-                    Địa chỉ
-                  </label>
-                  <Field
-                    id="address"
-                    name="address"
-                    type="text"
-                    className={`input input-bordered w-full`}
-                    placeholder="Nhập địa chỉ của bạn"
-                  />
-                  <ErrorMessage
-                    name="address"
                     component="div"
                     className="text-error mt-1"
                   />

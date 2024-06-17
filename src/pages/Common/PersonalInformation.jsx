@@ -21,7 +21,6 @@ const PersonalInformation = () => {
     name: `${user.firstName} ${user.lastName}`,
     email: `${user.email}`,
     phone: `${user.phoneNumber}`,
-    address: `${user.address}`,
   };
   const fetchOrders = async () => {
     try {
@@ -102,9 +101,6 @@ const PersonalInformation = () => {
             </p>
             <p>
               <strong>Số điện thoại:</strong> {userMap?.phone}
-            </p>
-            <p>
-              <strong>Địa chỉ:</strong> {userMap?.address}
             </p>
           </div>
         </div>
