@@ -12,7 +12,7 @@ const ManagementLayOut = () => {
         <div className="flex flex-row flex-1">
           <SideBar />
 
-          <div className="mx-4 p-4 w-full my-10 rounded-4xl">
+          <div className="mx-4 p-4 w-full my-10 rounded-4xl shadow-lg">
             <Outlet />
           </div>
         </div>

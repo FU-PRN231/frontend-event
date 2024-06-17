@@ -38,20 +38,9 @@ const SideBar = () => {
         path: "dashboard",
       },
       {
-        name: "Đối tác",
+        name: "Người dùng",
         icon: <i className="fa-solid fa-handshake-simple"></i>,
-        path: "shop",
-      },
-
-      {
-        name: "Gói dịch vụ",
-        icon: <i className="fa-solid fa-lightbulb"></i>,
-        path: "package",
-      },
-      {
-        name: "Cấu hình hệ thống",
-        icon: <i className="fa-solid fa-gear"></i>,
-        path: "settings",
+        path: "manage-user",
       },
     ],
     isStaff: [
@@ -101,9 +90,7 @@ const SideBar = () => {
               }`}
             >
               {item.icon}
-              <span className={`${isOpen ? "inline" : "hidden"} ml-2 text-md`}>
-                {item.name}
-              </span>
+              <span className={`inline ml-2 text-md`}>{item.name}</span>
             </a>
           </li>
         </NavLink>
@@ -113,15 +100,6 @@ const SideBar = () => {
 
   return (
     <div className="">
-      {/* <div
-        className={`bg-white text-text-color my-4 shadow-lg rounded-lg transition-all duration-300 ${
-          isOpen ? "w-64" : "w-20"
-        }`}
-      >
-        <ul className={`menu p-4 w-full text-base-content`}>
-          {roleName && renderMenu(menuItems[roleName])}
-        </ul>
-      </div> */}
       <div className="h-full border-r border-gray-100 drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
         <div className="drawer-side z-10  rounded-4xl">

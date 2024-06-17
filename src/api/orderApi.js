@@ -28,3 +28,9 @@ export const getAllOrderDetailsByOrderId = async (id, pageNumber, pageSize) => {
     return response.data;
   } catch (error) {}
 };
+export const purchaseOrder = async (id) => {
+  try {
+    const response = await axios.post(`${baseUrl}/order/purchase-order/${id}`);
+    return response.data;
+  } catch (error) {}
+};
