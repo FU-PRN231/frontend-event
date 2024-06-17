@@ -1,6 +1,8 @@
 import { Outlet } from "react-router-dom";
 import ManagementHeader from "../../components/ManagementComponents/Header/ManagementHeader";
 import SideBar from "../../components/ManagementComponents/Sidebar/Sidebar";
+import React, { useState } from "react";
+
 const ManagementLayOut = () => {
   return (
     <>

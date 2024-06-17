@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { NavLink, useLocation } from "react-router-dom";
 
 const SideBar = () => {
   const roleName = useSelector((state) => state.user?.role || "");
+  const [isOpen, setIsOpen] = useState(false);
 
   const location = useLocation();
 
@@ -67,6 +69,11 @@ const SideBar = () => {
         icon: <i className="fa-solid fa-bag-shopping"></i>,
         path: "order",
       },
+    ],
+    isOrganzation: [
+      { name: "Dashboard", link: "/dashboard" },
+      { name: "Surveys", link: "/surveys" },
+      { name: "Reports", link: "/reports" },
     ],
   };
 
