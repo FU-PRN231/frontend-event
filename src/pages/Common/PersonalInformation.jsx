@@ -14,7 +14,6 @@ const PersonalInformation = () => {
   const { user } = useSelector((state) => state.user || {});
   const [orders, setOrders] = useState([]);
   const [isOrderDetail, setIsOrderDetail] = useState(false);
-  const [orderDetailId, setOrderDetailId] = useState(null);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -42,10 +41,10 @@ const PersonalInformation = () => {
   useEffect(() => {
     fetchOrders();
   }, [user]);
-  const fetchOrderDetails = async () => {
+  const fetchOrderDetails = async (id) => {
     try {
       setIsLoading(true);
-      const data = await getAllOrderDetailsByOrderId(orderDetailId, 1, 100);
+      const data = await getAllOrderDetailsByOrderId(id, 1, 100);
       if (data.isSuccess) {
         setData(data.result);
       }
@@ -57,24 +56,26 @@ const PersonalInformation = () => {
   };
 
   const handleClick = (item) => {
-    setOrderDetailId(item.order?.id);
     setIsOrderDetail(true);
-    fetchOrderDetails();
+    fetchOrderDetails(item.order?.id);
   };
   const renderOrderItems = (order) => {
-    return orders.map((item) => (
+    console.log(order);
+    return (
       <tr
-        key={item.id}
+        key={order.order?.id}
         className="cursor-pointer"
-        onClick={() => handleClick(item)}
+        onClick={() => handleClick(order)}
       >
-        <td>{item.order?.id}</td>
-        <td>{orderLabels[item.order?.paymentStatus]}</td>
-        <td>{formatPrice(item.order?.total)}</td>
-        <td>{formatDateTime(item?.order?.purchaseDate)}</td>
+        <td>{order.order?.id}</td>
+        <td>{orderLabels[order?.order?.paymentStatus]}</td>
+        <td>{formatPrice(order?.order?.total)}</td>
+        <td>{formatDateTime(order?.order?.purchaseDate)}</td>
       </tr>
-    ));
+    );
   };
+  console.log(orders.length);
+
   return (
     <div className="container mx-auto py-8">
       <LoadingComponent isLoading={isLoading} title={"Đang tải dữ liệu"} />
