@@ -4,6 +4,7 @@ import {
   decreaseQuantity,
   increaseQuantity,
   removeFromCart,
+  resetCart,
 } from "../../redux/features/cartSlice";
 import { formatDateTime, formatPrice } from "../../utils/util";
 import { createOrderWithPament } from "../../api/orderApi";
@@ -39,8 +40,9 @@ const Cart = () => {
       setIsLoading(false);
     }
     if (response.isSuccess) {
-      debugger;
       message.success("Đặt vé thành công");
+      dispatch(resetCart());
+      window.location.href = response.result;
     } else {
       response.messages.forEach((mess) => {
         message.error(mess);
@@ -65,6 +67,12 @@ const Cart = () => {
               >
                 <div className="flex items-center">
                   <div>
+                    <div className="flex ">
+                      <strong className="text-lg mr-2">Event:</strong>
+                      <h3 className="text-lg  text-gray-900">
+                        {item.event?.title}
+                      </h3>
+                    </div>
                     <div className="flex ">
                       <strong className="text-lg mr-2">Hạng vé:</strong>
                       <h3 className="text-lg  text-gray-900">{item.name}</h3>
