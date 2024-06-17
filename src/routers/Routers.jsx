@@ -12,6 +12,7 @@ import Home from "../pages/Common/Home";
 import EventDetail from "../pages/Common/Event/EventDetail";
 import Cart from "../pages/Common/Cart";
 import PersonalInformation from "../pages/Common/PersonalInformation";
+import ManageUser from "../pages/CommonManager/ManageUser";
 
 function Routers() {
   const routing = useRoutes([
@@ -47,12 +48,8 @@ function Routers() {
         },
 
         {
-          path: "users",
-          element: <div>Users</div>,
-        },
-        {
-          path: "settings",
-          element: <div>Settings</div>,
+          path: "manage-user",
+          element: <ManageUser />,
         },
       ],
     },

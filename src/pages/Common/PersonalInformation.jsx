@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import {
   getAllOrderByAccountId,
   getAllOrderDetailsByOrderId,
+  purchaseOrder,
 } from "../../api/orderApi";
 import { orderLabels } from "../../utils/constant";
 import { formatDateTime, formatPrice } from "../../utils/util";
@@ -73,8 +74,21 @@ const PersonalInformation = () => {
       </tr>
     );
   };
-  console.log(orders.length);
 
+  const handlePaymentAgain = async (id) => {
+    try {
+      setIsLoading(true);
+      debugger;
+      const data = await purchaseOrder(id);
+      if (data.isSuccess) {
+        window.location.href = data.result;
+      }
+    } catch (error) {
+      message.error("Đã xảy ra lỗi, vui lòng thử lại sau");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="container mx-auto py-8">
       <LoadingComponent isLoading={isLoading} title={"Đang tải dữ liệu"} />
@@ -196,6 +210,16 @@ const PersonalInformation = () => {
                       ))}
                   </tbody>
                 </table>
+                {data.order?.status === 0 && (
+                  <div className="flex justify-center">
+                    <button
+                      className="bg-primary text-white rounded-md py-2 px-4 my-2"
+                      onClick={() => handlePaymentAgain(data.order?.id)}
+                    >
+                      Thanh toán ngay
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </>

@@ -135,7 +135,7 @@ export const submitOTPResetPass = async (email, recoveryCode, newPassword) => {
 
 export const getAllAccount = async (pageIndex, pageSize) => {
   try {
-    const res = await axios.post(
+    const res = await axios.get(
       `${baseUrl}/account/get-all-account?pageIndex=${pageIndex}&pageSize=${pageSize}`,
       []
     );
