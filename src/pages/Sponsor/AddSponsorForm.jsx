@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { addSponsor, getAllEvent } from "../../api/sponsorApi";
-
+import { getAllEvent } from "../../api/eventApi";
+import { addSponsor } from "../../api/sponsorApi";
 const AddSponsorForm = ({ onSponsorAdded }) => {
   const [sponsorData, setSponsorData] = useState({
     name: "",

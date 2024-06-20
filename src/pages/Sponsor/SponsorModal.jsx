@@ -15,10 +15,20 @@ const SponsorModal = () => {
     fetchSponsorsData();
   }, []);
 
-  const handleSponsorAdded = () => {
-    // Refresh sponsors data after adding a new sponsor
-    fetchSponsorsData();
-  };
+  useEffect(() => {
+    const fetchSponsorItemsOfEvent = async () => {
+      try {
+        const data = await fetchSponsorItemsOfEvent(eventId, 1, 10); // Example: Fetches first page with 10 items
+        setSponsors(data.result.items);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching sponsors:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchSponsorItemsOfEvent();
+  }, [eventId]);
 
   const fetchSponsorsData = async () => {
     try {
@@ -75,6 +85,12 @@ const SponsorModal = () => {
             eventId={eventId}
             onSponsorAdded={handleSponsorAdded}
           />
+        </div>
+        <div className="w-1/2 pl-4">
+          <h3 className="text-3xl font-bold mb-6">
+            Lich Sử Giao Dịch Của nhà tài trợ theo sự kiện{" "}
+          </h3>
+          <SponsorModal eventId={eventId} onSponsorAdded={handleSponsorAdded} />
         </div>
       </div>
     </div>
