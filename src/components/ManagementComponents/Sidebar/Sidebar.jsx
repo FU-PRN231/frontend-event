@@ -75,16 +75,20 @@ const SideBar = () => {
       { name: "Surveys", link: "/surveys" },
       { name: "Reports", link: "/reports" },
     ],
+    isPM: [
+      { name: "Dashboard", link: "/dashboard" },
+      { name: "Event", link: "create-event" },
+    ],
   };
 
   const renderMenu = (items) => {
     return items.map((item, index) => (
       <>
-        <NavLink to={`${item.path}`} key={index}>
+        <NavLink to={`${item.link}`} key={index}>
           <li className="hover:bg-primary rounded-md text-black hover:text-white my-1">
             <a
               className={`flex items-center ${
-                location.pathname?.includes(item.path)
+                location.pathname?.includes(item.link)
                   ? "bg-primary text-white"
                   : ""
               }`}
