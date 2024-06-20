@@ -69,6 +69,7 @@ function Routers() {
     {
       path: "org",
       //element: <ManagementLayOut />,
+
       children: [
         {
           path: "surveys",

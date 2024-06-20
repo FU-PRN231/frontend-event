@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import QrReader from "react-qr-scanner";
+import { useEffect, useState } from "react";
+import { getAllAvailableEvent, getAllEvent } from "../../api/eventApi";
 import {
   addAttendee,
   decodeQrCode,
@@ -31,6 +33,16 @@ const CheckInModal = () => {
       setAttendees(attendeesData.result.items);
     } catch (error) {
       console.error("Error fetching attendees:", error);
+
+  const fetchData = async () => {
+    const res = await getAllAvailableEvent(1, 10);
+    if (res.isSuccess) {
+      setEvents(res.result.items);
+      const initialCountdowns = {};
+      res.result.items.forEach((event, index) => {
+        initialCountdowns[index] = calculateCountdown(event.eventDate);
+      });
+      setCountdowns(initialCountdowns);
     }
   };
 
