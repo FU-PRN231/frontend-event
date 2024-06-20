@@ -61,7 +61,7 @@ function Routers() {
     },
     {
       path: "organization",
-      element: <ManagementLayOut />,
+      // element: <ManagementLayOut />,
       children: [
         { index: true, element: <Navigate to="surveys" replace /> },
         {

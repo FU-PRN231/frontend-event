@@ -4,34 +4,11 @@ import { NavLink, useLocation } from "react-router-dom";
 
 const SideBar = () => {
   const roleName = useSelector((state) => state.user?.role || "");
-  const [isOpen, setIsOpen] = useState(false);
 
   const location = useLocation();
 
   const menuItems = {
-    isShop: [
-      {
-        name: "Thống kê",
-        icon: <i className="fa-solid fa-chart-line"></i>,
-        path: "dashboard",
-      },
-      {
-        name: "Sản phẩm",
-        icon: <i className="fa-solid fa-shirt"></i>,
-        path: "product",
-      },
-      {
-        name: "Đơn hàng",
-        icon: <i className="fa-solid fa-list"></i>,
-        path: "orders",
-      },
-      {
-        name: "Gói dịch vụ",
-        icon: <i className="fa-solid fa-lightbulb"></i>,
-        path: "package",
-      },
-    ],
-    isAdmin: [
+    ADMIN: [
       {
         name: "Thống kê",
         icon: <i className="fa-solid fa-chart-line"></i>,
@@ -43,48 +20,29 @@ const SideBar = () => {
         path: "manage-user",
       },
     ],
-    isStaff: [
-      {
-        name: "Thống kê",
-        icon: <i className="fa-solid fa-chart-line"></i>,
-        path: "dashboard",
-      },
-      {
-        name: "Đối tác",
-        icon: <i className="fa-solid fa-handshake-simple"></i>,
-        path: "shop",
-      },
-      {
-        name: "Sản phẩm",
-        icon: <i className="fa-solid fa-shirt"></i>,
-        path: "product",
-      },
-      {
-        name: "Gói dịch vụ",
-        icon: <i className="fa-solid fa-box-open"></i>,
-        path: "package",
-      },
-      {
-        name: "Đơn hàng",
-        icon: <i className="fa-solid fa-bag-shopping"></i>,
-        path: "order",
-      },
-    ],
-    isOrganzation: [
+    ORGANIZER: [
       { name: "Dashboard", link: "/dashboard" },
       { name: "Surveys", link: "/surveys" },
       { name: "Reports", link: "/reports" },
+    ],
+    PM: [
+      { name: "Dashboard", link: "/dashboard" },
+      { name: "Event", link: "create-event" },
+    ],
+    SPONSOR: [
+      { name: "Dashboard", link: "/dashboard" },
+      { name: "Sponsor", link: "/sponsor" },
     ],
   };
 
   const renderMenu = (items) => {
     return items.map((item, index) => (
       <>
-        <NavLink to={`${item.path}`} key={index}>
+        <NavLink to={`${item.link}`} key={index}>
           <li className="hover:bg-primary rounded-md text-black hover:text-white my-1">
             <a
               className={`flex items-center ${
-                location.pathname?.includes(item.path)
+                location.pathname?.includes(item.link)
                   ? "bg-primary text-white"
                   : ""
               }`}

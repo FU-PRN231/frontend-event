@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllEvent } from "../../api/eventApi";
+import { getAllAvailableEvent, getAllEvent } from "../../api/eventApi";
 import {
   formatDate,
   calculateCountdown,
@@ -45,7 +45,7 @@ const Home = () => {
   };
 
   const fetchData = async () => {
-    const res = await getAllEvent(1, 10);
+    const res = await getAllAvailableEvent(1, 10);
     if (res.isSuccess) {
       setEvents(res.result.items);
       const initialCountdowns = {};
