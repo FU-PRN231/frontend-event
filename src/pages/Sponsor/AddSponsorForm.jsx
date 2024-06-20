@@ -54,12 +54,12 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="mb-4">
-          <label
+          {/* <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="event"
           >
             Chọn Event
-          </label>
+          </label> */}
           <select
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="event"

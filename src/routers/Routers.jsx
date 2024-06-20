@@ -10,6 +10,7 @@ import LoginPage from "../pages/Common/LoginPage";
 import PersonalInformation from "../pages/Common/PersonalInformation";
 import VerifyPayment from "../pages/Common/VerifyPayment";
 import ManageUser from "../pages/CommonManager/ManageUser";
+import CheckInModal from "../pages/Orgainization/CheckInModal.jsx";
 import SurveyModal from "../pages/Orgainization/SurveyModal";
 import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
@@ -66,14 +67,14 @@ function Routers() {
       ],
     },
     {
-      path: "organization",
-      element: <ManagementLayOut />,
+      path: "org",
+      //element: <ManagementLayOut />,
       children: [
-        { index: true, element: <Navigate to="surveys" replace /> },
         {
           path: "surveys",
           element: <SurveyModal />,
         },
+        { path: "manage-checkin", element: <CheckInModal /> },
       ],
     },
 

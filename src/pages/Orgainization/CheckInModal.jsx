@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { BsFillPersonFill } from "react-icons/bs";
 import QrReader from "react-qr-scanner";
 import {
   addAttendee,
@@ -16,6 +17,7 @@ const CheckInModal = () => {
   const [events, setEvents] = useState([]);
   const [attendees, setAttendees] = useState([]);
 
+  // Function to fetch events
   const fetchEvents = async () => {
     try {
       const eventsData = await getAllEvent(1, 100);
@@ -25,6 +27,7 @@ const CheckInModal = () => {
     }
   };
 
+  // Function to fetch attendees by event ID
   const fetchAttendees = async (eventId) => {
     try {
       const attendeesData = await getAllAttendeesByEventId(eventId);
@@ -34,24 +37,22 @@ const CheckInModal = () => {
     }
   };
 
+  // Fetch events on component mount
   useEffect(() => {
     fetchEvents();
   }, []);
 
+  // Fetch attendees when selectedEventId changes
   useEffect(() => {
     if (selectedEventId) {
       fetchAttendees(selectedEventId);
     }
   }, [selectedEventId]);
 
-  const getAccountIdByName = async (name) => {
-    // Simulated function to get accountId by name. Replace with actual implementation.
-    // This is just a placeholder, as the original request did not include this part.
-    return "06e8f582-cce4-4866-90e2-e3a3cfd3edd3"; // Example accountId
-  };
-
+  // Function to manage check-in by QR code
   const manageCheckInByQr = async (accountId) => {
     try {
+      // Generate QR code for the account ID
       const qrCodeResponse = await generateAccountQrCode(accountId);
 
       if (!qrCodeResponse.isSuccess) {
@@ -60,19 +61,21 @@ const CheckInModal = () => {
 
       const qrString = qrCodeResponse.result;
 
+      // Decode the QR code to get account details
       const decodeResponse = await decodeQrCode(qrString);
 
       if (!decodeResponse.isSuccess) {
         throw new Error(decodeResponse.messages.join(", "));
       }
 
+      // Add attendee to the selected event
       const attendeeResponse = await addAttendee(accountId, selectedEventId);
 
       if (!attendeeResponse.isSuccess) {
         throw new Error(attendeeResponse.messages.join(", "));
       }
 
-      // Refresh attendees list
+      // Refresh attendees list for the selected event
       fetchAttendees(selectedEventId);
 
       return {
@@ -89,6 +92,7 @@ const CheckInModal = () => {
     }
   };
 
+  // Function to handle form submission
   const onSubmit = async (data) => {
     try {
       const accountId = await getAccountIdByName(data.name);
@@ -104,6 +108,7 @@ const CheckInModal = () => {
     }
   };
 
+  // Function to handle QR code scan
   const handleScan = async (data) => {
     if (data) {
       setValue("name", data.text);
@@ -125,8 +130,14 @@ const CheckInModal = () => {
     }
   };
 
+  // Function to handle QR code scan error
   const handleError = (err) => {
     console.error(err);
+  };
+
+  // Function to handle event selection change
+  const handleEventChange = (e) => {
+    setSelectedEventId(e.target.value);
   };
 
   return (
@@ -148,11 +159,11 @@ const CheckInModal = () => {
       <div className="mt-8 rounded-lg p-4 shadow-lg">
         <form onSubmit={handleSubmit(onSubmit)}>
           <select
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus"
             id="event"
             name="event"
             value={selectedEventId}
-            onChange={(e) => setSelectedEventId(e.target.value)}
+            onChange={handleEventChange}
           >
             <option value="">Chọn Event</option>
             {events.map((event) => (
@@ -161,12 +172,6 @@ const CheckInModal = () => {
               </option>
             ))}
           </select>
-          <input
-            type="text"
-            {...register("name", { required: true })}
-            placeholder="Enter Name"
-            className="w-full p-2 border rounded mt-4"
-          />
           <button
             type="submit"
             className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -192,6 +197,20 @@ const CheckInModal = () => {
         <h2 className="text-primary font-bold uppercase text-center text-md my-2">
           Attendees for Selected Event
         </h2>
+        <select
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus"
+          id="event"
+          name="event"
+          value={selectedEventId}
+          onChange={handleEventChange}
+        >
+          <option value="">Chọn Event</option>
+          {events.map((event) => (
+            <option key={event.id} value={event.id}>
+              {event.title}
+            </option>
+          ))}
+        </select>
         {attendees.length > 0 ? (
           <ul className="list-disc list-inside">
             {attendees.map((attendee) => (
@@ -199,7 +218,10 @@ const CheckInModal = () => {
             ))}
           </ul>
         ) : (
-          <p>No attendees found for this event.</p>
+          <div className="flex flex-col items-center justify-center h-32">
+            <BsFillPersonFill size={48} className="text-gray-300 mb-2" />
+            <p>Chưa có người tham gia sự kiện này.</p>
+          </div>
         )}
       </div>
     </div>
