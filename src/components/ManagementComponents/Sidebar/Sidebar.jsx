@@ -25,6 +25,11 @@ const SideBar = () => {
       { name: "Surveys", link: "/surveys" },
       { name: "Reports", link: "/reports" },
     ],
+    isPM: [
+      { name: "Dashboard", link: "/dashboard" },
+      { name: "Event", link: "create-event" },
+    ],
+
     PM: [
       { name: "Dashboard", link: "/dashboard" },
       { name: "Event", link: "create-event" },
@@ -33,6 +38,7 @@ const SideBar = () => {
       { name: "Dashboard", link: "/dashboard" },
       { name: "Sponsor", link: "/sponsor" },
     ],
+
   };
 
   const renderMenu = (items) => {
