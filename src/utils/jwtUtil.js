@@ -4,15 +4,12 @@ const assignRole = (userRole) => {
     return "isAdmin";
   } else if (userRole.includes("STAFF")) {
     return "isStaff";
-  } else if (userRole.includes("ORGANIZER")) {
-    return "isOrganizer";
-  } else if (userRole.includes("PM")) {
-    return "isPM";
+  } else if (userRole.includes("SHOP")) {
+    return "isShop";
   } else if (
     !userRole.includes("ADMIN") &&
     !userRole.includes("STAFF") &&
-    !userRole.includes("PM") &&
-    !userRole.includes("ORGANIZER")
+    !userRole.includes("SHOP")
   ) {
     return "isUser";
   }

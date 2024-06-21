@@ -7,17 +7,15 @@ import ErrorPage from "../pages/Common/ErrorPage";
 import EventDetail from "../pages/Common/Event/EventDetail";
 import Home from "../pages/Common/Home";
 import LoginPage from "../pages/Common/LoginPage";
-import PersonalInformation from "../pages/Common/PersonalInformation";
 import VerifyPayment from "../pages/Common/VerifyPayment";
-import ManageUser from "../pages/CommonManager/ManageUser";
-import CheckInModal from "../pages/Orgainization/CheckInModal.jsx";
 import SurveyModal from "../pages/Orgainization/SurveyModal";
 import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
-import TaskModal from "../pages/PM/TaskModal.jsx";
-import SponsorHistory from "../pages/Sponsor/SponsorHistory.jsx";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
+import PersonalInformation from "../pages/Common/PersonalInformation";
+import ManageUser from "../pages/CommonManager/ManageUser";
+
 function Routers() {
   const routing = useRoutes([
     {
@@ -38,13 +36,8 @@ function Routers() {
       ],
     },
     {
-      path: "/sponsor",
-      //element: <ManagementLayOut />,
-
-      children: [
-        { path: "dashboard", element: <SponsorModal /> },
-        { path: "history", element: <SponsorHistory /> },
-      ],
+      path: "/sponsor/",
+      children: [{ path: "dashboard", element: <SponsorModal /> }],
     },
     {
       path: "admin",
@@ -67,15 +60,19 @@ function Routers() {
       ],
     },
     {
+<<<<<<< HEAD
+      path: "organization",
+      // element: <ManagementLayOut />,
+=======
       path: "org",
       //element: <ManagementLayOut />,
-
+>>>>>>> parent of 1545f6c (Merge branch 'main' into Ann)
       children: [
+        { index: true, element: <Navigate to="surveys" replace /> },
         {
           path: "surveys",
           element: <SurveyModal />,
         },
-        { path: "manage-checkin", element: <CheckInModal /> },
       ],
     },
 
@@ -87,10 +84,6 @@ function Routers() {
         {
           path: "create-event",
           element: <CreateEventForm />,
-        },
-        {
-          path: "task",
-          element: <TaskModal />,
         },
       ],
     },

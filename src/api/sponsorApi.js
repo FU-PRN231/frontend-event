@@ -11,8 +11,19 @@ export const getAllSponsors = async () => {
   }
 };
 
-export const addSponsor = async (formData) => {
+export const addSponsor = async (eventId, sponsorDtos) => {
   try {
+    const formData = new FormData();
+    formData.append("EventId", eventId);
+
+    sponsorDtos.forEach((sponsor, index) => {
+      formData.append(`SponsorDtos[${index}].name`, sponsor.name);
+      formData.append(`SponsorDtos[${index}].description`, sponsor.description);
+      formData.append(`SponsorDtos[${index}].phoneNumber`, sponsor.phoneNumber);
+      formData.append(`SponsorDtos[${index}].email`, sponsor.email);
+      formData.append(`SponsorDtos[${index}].img`, sponsor.img);
+    });
+
     const res = await axios.post(`${baseUrl}/sponsor/add-sponsor`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -25,41 +36,14 @@ export const addSponsor = async (formData) => {
     throw err;
   }
 };
-export const getAllSponsorItemsOfEvent = async (
-  eventId,
-  pageNumber,
-  pageSize
-) => {
+export const getAllEvent = async (pageNumber, pageSize) => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/sponsor/get-all-sponsor-item-of-an-event/${eventId}/${pageNumber}/${pageSize}`
+    const res = await axios.get(
+      `${baseUrl}/event/get-all-event?pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
-
-    return response.data;
-  } catch (error) {
-    console.error("Error getting sponsor items of event:", error);
-    throw error;
-  }
-};
-
-export const getSponsorHistoryByEventId = async (
-  eventId,
-  pageNumber,
-  pageSize
-) => {
-  try {
-    const response = await axios.get(
-      `${baseUrl}/sponsor/get-sponsor-history-by-event-id/${eventId}/${pageNumber}/${pageSize}`,
-      {
-        headers: {
-          Accept: "text/plain",
-        },
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error("Error getting sponsor history by event ID:", error);
-    throw error;
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching events:", err);
+    return null;
   }
 };

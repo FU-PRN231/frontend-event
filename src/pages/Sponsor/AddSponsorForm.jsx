@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { getAllEvent } from "../../api/eventApi";
-import { addSponsor } from "../../api/sponsorApi";
+import { addSponsor, getAllEvent } from "../../api/sponsorApi";
 
 const AddSponsorForm = ({ onSponsorAdded }) => {
-  const { register, handleSubmit, control, reset } = useForm();
+  const [sponsorData, setSponsorData] = useState({
+    name: "",
+    description: "",
+    phoneNumber: "",
+    email: "",
+    img: null,
+  });
   const [events, setEvents] = useState([]);
   const [selectedEventId, setSelectedEventId] = useState("");
 
@@ -21,26 +25,23 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
     fetchEvents();
   }, []);
 
-  const onSubmit = async (data) => {
-    const formData = new FormData();
-    formData.append("EventId", selectedEventId);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSponsorData({ ...sponsorData, [name]: value });
+  };
 
-    // Append other sponsor data
-    const sponsorDto = {
-      name: data.name,
-      description: data.description,
-      phoneNumber: data.phoneNumber,
-      email: data.email,
-      img: data.img[0], // Assuming data.img is an array with a single file object
-    };
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setSponsorData({ ...sponsorData, img: file });
+  };
 
-    formData.append("SponsorDtos", JSON.stringify([sponsorDto]));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     try {
-      const res = await addSponsor(formData);
+      const res = await addSponsor(selectedEventId, [sponsorData]);
       if (res) {
         onSponsorAdded();
-        reset(); // Reset the form after successful submission
       }
     } catch (error) {
       console.error("Error adding sponsor:", error);
@@ -51,15 +52,15 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          {/* <label
+          <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="event"
           >
             Chọn Event
-          </label> */}
+          </label>
           <select
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="event"
@@ -68,78 +69,85 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
             onChange={(e) => setSelectedEventId(e.target.value)}
           >
             <option value="">Chọn Event</option>
-            {events.map((event) => (
-              <option key={event.id} value={event.id}>
-                {event.title}
-              </option>
-            ))}
+            {events &&
+              events.map((event) => (
+                <option key={event.id} value={event.id}>
+                  {event.title}
+                </option>
+              ))}
           </select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="name"
-            >
-              Tên nhà tài trợ
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="name"
-              type="text"
-              {...register("name")}
-              placeholder="Nhập tên nhà tài trợ"
-            />
-          </div>
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="name"
+          >
+            Tên nhà tài trợ
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="name"
+            type="text"
+            name="name"
+            value={sponsorData.name}
+            onChange={handleChange}
+            placeholder="Nhập tên nhà tài trợ"
+          />
+        </div>
 
-          <div className="flex flex-col mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="description"
-            >
-              Mô tả chi tiết
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="description"
-              type="text"
-              {...register("description")}
-              placeholder="Nhập mô tả chi tiết về nhà tài trợ"
-            />
-          </div>
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="description"
+          >
+            Mô tả chi tiết
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="description"
+            type="text"
+            name="description"
+            value={sponsorData.description}
+            onChange={handleChange}
+            placeholder="Nhập mô tả chi tiết về nhà tài trợ"
+          />
+        </div>
 
-          <div className="flex flex-col mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="phoneNumber"
-            >
-              Số điện thoại
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="phoneNumber"
-              type="text"
-              {...register("phoneNumber")}
-              placeholder="Nhập số điện thoại"
-            />
-          </div>
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="phoneNumber"
+          >
+            SDT
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="phoneNumber"
+            type="text"
+            name="phoneNumber"
+            value={sponsorData.phoneNumber}
+            onChange={handleChange}
+            placeholder="Nhập số điện thoại"
+          />
+        </div>
 
-          <div className="flex flex-col mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="email"
-            >
-              Email
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="email"
-              type="text"
-              {...register("email")}
-              placeholder="Nhập email liên hệ"
-            />
-          </div>
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="email"
+          >
+            Email
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="email"
+            type="text"
+            name="email"
+            value={sponsorData.email}
+            onChange={handleChange}
+            placeholder="Nhập email liên hệ"
+          />
         </div>
 
         <div className="mb-4">
@@ -153,11 +161,12 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="img"
             type="file"
-            {...register("img")}
+            name="img"
+            onChange={handleFileChange}
           />
         </div>
 
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-between">
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

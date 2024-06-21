@@ -4,11 +4,34 @@ import { NavLink, useLocation } from "react-router-dom";
 
 const SideBar = () => {
   const roleName = useSelector((state) => state.user?.role || "");
+  const [isOpen, setIsOpen] = useState(false);
 
   const location = useLocation();
 
   const menuItems = {
-    ADMIN: [
+    isShop: [
+      {
+        name: "Thống kê",
+        icon: <i className="fa-solid fa-chart-line"></i>,
+        path: "dashboard",
+      },
+      {
+        name: "Sản phẩm",
+        icon: <i className="fa-solid fa-shirt"></i>,
+        path: "product",
+      },
+      {
+        name: "Đơn hàng",
+        icon: <i className="fa-solid fa-list"></i>,
+        path: "orders",
+      },
+      {
+        name: "Gói dịch vụ",
+        icon: <i className="fa-solid fa-lightbulb"></i>,
+        path: "package",
+      },
+    ],
+    isAdmin: [
       {
         name: "Thống kê",
         icon: <i className="fa-solid fa-chart-line"></i>,
@@ -20,16 +43,39 @@ const SideBar = () => {
         path: "manage-user",
       },
     ],
-    ORGANIZER: [
+    isStaff: [
+      {
+        name: "Thống kê",
+        icon: <i className="fa-solid fa-chart-line"></i>,
+        path: "dashboard",
+      },
+      {
+        name: "Đối tác",
+        icon: <i className="fa-solid fa-handshake-simple"></i>,
+        path: "shop",
+      },
+      {
+        name: "Sản phẩm",
+        icon: <i className="fa-solid fa-shirt"></i>,
+        path: "product",
+      },
+      {
+        name: "Gói dịch vụ",
+        icon: <i className="fa-solid fa-box-open"></i>,
+        path: "package",
+      },
+      {
+        name: "Đơn hàng",
+        icon: <i className="fa-solid fa-bag-shopping"></i>,
+        path: "order",
+      },
+    ],
+    isOrganzation: [
       { name: "Dashboard", link: "/dashboard" },
       { name: "Surveys", link: "/surveys" },
       { name: "Reports", link: "/reports" },
     ],
-    isPM: [
-      { name: "Dashboard", link: "/dashboard" },
-      { name: "Event", link: "create-event" },
-    ],
-
+<<<<<<< HEAD
     PM: [
       { name: "Dashboard", link: "/dashboard" },
       { name: "Event", link: "create-event" },
@@ -38,7 +84,12 @@ const SideBar = () => {
       { name: "Dashboard", link: "/dashboard" },
       { name: "Sponsor", link: "/sponsor" },
     ],
-
+=======
+    isPM: [
+      { name: "Dashboard", link: "/dashboard" },
+      { name: "Event", link: "create-event" },
+    ],
+>>>>>>> parent of 1545f6c (Merge branch 'main' into Ann)
   };
 
   const renderMenu = (items) => {
