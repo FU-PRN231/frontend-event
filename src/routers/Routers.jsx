@@ -60,8 +60,8 @@ function Routers() {
       ],
     },
     {
-      path: "organization",
-      // element: <ManagementLayOut />,
+      path: "org",
+      element: <ManagementLayOut />,
       children: [
         { index: true, element: <Navigate to="surveys" replace /> },
         {

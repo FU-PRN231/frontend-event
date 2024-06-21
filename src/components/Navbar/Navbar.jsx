@@ -44,22 +44,22 @@ const NavBar = () => {
           <li>
             <NavLink to="/personal-information">Tài khoản </NavLink>
           </li>
-          {roleName === "isAdmin" && (
+          {roleName === "PM" && (
+            <NavLink to="/pm">
+              <li>
+                <span>Trang quản trị</span>
+              </li>
+            </NavLink>
+          )}
+          {roleName === "ADMIN" && (
             <NavLink to="/admin">
               <li>
                 <span>Trang quản trị</span>
               </li>
             </NavLink>
           )}
-          {roleName === "isStaff" && (
-            <NavLink to="/staff">
-              <li>
-                <span>Trang quản trị</span>
-              </li>
-            </NavLink>
-          )}
-          {roleName === "isShop" && (
-            <NavLink to="/management-shop">
+          {roleName === "ORGANIZER" && (
+            <NavLink to="/org">
               <li>
                 <span>Trang quản trị</span>
               </li>
