@@ -16,8 +16,6 @@ import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
-import PersonalInformation from "../pages/Common/PersonalInformation";
-import ManageUser from "../pages/CommonManager/ManageUser";
 import ManagementEvent from "../pages/CommonManager/ManagementEvent";
 
 function Routers() {
