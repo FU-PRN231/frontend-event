@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Form,
   Input,
@@ -12,19 +12,8 @@ import {
   Col,
   Card,
   Divider,
-  Upload,
-  message,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import { sponsorType } from "../../utils/labelEnum";
-import { Trash2Icon, TrashIcon } from "lucide-react";
-import { createEvent } from "../../api/eventApi";
-import { formatDateToISOString } from "../../utils/util";
-import { getAllAvailableLocations } from "../../api/locationApi";
-import { getAllSponsors } from "../../api/sponsorApi";
-import { getAllOrganizations } from "../../api/organizationApi";
-import { useSelector } from "react-redux";
-import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
+
 const CreateEventForm = () => {
   const [fileSpeakerList, setFileSpeakerList] = useState([[]]);
   const [location, setLocation] = useState([]);
@@ -130,59 +119,24 @@ const CreateEventForm = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+  const locationIds = ["Location 1", "Location 2", "Location 3"];
+  const organizationIds = [
+    "Organization 1",
+    "Organization 2",
+    "Organization 3",
+  ];
 
-  const handleSpeakerUpload = (event, index) => {
-    debugger;
-    const file = event.target.files[0];
-    setFileSpeakerList((prevSpeakers) => {
-      const newSpeakers = [...prevSpeakers];
-      newSpeakers[index].file = file;
-      return newSpeakers;
-    });
-  };
-  console.log(fileSpeakerList);
-  const handleChangeEventDate = async (value) => {
-    debugger;
-    const data = await getAllAvailableLocations(
-      formatDateToISOString(new Date(value[0])),
-      formatDateToISOString(new Date(value[1]))
-    );
-    if (data.isSuccess) {
-      setLocation(data.result);
-    }
-  };
-  const fetchData = async () => {
-    const [data1, data2] = await Promise.all([
-      getAllOrganizations(1, 100),
-      getAllSponsors(),
-    ]);
-    if (data1.isSuccess && data2.isSuccess) {
-      debugger;
-      setOrganization(data1.result.items);
-      setSponsor(data2.result.items);
-    }
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const handleUpload = (event) => {
-    setFiles([...event.target.files]);
-  };
   return (
     <div className="container">
-      <LoadingComponent isLoading={isLoading} />
-
       <Form
         name="basic"
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        form={form}
       >
-        <div className="my-10">
-          <div>
-            <div className="shadow-md rounded-md p-4">
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12}>
+            <Card title="Thông tin sự kiện">
               {/* <Form.Item
                 label="User ID"
                 name="userId"
@@ -192,9 +146,7 @@ const CreateEventForm = () => {
               >
                 <Input style={{ width: "100%" }} placeholder="User ID" />
               </Form.Item> */}
-              <h1 className="text-center text-primary font-bold text-xl my-4">
-                Thông tin sự kiện
-              </h1>
+
               <Form.Item
                 label="Tiêu đề"
                 name="title"
@@ -218,6 +170,10 @@ const CreateEventForm = () => {
                   placeholder="Mô tả sự kiện"
                 />
               </Form.Item>
+            </Card>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Card title="Thông tin về thời gian sự kiện">
               <Form.Item
                 label="Ngày sự kiện"
                 name="eventDate"
@@ -225,30 +181,45 @@ const CreateEventForm = () => {
                   { required: true, message: "Please input the event date!" },
                 ]}
               >
-                <DatePicker.RangePicker
+                <DatePicker
+                  style={{ width: "100%" }}
                   showTime
-                  format="DD-MM-YYYY HH:mm:ss"
-                  placeholder={["Thời gian bắt đầu", "Thời gian kết thúc"]}
-                  onChange={(value) => handleChangeEventDate(value)}
+                  placeholder="Event Date"
                 />
               </Form.Item>
 
               <Form.Item
-                name={["dateRange"]}
-                label="Thời gian mở bán vé"
+                label="Thời gian bắt đầu"
+                name="startTime"
                 rules={[
-                  {
-                    required: true,
-                    message: "Thời gian bắt đầu và kết thúc bắt buộc",
-                  },
+                  { required: true, message: "Please input the start time!" },
                 ]}
               >
-                <DatePicker.RangePicker
-                  showTime
-                  format="DD-MM-YYYY HH:mm:ss"
-                  placeholder={["Thời gian bắt đầu", "Thời gian kết thúc"]}
+                <TimePicker
+                  style={{ width: "100%" }}
+                  placeholder="Thời gian bắt đầu"
                 />
               </Form.Item>
+
+              <Form.Item
+                label="Thời gian kết thúc"
+                name="endTime"
+                rules={[
+                  { required: true, message: "Please input the end time!" },
+                ]}
+              >
+                <TimePicker
+                  style={{ width: "100%" }}
+                  placeholder="Thời gian kết thúc"
+                />
+              </Form.Item>
+            </Card>
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12}>
+            <Card title="Địa điểm và ban tổ chức">
               <Form.Item
                 label="Địa điểm sự kiện"
                 name="locationId"
@@ -257,9 +228,9 @@ const CreateEventForm = () => {
                 ]}
               >
                 <Select style={{ width: "100%" }} placeholder="Chọn địa điểm">
-                  {location.map((item) => (
-                    <Select.Option key={item.id} value={item.id}>
-                      {`${item.name} - ${item.address}`}
+                  {locationIds.map((id) => (
+                    <Select.Option key={id} value={id}>
+                      {id}
                     </Select.Option>
                   ))}
                 </Select>
@@ -279,54 +250,27 @@ const CreateEventForm = () => {
                   style={{ width: "100%" }}
                   placeholder="Chọn ban tổ chức sự kiện"
                 >
-                  {organization.map((item) => (
-                    <Option key={item.id} value={item.id}>
-                      {`${item.name} - ${item.contactEmail} - ${item.address}`}
-                    </Option>
+                  {organizationIds.map((id) => (
+                    <Select.Option key={id} value={id}>
+                      {id}
+                    </Select.Option>
                   ))}
                 </Select>
               </Form.Item>
-              <div className="form-group">
-                <label className="label">
-                  <span className="label-text">Hình ảnh sự kiện</span>
-                </label>
-                <input
-                  type="file"
-                  multiple
-                  onChange={handleUpload}
-                  className="input input-bordered"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-4 rounded-md shadow-md p-4">
-          <div>
-            <div>
+            </Card>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Card title="Hạng ghế">
               <Form.List name="createSeatRankDtoRequests">
                 {(fields, { add, remove }) => (
-                  <div>
-                    <h1 className="font-bold text-center text-primary text-xl">
-                      Hạng ghế
-                    </h1>
-                    {fields.map((field, index) => (
-                      <div
+                  <>
+                    {fields.map((field) => (
+                      <Row
                         gutter={16}
                         key={field.key}
                         style={{ marginBottom: 16 }}
                       >
-                        <div className="relative">
-                          <div className="grid grid-cols-12">
-                            <Divider orientation="left" className="col-span-12">
-                              Hạng ghế {index + 1}
-                            </Divider>
-
-                            <TrashIcon
-                              className="text-red-500 absolute right-0 cursor-pointer"
-                              onClick={() => remove(field.name)}
-                            />
-                          </div>
+                        <Col xs={24} sm={12}>
                           <Form.Item
                             {...field}
                             name={[field.name, "name"]}
@@ -338,67 +282,70 @@ const CreateEventForm = () => {
                               },
                             ]}
                           >
-                            <Input
-                              placeholder="Tên hạng ghế"
-                              className="w-full"
-                            />
+                            <Input placeholder="Tên hạng ghế" />
                           </Form.Item>
-                        </div>
-                        <Col xs={24} sm={24}>
+                        </Col>
+                        <Col xs={24} sm={12}>
                           <Form.Item
                             {...field}
-                            name={[field.name, "dateRange"]}
-                            label="Thời gian mở bán"
+                            name={[field.name, "startTime"]}
+                            label="Thời gian bắt đầu"
                             rules={[
                               {
                                 required: true,
-                                message:
-                                  "Thời gian bắt đầu và kết thúc bắt buộc",
+                                message: "Thời gian bắt đầu bắt buộc",
                               },
                             ]}
                           >
-                            <DatePicker.RangePicker
-                              showTime
-                              format="DD-MM-YYYY HH:mm:ss"
-                              placeholder={[
-                                "Thời gian bắt đầu",
-                                "Thời gian kết thúc",
-                              ]}
-                              className="w-full"
+                            <TimePicker placeholder="Thời gian bắt đầu" />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12}>
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "endTime"]}
+                            label="Thời gian kết thúc"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Thời gian kết thúc bắt buộc",
+                              },
+                            ]}
+                          >
+                            <TimePicker placeholder="Thời gian kết thúc" />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={24} md={12} lg={8}>
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "remainingCapacity"]}
+                            label="Số lượng còn lại"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Số lượng còn lại bắt buộc",
+                              },
+                            ]}
+                          >
+                            <InputNumber
+                              min={0}
+                              placeholder="Số lượng còn lại"
                             />
                           </Form.Item>
                         </Col>
-                        <Row>
-                          <Col xs={24} sm={12}>
-                            <Form.Item
-                              {...field}
-                              name={[field.name, "price"]}
-                              label="Giá"
-                              rules={[
-                                { required: true, message: "Giá bắt buộc" },
-                              ]}
-                            >
-                              <InputNumber min={0} placeholder="Giá" />
-                            </Form.Item>
-                          </Col>
-                          <Col xs={24} sm={12}>
-                            <Form.Item
-                              {...field}
-                              name={[field.name, "quantity"]}
-                              label="Số lượng"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "Số lượng bắt buộc",
-                                },
-                              ]}
-                            >
-                              <InputNumber min={0} placeholder="Số lượng" />
-                            </Form.Item>
-                          </Col>
-                        </Row>
-
-                        <div>
+                        <Col xs={24} sm={12}>
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "price"]}
+                            label="Giá"
+                            rules={[
+                              { required: true, message: "Giá bắt buộc" },
+                            ]}
+                          >
+                            <InputNumber min={0} placeholder="Giá" />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12}>
                           <Form.Item
                             {...field}
                             name={[field.name, "description"]}
@@ -407,216 +354,42 @@ const CreateEventForm = () => {
                               { required: true, message: "Mô tả bắt buộc" },
                             ]}
                           >
-                            <Input.TextArea
-                              placeholder="Mô tả"
-                              className="w-full"
-                            />
+                            <Input.TextArea placeholder="Mô tả" />
                           </Form.Item>
-                        </div>
-                      </div>
+                        </Col>
+                        <Col xs={24} sm={12}>
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "quantity"]}
+                            label="Số lượng"
+                            rules={[
+                              { required: true, message: "Số lượng bắt buộc" },
+                            ]}
+                          >
+                            <InputNumber min={0} placeholder="Số lượng" />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12} style={{ textAlign: "right" }}>
+                          <Button onClick={() => remove(field.name)}>
+                            Xóa
+                          </Button>
+                        </Col>
+                      </Row>
                     ))}
                     <Form.Item>
-                      <Button
-                        className="bg-primary text-white"
-                        onClick={() => add()}
-                        block
-                      >
+                      <Button type="dashed" onClick={() => add()} block>
                         Thêm hạng ghế
                       </Button>
                     </Form.Item>
-                  </div>
+                  </>
                 )}
               </Form.List>
-            </div>
-          </div>
-        </div>
-        <div className="grid md:grid-cols-2 space-x-3 mt-4">
-          <div className="shadow-md rounded-md p-4">
-            <h1 className="text-xl text-center font-bold text-primary">
-              Nhà tài trợ
-            </h1>
+            </Card>
+          </Col>
+        </Row>
 
-            <Form.List name="sponsors">
-              {(fields, { add, remove }) => (
-                <>
-                  {fields.map((field, index) => (
-                    <div key={field.key}>
-                      <div className="relative">
-                        <div className="grid grid-cols-12">
-                          <Divider orientation="left" className="col-span-12">
-                            Nhà tài trợ {index + 1}
-                          </Divider>
-
-                          <TrashIcon
-                            className="text-red-500 absolute right-0 cursor-pointer"
-                            onClick={() => remove(field.name)}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <Form.Item
-                          label="Hình thức tài trợ"
-                          name={[field.name, "sponsorType"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Vui lòng chọn hình thức tài trợ",
-                            },
-                          ]}
-                        >
-                          <Select placeholder="Chọn hình thức tài trợ">
-                            {Object.entries(sponsorType).map(
-                              ([value, label]) => (
-                                <Select.Option key={value} value={value}>
-                                  {label}
-                                </Select.Option>
-                              )
-                            )}
-                          </Select>
-                        </Form.Item>
-                        <Form.Item
-                          label="Chọn nhà tài trợ"
-                          name={[field.name, "sponsorId"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please input the sponsor ID!",
-                            },
-                          ]}
-                        >
-                          <Select placeholder="Chọn nhà tài trợ">
-                            {sponsor.map((item) => (
-                              <Select.Option key={item.id} value={item.id}>
-                                {item.name}
-                              </Select.Option>
-                            ))}
-                          </Select>
-                        </Form.Item>
-                        <Form.Item
-                          name={[field.name, "description"]}
-                          label="Mô tả"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please input the sponsor description!",
-                            },
-                          ]}
-                        >
-                          <Input.TextArea placeholder="Mô tả thêm về nhà tài trợ" />
-                        </Form.Item>
-
-                        <Form.Item
-                          label="Số tiền tài trợ"
-                          name={[field.name, "moneySponsorAmount"]}
-                        >
-                          <InputNumber
-                            className="w-full"
-                            min={0}
-                            placeholder="Nhập số tiền tài trợ"
-                          />
-                        </Form.Item>
-                      </div>
-                    </div>
-                  ))}
-                  <Button
-                    className="bg-primary text-white"
-                    onClick={() => add()}
-                    block
-                  >
-                    Thêm nhà tài trợ
-                  </Button>
-                </>
-              )}
-            </Form.List>
-          </div>
-
-          <div className="rounded-md shadow-md p-4">
-            <h1 className="text-center text-primary font-bold text-xl">
-              Diễn giả
-            </h1>
-            <Form.List name="speakers">
-              {(fields, { add, remove }) => (
-                <>
-                  {fields.map((field, index) => (
-                    <div key={field.key}>
-                      <div className="relative">
-                        <div className="grid grid-cols-12">
-                          <Divider orientation="left" className="col-span-12">
-                            Diễn giả {index + 1}
-                          </Divider>
-
-                          <TrashIcon
-                            className="text-red-500 absolute right-0 cursor-pointer"
-                            onClick={() => remove(field.name)}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <Form.Item
-                          label="Tên diễn giả"
-                          name={[field.name, "name"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please input the speaker's name!",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="Tên diễn giả" />
-                        </Form.Item>
-
-                        <Form.Item
-                          label="Mô tả"
-                          name={[field.name, "description"]}
-                          rules={[
-                            {
-                              required: true,
-                              message:
-                                "Please input the speaker's description!",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="Mô tả" />
-                        </Form.Item>
-
-                        <Form.Item
-                          label="Hình"
-                          name={[field.name, `image${index}`]}
-                          required
-                        >
-                          <div className="form-group">
-                            <label className="label">
-                              <span className="label-text">
-                                Hình ảnh sự kiện
-                              </span>
-                            </label>
-                            <input
-                              type="file"
-                              multiple
-                              onChange={(event) =>
-                                handleSpeakerUpload(event, index)
-                              }
-                              className="input input-bordered"
-                            />
-                          </div>
-                        </Form.Item>
-                      </div>
-                    </div>
-                  ))}
-                  <Button
-                    className="bg-primary text-white"
-                    onClick={() => add()}
-                    block
-                  >
-                    Thêm diễn giả
-                  </Button>
-                </>
-              )}
-            </Form.List>
-          </div>
-        </div>
-        <div>
-          <div>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={24} md={24} lg={{ span: 8, offset: 8 }}>
             <Form.Item>
               <Button
                 type="primary"
@@ -626,8 +399,8 @@ const CreateEventForm = () => {
                 Tạo sự kiện
               </Button>
             </Form.Item>
-          </div>
-        </div>
+          </Col>
+        </Row>
       </Form>
     </div>
   );

@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { getAllAvailableEvent, getAllEvent } from "../../api/eventApi";
+import { useNavigate } from "react-router-dom";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import { getAllAvailableEvent } from "../../api/eventApi";
+import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import {
-  formatDate,
   calculateCountdown,
+  formatDate,
   formatDateTime,
 } from "../../utils/util";
-import { useNavigate } from "react-router-dom";
-import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 const Home = () => {
   const [events, setEvents] = useState([]);
   const [countdowns, setCountdowns] = useState({});

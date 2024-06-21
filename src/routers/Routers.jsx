@@ -7,7 +7,10 @@ import ErrorPage from "../pages/Common/ErrorPage";
 import EventDetail from "../pages/Common/Event/EventDetail";
 import Home from "../pages/Common/Home";
 import LoginPage from "../pages/Common/LoginPage";
+import PersonalInformation from "../pages/Common/PersonalInformation";
 import VerifyPayment from "../pages/Common/VerifyPayment";
+import ManageUser from "../pages/CommonManager/ManageUser";
+import CheckInModal from "../pages/Orgainization/CheckinModal";
 import SurveyModal from "../pages/Orgainization/SurveyModal";
 import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
@@ -38,7 +41,10 @@ function Routers() {
     },
     {
       path: "/sponsor/",
-      children: [{ path: "dashboard", element: <SponsorModal /> }],
+      children: [
+        { path: "dashboard", element: <SponsorModal /> },
+        { path: "manage-checkin", element: <CheckInModal /> },
+      ],
     },
     {
       path: "admin",
@@ -63,12 +69,14 @@ function Routers() {
     {
       path: "org",
       element: <ManagementLayOut />,
+
       children: [
         { index: true, element: <Navigate to="surveys" replace /> },
         {
           path: "surveys",
           element: <SurveyModal />,
         },
+        { path: "manage-checkin", element: <CheckInModal /> },
       ],
     },
 
