@@ -27,7 +27,7 @@ const SideBar = () => {
     ],
     PM: [
       { name: "Dashboard", link: "/dashboard" },
-      { name: "Event", link: "create-event" },
+      { name: "Event", link: "event" },
     ],
     SPONSOR: [
       { name: "Dashboard", link: "/dashboard" },

@@ -96,6 +96,7 @@ const EventDetail = () => {
     slidesToShow: 3,
     slidesToScroll: 3,
   };
+  console.log(eventData.speakers);
   return (
     <div className={`container mx-auto py-12 ${sectionMargin}`}>
       <h2
@@ -226,16 +227,16 @@ const EventDetail = () => {
         <h3 className={`${titleFontSize} font-bold ${titleMargin}`}>
           Diễn giả
         </h3>
-        <Slider {...settingsSpeaker}>
-          {eventData.speakers?.map((speaker) => (
+        <div className="grid grid-cols-4">
+          {eventData.speakers?.map((speaker, index) => (
             <div
-              key={speaker.id}
+              key={index}
               className={`bg-white rounded-lg shadow-md overflow-hidden ${cardPadding}`}
             >
               <img
                 src={speaker.img}
                 alt={speaker.name}
-                className="w-full h-48 object-cover rounded-lg"
+                className="w-full h-auto object-cover rounded-lg"
               />
               <div className={cardPadding}>
                 <h4 className={`${subtitleFontSize} font-bold mb-2`}>
@@ -245,13 +246,13 @@ const EventDetail = () => {
               </div>
             </div>
           ))}
-        </Slider>
+        </div>
       </div>
       <div className={sectionMargin}>
         <h3 className={`${titleFontSize} font-bold ${titleMargin}`}>
           Nhà tài trợ
         </h3>
-        <Slider {...settingsSpeaker}>
+        <div className="grid grid-cols-3">
           {eventData.eventSponsors?.map((sponsor) => (
             <div
               key={sponsor.id}
@@ -260,7 +261,7 @@ const EventDetail = () => {
               <img
                 src={sponsor.sponsor.img}
                 alt={sponsor.sponsor.name}
-                className="w-full min-h-48 object-contain rounded-lg"
+                className="w-full min-h-auto object-contain rounded-lg"
               />
               <div className={cardPadding}>
                 <h4 className={`${subtitleFontSize} font-bold mb-2`}>
@@ -270,7 +271,7 @@ const EventDetail = () => {
               </div>
             </div>
           ))}
-        </Slider>
+        </div>
       </div>
       <div className={sectionMargin}>
         <h3 className={`${titleFontSize} font-bold ${titleMargin}`}>

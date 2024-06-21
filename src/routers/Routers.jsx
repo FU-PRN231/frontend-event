@@ -15,6 +15,7 @@ import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
 import PersonalInformation from "../pages/Common/PersonalInformation";
 import ManageUser from "../pages/CommonManager/ManageUser";
+import ManagementEvent from "../pages/CommonManager/ManagementEvent";
 
 function Routers() {
   const routing = useRoutes([
@@ -77,7 +78,11 @@ function Routers() {
       children: [
         { index: true, element: <Navigate to="create-event" replace /> },
         {
-          path: "create-event",
+          path: "event",
+          element: <ManagementEvent />,
+        },
+        {
+          path: "event/create-event",
           element: <CreateEventForm />,
         },
       ],
