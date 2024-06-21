@@ -50,7 +50,7 @@ const Home = () => {
       setEvents(res.result.items);
       const initialCountdowns = {};
       res.result.items.forEach((event, index) => {
-        initialCountdowns[index] = calculateCountdown(event.eventDate);
+        initialCountdowns[index] = calculateCountdown(event.startEventDate);
       });
       setCountdowns(initialCountdowns);
     }
@@ -63,7 +63,7 @@ const Home = () => {
     const interval = setInterval(() => {
       const newCountdowns = {};
       events.forEach((event, index) => {
-        newCountdowns[index] = calculateCountdown(event.eventDate);
+        newCountdowns[index] = calculateCountdown(event.startEventDate);
       });
       setCountdowns(newCountdowns);
     }, 1000);
@@ -110,7 +110,7 @@ const Home = () => {
                   <div className="flex items-center mb-2">
                     <i className="fas fa-calendar-alt text-[#0c4a6e] mr-2"></i>
                     <span className="text-gray-600">
-                      {formatDate(event.eventDate)}
+                      {formatDate(event.startEventDate)}
                     </span>
                   </div>
                   <div className="flex items-center mb-2">

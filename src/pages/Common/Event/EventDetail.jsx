@@ -25,7 +25,7 @@ const EventDetail = () => {
     const res = await getEventById(id);
     if (res.isSuccess) {
       setEventData(res.result);
-      setCountdown(calculateCountdown(res.result.event?.eventDate));
+      setCountdown(calculateCountdown(res.result.event?.startEventDate));
     }
   };
 
@@ -36,7 +36,7 @@ const EventDetail = () => {
   useEffect(() => {
     if (eventData) {
       const interval = setInterval(() => {
-        setCountdown(calculateCountdown(eventData.event?.eventDate));
+        setCountdown(calculateCountdown(eventData.event?.startEventDate));
       }, 1000);
       return () => clearInterval(interval);
     }
@@ -142,7 +142,7 @@ const EventDetail = () => {
                 className={`fas fa-calendar-alt text-${primaryColor} mr-2`}
               ></i>
               <span className="text-gray-600">
-                {formatDate(eventData.event?.eventDate)}
+                {formatDate(eventData.event?.startEventDate)}
               </span>
             </div>
             <div className="flex items-center mb-4">
