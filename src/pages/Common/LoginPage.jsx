@@ -113,7 +113,7 @@ const LoginPage = () => {
           decode(localStorage.getItem("accessToken")).accountId,
           localStorage.getItem("accessToken")
         );
-        dispatch(author(result?.result?.mainRole));
+        dispatch(author(decode(localStorage.getItem("accessToken")).role));
         if (fetchAccount.isSuccess) {
           const userAccount = fetchAccount.result;
           dispatch(login(userAccount));
@@ -160,7 +160,9 @@ const LoginPage = () => {
                         decode(localStorage.getItem("accessToken")).accountId,
                         localStorage.getItem("accessToken")
                       );
-                      dispatch(author(data.result.mainRole));
+                      dispatch(
+                        author(decode(localStorage.getItem("accessToken")).role)
+                      );
                       if (fetchAccount.isSuccess) {
                         const userAccount = fetchAccount.result;
                         dispatch(login(userAccount));
