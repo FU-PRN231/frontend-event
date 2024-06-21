@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
+import { getAllAvailableEvent, getAllEvent } from "../../api/eventApi";
+=======
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import QrReader from "react-qr-scanner";
+>>>>>>> parent of 1545f6c (Merge branch 'main' into Ann)
 import {
   formatDate,
   calculateCountdown,
@@ -43,12 +50,24 @@ const Home = () => {
     autoplaySpeed: 3000,
   };
 
+<<<<<<< HEAD
+  const fetchData = async () => {
+    const res = await getAllAvailableEvent(1, 10);
+    if (res.isSuccess) {
+      setEvents(res.result.items);
+      const initialCountdowns = {};
+      res.result.items.forEach((event, index) => {
+        initialCountdowns[index] = calculateCountdown(event.eventDate);
+      });
+      setCountdowns(initialCountdowns);
+=======
   const fetchAttendees = async (eventId) => {
     try {
       const attendeesData = await getAllAttendeesByEventId(eventId);
       setAttendees(attendeesData.result.items);
     } catch (error) {
       console.error("Error fetching attendees:", error);
+>>>>>>> parent of 1545f6c (Merge branch 'main' into Ann)
     }
   };
 

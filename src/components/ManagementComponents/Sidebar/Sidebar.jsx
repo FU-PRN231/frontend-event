@@ -75,6 +75,7 @@ const SideBar = () => {
       { name: "Surveys", link: "/surveys" },
       { name: "Reports", link: "/reports" },
     ],
+<<<<<<< HEAD
     PM: [
       { name: "Dashboard", link: "/dashboard" },
       { name: "Event", link: "create-event" },
@@ -83,6 +84,12 @@ const SideBar = () => {
       { name: "Dashboard", link: "/dashboard" },
       { name: "Sponsor", link: "/sponsor" },
     ],
+=======
+    isPM: [
+      { name: "Dashboard", link: "/dashboard" },
+      { name: "Event", link: "create-event" },
+    ],
+>>>>>>> parent of 1545f6c (Merge branch 'main' into Ann)
   };
 
   const renderMenu = (items) => {

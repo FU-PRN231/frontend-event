@@ -60,8 +60,13 @@ function Routers() {
       ],
     },
     {
+<<<<<<< HEAD
       path: "organization",
       // element: <ManagementLayOut />,
+=======
+      path: "org",
+      //element: <ManagementLayOut />,
+>>>>>>> parent of 1545f6c (Merge branch 'main' into Ann)
       children: [
         { index: true, element: <Navigate to="surveys" replace /> },
         {
