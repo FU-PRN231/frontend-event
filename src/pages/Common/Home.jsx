@@ -6,51 +6,35 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import QrReader from "react-qr-scanner";
 >>>>>>> parent of 1545f6c (Merge branch 'main' into Ann)
+import Slider from "react-slick";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import {
-  formatDate,
   calculateCountdown,
+  formatDate,
   formatDateTime,
 } from "../../utils/util";
-import { useNavigate } from "react-router-dom";
-import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 const Home = () => {
   const [events, setEvents] = useState([]);
-  const [countdowns, setCountdowns] = useState({});
-  const navigate = useNavigate();
-  const images = [
-    {
-      url: "https://images.pexels.com/photos/976862/pexels-photo-976862.jpeg?cs=srgb&dl=pexels-joshsorenson-976862.jpg&fm=jpg",
-      title: "Ánh sáng rực rỡ",
-      description:
-        "Những tia sáng lung linh, tỏa khắp không gian, tựa những vì sao lấp lánh trên bầu trời đêm.",
-    },
-    {
-      url: "https://images.pexels.com/photos/2020432/pexels-photo-2020432.jpeg?cs=srgb&dl=pexels-phreewil-2020432.jpg&fm=jpg",
-      title: "Điệu nhảy của sắc màu",
-      description:
-        "Các sắc màu đan xen, nhảy múa trong từng nhịp điệu, tạo nên một bữa tiệc đa sắc đầy cuốn hút.",
-    },
-    {
-      url: "https://wallpapers.com/images/hd/stage-light-background-kn0w04juezldy7et.jpg",
-      title: "Sân khấu ánh sáng",
-      description:
-        "Ánh đèn sân khấu chớp nhoáng, mời gọi khán giả bước vào thế giới kỳ diệu của nghệ thuật.",
-    },
-  ];
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
+  const [attendees, setAttendees] = useState([]);
+
+  const fetchEvents = async () => {
+    try {
+      const eventsData = await getAllEvent(1, 100);
+      setEvents(eventsData.result.items);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
   };
 
-<<<<<<< HEAD
+  const fetchAttendees = async (eventId) => {
+    try {
+      const attendeesData = await getAllAttendeesByEventId(eventId);
+      setAttendees(attendeesData.result.items);
+    } catch (error) {
+      console.error("Error fetching attendees:", error);
+
   const fetchData = async () => {
     const res = await getAllAvailableEvent(1, 10);
     if (res.isSuccess) {

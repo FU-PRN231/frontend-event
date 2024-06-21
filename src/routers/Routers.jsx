@@ -7,14 +7,15 @@ import ErrorPage from "../pages/Common/ErrorPage";
 import EventDetail from "../pages/Common/Event/EventDetail";
 import Home from "../pages/Common/Home";
 import LoginPage from "../pages/Common/LoginPage";
+import PersonalInformation from "../pages/Common/PersonalInformation";
 import VerifyPayment from "../pages/Common/VerifyPayment";
+import ManageUser from "../pages/CommonManager/ManageUser";
 import SurveyModal from "../pages/Orgainization/SurveyModal";
 import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
-import PersonalInformation from "../pages/Common/PersonalInformation";
-import ManageUser from "../pages/CommonManager/ManageUser";
+
 
 function Routers() {
   const routing = useRoutes([
@@ -36,6 +37,8 @@ function Routers() {
       ],
     },
     {
+      path: "/sponsor/",
+      children: [{ path: "dashboard", element: <SponsorModal /> }],
       path: "/sponsor/",
       children: [{ path: "dashboard", element: <SponsorModal /> }],
     },
