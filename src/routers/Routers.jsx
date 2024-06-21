@@ -10,13 +10,12 @@ import LoginPage from "../pages/Common/LoginPage";
 import PersonalInformation from "../pages/Common/PersonalInformation";
 import VerifyPayment from "../pages/Common/VerifyPayment";
 import ManageUser from "../pages/CommonManager/ManageUser";
+import CheckInModal from "../pages/Orgainization/CheckinModal";
 import SurveyModal from "../pages/Orgainization/SurveyModal";
 import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
-
-
 function Routers() {
   const routing = useRoutes([
     {
@@ -38,9 +37,10 @@ function Routers() {
     },
     {
       path: "/sponsor/",
-      children: [{ path: "dashboard", element: <SponsorModal /> }],
-      path: "/sponsor/",
-      children: [{ path: "dashboard", element: <SponsorModal /> }],
+      children: [
+        { path: "dashboard", element: <SponsorModal /> },
+        { path: "manage-checkin", element: <CheckInModal /> },
+      ],
     },
     {
       path: "admin",
@@ -63,19 +63,15 @@ function Routers() {
       ],
     },
     {
-<<<<<<< HEAD
-      path: "organization",
-      // element: <ManagementLayOut />,
-=======
       path: "org",
       //element: <ManagementLayOut />,
->>>>>>> parent of 1545f6c (Merge branch 'main' into Ann)
       children: [
         { index: true, element: <Navigate to="surveys" replace /> },
         {
           path: "surveys",
           element: <SurveyModal />,
         },
+        { path: "manage-checkin", element: <CheckInModal /> },
       ],
     },
 
