@@ -10,14 +10,15 @@ import LoginPage from "../pages/Common/LoginPage";
 import PersonalInformation from "../pages/Common/PersonalInformation";
 import VerifyPayment from "../pages/Common/VerifyPayment";
 import ManageUser from "../pages/CommonManager/ManageUser";
+import ManagementEvent from "../pages/CommonManager/ManagementEvent";
 import CheckInModal from "../pages/Orgainization/CheckinModal";
 import SurveyModal from "../pages/Orgainization/SurveyModal";
 import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
+import TaskModal from "../pages/PM/TaskModal";
+import SponsorHistory from "../pages/Sponsor/SponsorHistory";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
-import ManagementEvent from "../pages/CommonManager/ManagementEvent";
-
 function Routers() {
   const routing = useRoutes([
     {
@@ -38,10 +39,12 @@ function Routers() {
       ],
     },
     {
-      path: "/sponsor/",
+      path: "/sponsor",
+      //element: <ManagementLayOut />,
+
       children: [
         { path: "dashboard", element: <SponsorModal /> },
-        { path: "manage-checkin", element: <CheckInModal /> },
+        { path: "history", element: <SponsorHistory /> },
       ],
     },
     {
@@ -66,7 +69,7 @@ function Routers() {
     },
     {
       path: "org",
-      element: <ManagementLayOut />,
+      // element: <ManagementLayOut />,
 
       children: [
         { index: true, element: <Navigate to="surveys" replace /> },
@@ -90,6 +93,10 @@ function Routers() {
         {
           path: "event/create-event",
           element: <CreateEventForm />,
+        },
+        {
+          path: "task",
+          element: <TaskModal />,
         },
       ],
     },
