@@ -85,7 +85,6 @@ function Routers() {
       path: "pm",
       element: <ManagementLayOut />,
       children: [
-        { index: true, element: <Navigate to="create-event" replace /> },
         {
           path: "event",
           element: <ManagementEvent />,
