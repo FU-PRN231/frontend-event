@@ -63,3 +63,24 @@ export const getSponsorHistoryByEventId = async (
     throw error;
   }
 };
+export const addSponsorMoneyToEvent = async (eventId, sponsorItems) => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}/sponsor/add-sponsor-money-to-event`,
+      {
+        eventId,
+        sponsorItems,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error adding sponsor money to event:", error);
+    throw error;
+  }
+};
