@@ -86,7 +86,7 @@ const SideBar = () => {
 
     isPM: [
       { name: "Dashboard", link: "/dashboard" },
-      { name: "Event", link: "create-event" },
+      { name: "Event", link: "event" },
     ],
   };
 

@@ -3,20 +3,20 @@ import { useLocation } from "react-router-dom";
 // import Home from "../Home";
 import paymentSuccess from "../../images/payment-success.gif";
 import paymentFailed from "../../images/payment-failed.gif";
-
+import { purchaseOrder } from "../../api/orderApi";
+import Home from "../Common/Home";
 const VerifyPayment = () => {
   const location = useLocation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false); // Corrected state declaration
   const [isVNPAY, setIsVNPAY] = useState(false); // Corrected state declaration
-
-  useEffect(() => {
-    // Lấy các tham số từ URL
+  const handlePayment = async () => {
     const searchParams = new URLSearchParams(location.search);
     const vnpResponseCode = searchParams.get("vnp_ResponseCode");
     const partnerCode = searchParams.get("partnerCode");
     const resultCode = searchParams.get("resultCode");
+    const vnp_TxnRef = searchParams.get("vnp_TxnRef");
 
     if (vnpResponseCode) {
       setIsVNPAY(true);
@@ -24,8 +24,11 @@ const VerifyPayment = () => {
         searchParams.get("vnp_OrderInfo")
       );
       if (vnpResponseCode === "00") {
-        setModalMessage(`Thanh toán thành công cho ${vnpOrderInfo}`);
-        setIsSuccess(true);
+        const data = await purchaseOrder(vnp_TxnRef);
+        if (data.isSuccess) {
+          setModalMessage(`Thanh toán thành công cho ${vnpOrderInfo}`);
+          setIsSuccess(true);
+        }
       } else {
         setModalMessage(
           `Thanh toán VNPay thất bại cho đơn hàng: ${vnpOrderInfo}. Vui lòng thanh toán lại`
@@ -47,6 +50,9 @@ const VerifyPayment = () => {
       }
       setModalIsOpen(true);
     }
+  };
+  useEffect(() => {
+    handlePayment();
   }, [location]);
 
   const closeModal = () => {
@@ -55,7 +61,7 @@ const VerifyPayment = () => {
 
   return (
     <>
-      {/* <Home /> */}
+      <Home />
       {modalIsOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="modal modal-open shadow-lg">

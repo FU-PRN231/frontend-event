@@ -19,7 +19,8 @@ AOS.init({
 import { registerables } from "chart.js";
 import Chart from "chart.js/auto";
 Chart.register(...registerables);
-
+import moment from "moment-timezone";
+moment.tz.setDefault("Asia/Ho_Chi_Minh");
 function App() {
   return (
     <>
