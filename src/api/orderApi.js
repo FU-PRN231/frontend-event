@@ -34,3 +34,12 @@ export const purchaseOrder = async (id) => {
     return response.data;
   } catch (error) {}
 };
+
+export const updateStatusOrder = async (id) => {
+  try {
+    const response = await axios.put(
+      `${baseUrl}/order/update-status?orderId=${id}`
+    );
+    return response.data;
+  } catch (error) {}
+};

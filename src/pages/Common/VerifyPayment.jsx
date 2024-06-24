@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 // import Home from "../Home";
 import paymentSuccess from "../../images/payment-success.gif";
 import paymentFailed from "../../images/payment-failed.gif";
-import { purchaseOrder } from "../../api/orderApi";
+import { purchaseOrder, updateStatusOrder } from "../../api/orderApi";
 import Home from "../Common/Home";
 const VerifyPayment = () => {
   const location = useLocation();
@@ -17,14 +17,14 @@ const VerifyPayment = () => {
     const partnerCode = searchParams.get("partnerCode");
     const resultCode = searchParams.get("resultCode");
     const vnp_TxnRef = searchParams.get("vnp_TxnRef");
-
+    debugger;
     if (vnpResponseCode) {
       setIsVNPAY(true);
       const vnpOrderInfo = decodeURIComponent(
         searchParams.get("vnp_OrderInfo")
       );
       if (vnpResponseCode === "00") {
-        const data = await purchaseOrder(vnp_TxnRef);
+        const data = await updateStatusOrder(vnp_TxnRef);
         if (data.isSuccess) {
           setModalMessage(`Thanh toán thành công cho ${vnpOrderInfo}`);
           setIsSuccess(true);
