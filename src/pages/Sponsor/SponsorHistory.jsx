@@ -10,12 +10,12 @@ const SponsorHistory = ({ eventId }) => {
   const [events, setEvents] = useState([]);
 
   const fetchSponsorHistory = useCallback(async () => {
-    if (!selectedEventId) return; // No need to fetch if no event selected
+    if (!selectedEventId) return;
 
     setLoading(true);
     try {
       const response = await getSponsorHistoryByEventId(selectedEventId, 1, 10);
-      setSponsorHistory(response.result.items); // Assuming response.result.items is an array
+      setSponsorHistory(response.result.items);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching sponsor history:", error);

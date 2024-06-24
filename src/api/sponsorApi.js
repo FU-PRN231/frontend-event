@@ -13,7 +13,7 @@ export const getAllSponsors = async () => {
 
 export const addSponsor = async (formData) => {
   try {
-    const res = await axios.post(`${baseUrl}/sponsor/add-sponsor`, formData, {
+    const res = await axios.post(`${baseUrl}/account/add-sponsor`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

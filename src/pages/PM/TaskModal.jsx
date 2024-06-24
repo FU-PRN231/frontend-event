@@ -1,78 +1,82 @@
-const TaskModal = ({ eventId, show, handleClose }) => {
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { getAllEvent } from "../../api/eventApi";
+import { getAllTasksOfEvent } from "../../api/taskApi";
+import ManageTaskEvent from "./Task/ManageTaskEvent";
+import ViewTask from "./Task/ViewTask";
+
+const TaskModal = ({ eventId }) => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+  const [events, setEvents] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [taskStatus, setTaskStatus] = useState("");
+  const [newTaskDetails, setNewTaskDetails] = useState({
+    name: "",
+    description: "",
+  });
+  const [updateTaskDetails, setUpdateTaskDetails] = useState({
+    id: "",
+    name: "",
+    description: "",
+    status: "",
+  });
   const [pageNumber, setPageNumber] = useState(1);
-  const [pageSize] = useState(10); // You can change the page size as needed
-  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
+  const [selectedEventId, setSelectedEventId] = useState("");
+  const handleEventChange = (e) => {
+    const selectedId = e.target.value;
+    setSelectedEventId(selectedId);
+  };
+  const fetchEvents = async () => {
+    try {
+      const eventsData = await getAllEvent(1, 100);
+      setEvents(eventsData.result.items);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
 
   useEffect(() => {
-    if (show) {
-      fetchTasks(eventId, pageNumber, pageSize);
+    fetchEvents();
+  }, []);
+  useEffect(() => {
+    if (eventId) {
+      fetchAllTasks();
     }
-  }, [show, eventId, pageNumber, pageSize]);
+  }, [eventId]);
 
-  const fetchTasks = async (eventId, pageNumber, pageSize) => {
+  const fetchAllTasks = async () => {
     setLoading(true);
-    const data = await getAllTasksOfEvent(eventId, pageNumber, pageSize);
-    if (data) {
-      setTasks(data.tasks); // Assuming the response has a tasks field
-      setTotalPages(data.totalPages); // Assuming the response has a totalPages field
+    setError(null);
+    try {
+      const data = await getAllTasksOfEvent(eventId, pageNumber, pageSize);
+      setTasks(data.tasks);
+      setTotalPages(data.totalPages);
+    } catch (err) {
+      setError("Error fetching tasks.");
     }
     setLoading(false);
   };
 
-  const handlePageChange = (newPageNumber) => {
-    setPageNumber(newPageNumber);
-  };
-
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Tasks</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {loading ? (
-          <Spinner animation="border" />
-        ) : (
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Task Name</th>
-                <th>Description</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tasks.map((task) => (
-                <tr key={task.id}>
-                  <td>{task.id}</td>
-                  <td>{task.name}</td>
-                  <td>{task.description}</td>
-                  <td>{task.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        )}
-        <Pagination>
-          {[...Array(totalPages)].map((_, index) => (
-            <Pagination.Item
-              key={index + 1}
-              active={index + 1 === pageNumber}
-              onClick={() => handlePageChange(index + 1)}
-            >
-              {index + 1}
-            </Pagination.Item>
-          ))}
-        </Pagination>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Close
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    <div className="container mx-auto mt-">
+      <h1 className="text-3xl font-semibold mb-4">Tasks for Event</h1>
+      <div className="mt-8">
+        <ViewTask />
+      </div>
+      {/* Task List */}
+      <div className="mt-8">
+        <ManageTaskEvent />
+      </div>
+    </div>
   );
 };
 

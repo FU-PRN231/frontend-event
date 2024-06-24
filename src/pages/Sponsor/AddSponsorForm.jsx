@@ -4,7 +4,7 @@ import { getAllEvent } from "../../api/eventApi";
 import { addSponsor } from "../../api/sponsorApi";
 
 const AddSponsorForm = ({ onSponsorAdded }) => {
-  const { register, handleSubmit, control, reset } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const [events, setEvents] = useState([]);
   const [selectedEventId, setSelectedEventId] = useState("");
 
@@ -31,16 +31,20 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
       description: data.description,
       phoneNumber: data.phoneNumber,
       email: data.email,
-      img: data.img[0], // Assuming data.img is an array with a single file object
     };
 
     formData.append("SponsorDtos", JSON.stringify([sponsorDto]));
+
+    // Append multiple files
+    for (let i = 0; i < data.img.length; i++) {
+      formData.append("img", data.img[i]);
+    }
 
     try {
       const res = await addSponsor(formData);
       if (res) {
         onSponsorAdded();
-        reset(); // Reset the form after successful submission
+        reset();
       }
     } catch (error) {
       console.error("Error adding sponsor:", error);
@@ -52,30 +56,10 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      <h3 className="text-2xl font-bold text-center mb-6">
+        Thêm đơn vị tài trợ
+      </h3>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="mb-4">
-          {/* <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="event"
-          >
-            Chọn Event
-          </label> */}
-          <select
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="event"
-            name="event"
-            value={selectedEventId}
-            onChange={(e) => setSelectedEventId(e.target.value)}
-          >
-            <option value="">Chọn Event</option>
-            {events.map((event) => (
-              <option key={event.id} value={event.id}>
-                {event.title}
-              </option>
-            ))}
-          </select>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col mb-4">
             <label
@@ -153,6 +137,7 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="img"
             type="file"
+            multiple
             {...register("img")}
           />
         </div>
