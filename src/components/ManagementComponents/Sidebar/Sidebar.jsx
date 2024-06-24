@@ -9,84 +9,18 @@ const SideBar = () => {
   const location = useLocation();
 
   const menuItems = {
-    isShop: [
-      {
-        name: "Thống kê",
-        icon: <i className="fa-solid fa-chart-line"></i>,
-        path: "dashboard",
-      },
-      {
-        name: "Sản phẩm",
-        icon: <i className="fa-solid fa-shirt"></i>,
-        path: "product",
-      },
-      {
-        name: "Đơn hàng",
-        icon: <i className="fa-solid fa-list"></i>,
-        path: "orders",
-      },
-      {
-        name: "Gói dịch vụ",
-        icon: <i className="fa-solid fa-lightbulb"></i>,
-        path: "package",
-      },
-    ],
-    isAdmin: [
-      {
-        name: "Thống kê",
-        icon: <i className="fa-solid fa-chart-line"></i>,
-        path: "dashboard",
-      },
-      {
-        name: "Người dùng",
-        icon: <i className="fa-solid fa-handshake-simple"></i>,
-        path: "manage-user",
-      },
-    ],
-    isStaff: [
-      {
-        name: "Thống kê",
-        icon: <i className="fa-solid fa-chart-line"></i>,
-        path: "dashboard",
-      },
-      {
-        name: "Đối tác",
-        icon: <i className="fa-solid fa-handshake-simple"></i>,
-        path: "shop",
-      },
-      {
-        name: "Sản phẩm",
-        icon: <i className="fa-solid fa-shirt"></i>,
-        path: "product",
-      },
-      {
-        name: "Gói dịch vụ",
-        icon: <i className="fa-solid fa-box-open"></i>,
-        path: "package",
-      },
-      {
-        name: "Đơn hàng",
-        icon: <i className="fa-solid fa-bag-shopping"></i>,
-        path: "order",
-      },
-    ],
-    isOrganzation: [
-      { name: "Dashboard", link: "/dashboard" },
-      { name: "Surveys", link: "/surveys" },
-      { name: "Reports", link: "/reports" },
+    ORGANIZER: [
+      { name: "Dashboard", link: "dashboard" },
+      { name: "Surveys", link: "surveys" },
+      { name: "Reports", link: "reports" },
     ],
     PM: [
-      { name: "Dashboard", link: "/dashboard" },
+      { name: "Dashboard", link: "dashboard" },
       { name: "Event", link: "event" },
     ],
     SPONSOR: [
-      { name: "Dashboard", link: "/dashboard" },
-      { name: "Sponsor", link: "/sponsor" },
-    ],
-
-    isPM: [
-      { name: "Dashboard", link: "/dashboard" },
-      { name: "Event", link: "event" },
+      { name: "Dashboard", link: "dashboard" },
+      { name: "Sponsor", link: "sponsor" },
     ],
   };
 
