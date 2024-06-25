@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   getAllOrderByAccountId,
@@ -7,7 +7,6 @@ import {
 } from "../../api/orderApi";
 import { orderLabels } from "../../utils/constant";
 import { formatDateTime, formatPrice } from "../../utils/util";
-import { clothingSizeLabels, shoeSizeLabels } from "../../utils/constant";
 import PersonalModal from "./Account/PersonalModal";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import { message } from "antd";
@@ -68,7 +67,7 @@ const PersonalInformation = () => {
         onClick={() => handleClick(order)}
       >
         <td>{order.order?.id}</td>
-        <td>{orderLabels[order?.order?.paymentStatus]}</td>
+        <td>{orderLabels[order?.order?.status]}</td>
         <td>{formatPrice(order?.order?.total)}</td>
         <td>{formatDateTime(order?.order?.purchaseDate)}</td>
       </tr>

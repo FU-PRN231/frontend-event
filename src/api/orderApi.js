@@ -43,3 +43,12 @@ export const updateStatusOrder = async (id) => {
     return response.data;
   } catch (error) {}
 };
+
+export const sendTicketEmail = async (id) => {
+  try {
+    const response = await axios.get(
+      `${baseUrl}/order/send-ticket-email/${id}`
+    );
+    return response.data;
+  } catch (error) {}
+};
