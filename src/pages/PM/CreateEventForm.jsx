@@ -116,7 +116,7 @@ const CreateEventForm = () => {
 
     // For file inputs, append the files to the form data
     files.forEach((file, index) => {
-      formData.append(`Img[${index}]`, file);
+      formData.append(`Img`, file);
     });
     const data = await createEvent(formData);
     if (data.isSuccess) {
