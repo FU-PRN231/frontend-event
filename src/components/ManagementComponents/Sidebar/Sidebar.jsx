@@ -1,4 +1,12 @@
 import { useState } from "react";
+import {
+  FaCalendarPlus,
+  FaChartBar,
+  FaClipboardList,
+  FaHistory,
+  FaHome,
+  FaMoneyBill,
+} from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -10,23 +18,28 @@ const SideBar = () => {
 
   const menuItems = {
     ORGANIZER: [
-      { name: "Dashboard", link: "dashboard" },
-      { name: "Surveys", link: "surveys" },
-      { name: "Reports", link: "reports" },
+      { name: "Dashboard", link: "dashboard", icon: <FaHome /> },
+      { name: "Surveys", link: "surveys", icon: <FaClipboardList /> },
+      { name: "Reports", link: "reports", icon: <FaChartBar /> },
     ],
     PM: [
-      { name: "Dashboard", link: "dashboard" },
-      { name: "Event", link: "event" },
+      { name: "Dashboard", link: "dashboard", icon: <FaHome /> },
+      { name: "Event", link: "event", icon: <FaCalendarPlus /> },
     ],
     SPONSOR: [
-      { name: "Dashboard", link: "dashboard" },
-      { name: "Sponsor", link: "sponsor" },
+      { name: "Dashboard", link: "dashboard", icon: <FaHome /> },
+      { name: "Sponsor", link: "sponsor", icon: <FaHome /> },
+      { name: "Add New", link: "add-new", icon: <FaCalendarPlus /> },
+      { name: "View History", link: "view-history", icon: <FaHistory /> },
+      { name: "Add Money", link: "add-money", icon: <FaMoneyBill /> },
     ],
   };
 
   const renderMenu = (items) => {
+    if (!items) return null;
     return items.map((item, index) => (
       <>
+        {/* <NavLink to={`/${roleName.toLowerCase()}/${item.link}`} key={index}> */}
         <NavLink to={`${item.link}`} key={index}>
           <li className="hover:bg-primary rounded-md text-black hover:text-white my-1">
             <a

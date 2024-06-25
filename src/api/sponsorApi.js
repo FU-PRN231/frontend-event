@@ -13,7 +13,7 @@ export const getAllSponsors = async () => {
 
 export const addSponsor = async (formData) => {
   try {
-    const res = await axios.post(`${baseUrl}/sponsor/add-sponsor`, formData, {
+    const res = await axios.post(`${baseUrl}/account/add-sponsor`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -60,6 +60,27 @@ export const getSponsorHistoryByEventId = async (
     return response.data;
   } catch (error) {
     console.error("Error getting sponsor history by event ID:", error);
+    throw error;
+  }
+};
+export const addSponsorMoneyToEvent = async (eventId, sponsorItems) => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}/sponsor/add-sponsor-money-to-event`,
+      {
+        eventId,
+        sponsorItems,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error adding sponsor money to event:", error);
     throw error;
   }
 };

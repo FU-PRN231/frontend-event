@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import { getAllSponsors } from "../../api/sponsorApi";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-import AddSponsorForm from "./AddSponsorForm";
+import AddSponsorMoney from "./AddSponsorMoney";
 import SponsorHistory from "./SponsorHistory";
 
 const SponsorModal = () => {
@@ -62,17 +62,20 @@ const SponsorModal = () => {
 
   return (
     <div className="container mx-auto py-12">
-      <div className="w-1/2 pl-4">
-        <h3 className="text-3xl font-bold mb-6">Đơn vị tài trợ cho sự kiện </h3>
-        <AddSponsorForm eventId={eventId} onSponsorAdded={handleSponsorAdded} />
+      <div className="pl-4 mt-8">
+        <h3 className="text-3xl font-bold mb-6">Add Sponsor Money to Event</h3>
+        <AddSponsorMoney
+          eventId={eventId}
+          onSponsorAdded={handleSponsorAdded}
+        />
       </div>
       <div className="mt-8">
         <h3 className="text-3xl font-bold mb-6">
-          Lịch Sử Giao Dịch Của Nhà Tài Trợ Theo Sự Kiện
+          Sponsor Transaction History by Event
         </h3>
         <SponsorHistory />
       </div>
-      <h3 className="text-3xl font-bold mb-6">Nhà tài trợ</h3>
+      <h3 className="text-3xl font-bold mb-6">Sponsors</h3>
 
       <Slider {...settings}>
         {sponsors.map((sponsor) => (

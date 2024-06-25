@@ -16,6 +16,8 @@ import SurveyModal from "../pages/Orgainization/SurveyModal";
 import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
 import TaskModal from "../pages/PM/TaskModal";
+import AddSponsorForm from "../pages/Sponsor/AddSponsorForm";
+import AddSponsorMoney from "../pages/Sponsor/AddSponsorMoney";
 import SponsorHistory from "../pages/Sponsor/SponsorHistory";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
@@ -40,11 +42,13 @@ function Routers() {
     },
     {
       path: "/sponsor",
-      //element: <ManagementLayOut />,
+      element: <ManagementLayOut />,
 
       children: [
         { path: "dashboard", element: <SponsorModal /> },
         { path: "history", element: <SponsorHistory /> },
+        { path: "add-new", element: <AddSponsorForm /> },
+        { path: "add-money-sponsor", element: <AddSponsorMoney /> },
       ],
     },
     {
