@@ -20,6 +20,7 @@ import { author, login } from "../../redux/features/authSlice";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import OtpModal from "./Account/OtpModal";
 import ForgotPasswordModal from "./Account/ForgotPasswordModal";
+import { message } from "antd";
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string()
@@ -65,7 +66,7 @@ const LoginPage = () => {
     console.log("Submitted OTP:", otp);
     const result = await activeAccount(email, otp);
     if (result.isSuccess) {
-      toast.success("Verify successfully");
+      message.success("Verify successfully");
       setIsModalVisible(false);
       setIsSignUp(false);
     }
@@ -78,10 +79,10 @@ const LoginPage = () => {
       data.newPassword
     );
     if (result.isSuccess) {
-      toast.success("Reset password successfully");
+      message.success("Reset password successfully");
     } else {
       for (var i = 0; i < result.messages.length; i++) {
-        toast.error(result.messages[i]);
+        message.error(result.messages[i]);
       }
     }
     setIsModalForgotPasswordVisible(false);
@@ -117,7 +118,7 @@ const LoginPage = () => {
         if (fetchAccount.isSuccess) {
           const userAccount = fetchAccount.result;
           dispatch(login(userAccount));
-          toast.success("Đăng nhập thành công");
+          message.success("Đăng nhập thành công");
           navigate("/");
         }
       }
@@ -164,12 +165,12 @@ const LoginPage = () => {
                       if (fetchAccount.isSuccess) {
                         const userAccount = fetchAccount.result;
                         dispatch(login(userAccount));
-                        toast.success("Đăng nhập thành công");
+                        message.success("Đăng nhập thành công");
                         navigate("/");
                       }
                     } else {
                       for (var i = 0; i < data.messages.length; i++) {
-                        toast.error(data.messages[i]);
+                        message.error(data.messages[i]);
                         if (
                           data.messages[i] ==
                           "Tài khoản này chưa được xác thực !"
@@ -314,7 +315,7 @@ const LoginPage = () => {
                         if (result.isSuccess === true) {
                           setEmail(values.email);
                           setIsModalVisible(true);
-                          toast.success(
+                          message.success(
                             "Registration successful! Please verify email."
                           );
                         } else {
@@ -322,12 +323,14 @@ const LoginPage = () => {
                             "Registration failed:",
                             result ? result.message : "Unknown error"
                           );
-                          toast.error("Registration failed. Please try again.");
+                          message.error(
+                            "Registration failed. Please try again."
+                          );
                         }
                         setIsLoading(false);
                       } catch (error) {
                         console.error("Error signing up:", error);
-                        toast.error(
+                        message.error(
                           "An error occurred. Please try again later."
                         );
                       }

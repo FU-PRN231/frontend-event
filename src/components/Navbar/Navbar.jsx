@@ -4,6 +4,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { logout } from "../../redux/features/authSlice";
 import { isEmptyObject } from "../../utils/util";
+import { message } from "antd";
 
 const NavBar = () => {
   const { user } = useSelector((state) => state.user || {});
@@ -25,7 +26,7 @@ const NavBar = () => {
     localStorage.removeItem("refreshToken");
     dispatch(logout());
     navigate("/");
-    toast.success("Đăng xuất thành công");
+    message.success("Đăng xuất thành công");
   };
   const renderDropDown = () => {
     return (

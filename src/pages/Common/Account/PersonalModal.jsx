@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { login } from "../../../redux/features/authSlice";
 import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
+import { message } from "antd";
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
@@ -44,19 +45,19 @@ const PersonalModal = ({ onClose }) => {
                   if (userData.isSuccess) {
                     debugger;
                     dispatch(login(userData.result));
-                    toast.success("Cập nhật dữ liệu thành công");
+                    message.success("Cập nhật dữ liệu thành công");
                   }
                 } else {
                   if (data.messages.length === 0) {
-                    toast.error("Đã xảy ra lỗi, vui lòng thử lại sau");
+                    message.error("Đã xảy ra lỗi, vui lòng thử lại sau");
                   } else {
                     data.messages.forEach((item) => {
-                      toast.error(item);
+                      message.error(item);
                     });
                   }
                 }
               } catch (error) {
-                toast.error("Có lỗi xảy ra, vui lòng thử lại");
+                message.error("Có lỗi xảy ra, vui lòng thử lại");
               } finally {
                 setSubmitting(false);
                 setIsLoading(false);

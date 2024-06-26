@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Modal, Input, Button } from "antd";
+import { Modal, Input, Button, message } from "antd";
 import { sendOTP } from "../../../api/accountApi";
 import { toast } from "react-toastify";
 
@@ -45,7 +45,7 @@ const OtpModal = ({ visible, onCancel, onOtpSubmit, email }) => {
 
     const result = await sendOTP(email);
     if (result.isSuccess) {
-      toast.success("Resend OTP successfully");
+      message.success("Resend OTP successfully");
       setCountdown(30); // start countdown from 30 seconds
       countdownInterval.current = setInterval(() => {
         setCountdown((prevCountdown) => {

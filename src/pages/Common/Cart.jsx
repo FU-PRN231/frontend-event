@@ -6,7 +6,7 @@ import {
   removeFromCart,
   resetCart,
 } from "../../redux/features/cartSlice";
-import { formatDateTime, formatPrice } from "../../utils/util";
+import { formatDateTime, formatPrice, isEmptyObject } from "../../utils/util";
 import { createOrderWithPament } from "../../api/orderApi";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import { message } from "antd";
@@ -124,14 +124,20 @@ const Cart = () => {
               {formatPrice(total)}
             </span>
           </div>
-          <div className="flex justify-center">
-            <button
-              onClick={checkOut}
-              className="mt-8 px-8 py-3 bg-primary text-white rounded-lg hover:bg-blue-600 focus:outline-none"
-            >
-              Thanh toán ngay
-            </button>
-          </div>
+          {!isEmptyObject(user) ? (
+            <div className="flex justify-center">
+              <button
+                onClick={checkOut}
+                className="mt-8 px-8 py-3 bg-primary text-white rounded-lg hover:bg-blue-600 focus:outline-none"
+              >
+                Thanh toán ngay
+              </button>
+            </div>
+          ) : (
+            <p className="text-red-600 text-xl mt-4 text-center">
+              Vui lòng đăng nhập để thanh toán
+            </p>
+          )}
         </>
       ) : (
         <p className="text-gray-500">Giỏ hàng chưa có sản phẩm nào.</p>
