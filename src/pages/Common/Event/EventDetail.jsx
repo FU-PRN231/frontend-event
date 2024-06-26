@@ -14,6 +14,7 @@ import LoadingComponent from "../../../components/LoadingComponent/LoadingCompon
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../redux/features/cartSlice";
 import { toast } from "react-toastify";
+import { message } from "antd";
 
 const EventDetail = () => {
   const { id } = useParams();
@@ -213,7 +214,7 @@ const EventDetail = () => {
                 className="px-4 text-center py-2 my-4 bg-indigo-600 text-white rounded-lg cursor-pointer hover:bg-indigo-700 transition-colors duration-300"
                 onClick={() => {
                   dispatch(addToCart(seatRank));
-                  toast.success("Đã thêm vé vào giỏ hàng");
+                  message.success("Đã thêm vé vào giỏ hàng");
                 }}
                 disabled={seatRank.quantity <= 0}
               >
