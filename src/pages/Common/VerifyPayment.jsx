@@ -3,8 +3,13 @@ import { useLocation } from "react-router-dom";
 // import Home from "../Home";
 import paymentSuccess from "../../images/payment-success.gif";
 import paymentFailed from "../../images/payment-failed.gif";
-import { purchaseOrder, updateStatusOrder } from "../../api/orderApi";
+import {
+  purchaseOrder,
+  sendTicketEmail,
+  updateStatusOrder,
+} from "../../api/orderApi";
 import Home from "../Common/Home";
+import { message } from "antd";
 const VerifyPayment = () => {
   const location = useLocation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -25,7 +30,17 @@ const VerifyPayment = () => {
       );
       if (vnpResponseCode === "00") {
         const data = await updateStatusOrder(vnp_TxnRef);
+        // const emailResponse = await sendTicketEmail(vnp_TxnRef);
+        // const data = await updateStatusOrder(vnp_TxnRef);
         if (data.isSuccess) {
+          // const emailResponse = await sendTicketEmail(vnp_TxnRef);
+          // if (emailResponse.isSuccess) {
+          //   message.success("Bạn vui lòng kiểm tra email để nhận mã QR vé");
+          // } else {
+          //   message.error(
+          //     `Hệ thống đã xảy ra lỗi khi gửi email vé. Chúng tôi sẽ khắc phục sớm nhất`
+          //   );
+          // }
           setModalMessage(`Thanh toán thành công cho ${vnpOrderInfo}`);
           setIsSuccess(true);
         }
@@ -53,7 +68,7 @@ const VerifyPayment = () => {
   };
   useEffect(() => {
     handlePayment();
-  }, [location]);
+  }, []);
 
   const closeModal = () => {
     setModalIsOpen(false);

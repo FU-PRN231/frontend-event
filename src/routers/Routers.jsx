@@ -21,6 +21,7 @@ import AddSponsorMoney from "../pages/Sponsor/AddSponsorMoney";
 import SponsorHistory from "../pages/Sponsor/SponsorHistory";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
+import Dashboard from "../pages/CommonManager/Dashboard";
 function Routers() {
   const routing = useRoutes([
     {
@@ -45,7 +46,10 @@ function Routers() {
       element: <ManagementLayOut />,
 
       children: [
-        { path: "dashboard", element: <SponsorModal /> },
+        { index: true, element: <Navigate to="dashboard" replace /> },
+
+        { path: "dashboard", element: <Dashboard /> },
+        { path: "sponsor-money", element: <SponsorModal /> },
         { path: "history", element: <SponsorHistory /> },
         { path: "add-new", element: <AddSponsorForm /> },
         { path: "add-money-sponsor", element: <AddSponsorMoney /> },
@@ -62,7 +66,7 @@ function Routers() {
         { index: true, element: <Navigate to="dashboard" replace /> },
         {
           path: "dashboard",
-          element: <div>Dashboard</div>,
+          element: <Dashboard />,
         },
 
         {
@@ -73,10 +77,14 @@ function Routers() {
     },
     {
       path: "org",
-      // element: <ManagementLayOut />,
+      element: <ManagementLayOut />,
 
       children: [
-        { index: true, element: <Navigate to="surveys" replace /> },
+        { index: true, element: <Navigate to="dashboard" replace /> },
+        {
+          path: "dashboard",
+          element: <Dashboard />,
+        },
         {
           path: "surveys",
           element: <SurveyModal />,
@@ -89,6 +97,12 @@ function Routers() {
       path: "pm",
       element: <ManagementLayOut />,
       children: [
+        { index: true, element: <Navigate to="dashboard" replace /> },
+
+        {
+          path: "dashboard",
+          element: <Dashboard />,
+        },
         {
           path: "event",
           element: <ManagementEvent />,

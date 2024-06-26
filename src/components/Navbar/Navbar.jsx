@@ -65,6 +65,13 @@ const NavBar = () => {
               </li>
             </NavLink>
           )}
+          {roleName === "SPONSOR" && (
+            <NavLink to="/sponsor">
+              <li>
+                <span>Trang quản trị</span>
+              </li>
+            </NavLink>
+          )}
           <li onClick={handleLogOut}>
             <a>Đăng xuất</a>
           </li>

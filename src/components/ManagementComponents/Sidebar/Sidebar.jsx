@@ -6,6 +6,7 @@ import {
   FaHistory,
   FaHome,
   FaMoneyBill,
+  FaUser,
 } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { NavLink, useLocation } from "react-router-dom";
@@ -18,20 +19,31 @@ const SideBar = () => {
 
   const menuItems = {
     ORGANIZER: [
-      { name: "Dashboard", link: "dashboard", icon: <FaHome /> },
-      { name: "Surveys", link: "surveys", icon: <FaClipboardList /> },
-      { name: "Reports", link: "reports", icon: <FaChartBar /> },
+      { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
+      { name: "Khảo sát", link: "surveys", icon: <FaClipboardList /> },
     ],
     PM: [
-      { name: "Dashboard", link: "dashboard", icon: <FaHome /> },
-      { name: "Event", link: "event", icon: <FaCalendarPlus /> },
+      { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
+      { name: "Sự kiện", link: "event", icon: <FaCalendarPlus /> },
     ],
     SPONSOR: [
-      { name: "Dashboard", link: "dashboard", icon: <FaHome /> },
-      { name: "Sponsor", link: "sponsor", icon: <FaHome /> },
-      { name: "Add New", link: "add-new", icon: <FaCalendarPlus /> },
-      { name: "View History", link: "view-history", icon: <FaHistory /> },
-      { name: "Add Money", link: "add-money", icon: <FaMoneyBill /> },
+      { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
+      { name: "Tiền từ nhà tài trợ", link: "sponsor-money", icon: <FaHome /> },
+      {
+        name: "Thêm mới nhà tài trợ",
+        link: "add-new",
+        icon: <FaCalendarPlus />,
+      },
+      { name: "Lịch sử dòng tiền", link: "history", icon: <FaHistory /> },
+      {
+        name: "Thêm dòng tiền vào dự án",
+        link: "add-money-sponsor",
+        icon: <FaMoneyBill />,
+      },
+    ],
+    ADMIN: [
+      { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
+      { name: "Người dùng", link: "manage-user", icon: <FaUser /> },
     ],
   };
 
