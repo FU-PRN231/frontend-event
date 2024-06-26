@@ -4,3 +4,9 @@ export const sponsorType = {
   2: "Tài trợ sản phẩm",
   3: "Tài trợ kinh phi và sản phẩm",
 };
+export const reportType = {
+  0: "Tuần này",
+  1: "Tháng này",
+  2: "6 tháng gần đây",
+  3: "Năm nay",
+};
