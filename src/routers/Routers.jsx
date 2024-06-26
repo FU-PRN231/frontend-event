@@ -9,6 +9,7 @@ import Home from "../pages/Common/Home";
 import LoginPage from "../pages/Common/LoginPage";
 import PersonalInformation from "../pages/Common/PersonalInformation";
 import VerifyPayment from "../pages/Common/VerifyPayment";
+import Dashboard from "../pages/CommonManager/Dashboard";
 import ManageUser from "../pages/CommonManager/ManageUser";
 import ManagementEvent from "../pages/CommonManager/ManagementEvent";
 import CheckInModal from "../pages/Orgainization/CheckinModal";
@@ -21,7 +22,6 @@ import AddSponsorMoney from "../pages/Sponsor/AddSponsorMoney";
 import SponsorHistory from "../pages/Sponsor/SponsorHistory";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
-import Dashboard from "../pages/CommonManager/Dashboard";
 function Routers() {
   const routing = useRoutes([
     {
