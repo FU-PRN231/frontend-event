@@ -23,7 +23,7 @@ const ForgotPasswordModal = ({ visible, onCancel, onSubmit }) => {
     setIsLoading(true);
     const result = await sendResetPassOTP(email);
     if (result.isSuccess) {
-      toast.success("OTP has just been sent to your email");
+      message.success("OTP has just been sent to your email");
       setIsLoading(false);
       setStep(2);
       setCountdown(30); // start countdown from 30 seconds
@@ -38,7 +38,7 @@ const ForgotPasswordModal = ({ visible, onCancel, onSubmit }) => {
       }, 1000);
     } else {
       for (var i = 0; i < result.messages.length; i++) {
-        toast.error(result.messages[i]);
+        message.error(result.messages[i]);
         setIsLoading(false);
       }
     }
