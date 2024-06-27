@@ -2,221 +2,209 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BsFillPersonFill } from "react-icons/bs";
 import QrReader from "react-qr-scanner";
+import { checkIn, getAllAttendeesByEventId } from "../../api/checkinApi";
 import {
-  addAttendee,
-  decodeQrCode,
-  generateAccountQrCode,
-  getAllAttendeesByEventId,
-} from "../../api/checkinApi";
-import { getAllEvent } from "../../api/eventApi";
+  Card,
+  Col,
+  Descriptions,
+  Divider,
+  Row,
+  Table,
+  Tag,
+  message,
+} from "antd";
+import { useParams } from "react-router-dom";
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  QrcodeOutlined,
+} from "@ant-design/icons";
+import Title from "antd/es/skeleton/Title";
+import { formatDate, formatPrice } from "../../utils/util";
 
 const CheckInModal = () => {
-  const [checkInResult, setCheckInResult] = useState(null);
-  const { handleSubmit, setValue } = useForm();
-  const [selectedEventId, setSelectedEventId] = useState("");
-  const [events, setEvents] = useState([]);
+  const [result, setResult] = useState({});
+  // const { account, seatRank, checkedIn, orderDate } = result;
+
+  const { id } = useParams();
   const [attendees, setAttendees] = useState([]);
-
-  // Function to fetch events
-  const fetchEvents = async () => {
-    try {
-      const eventsData = await getAllEvent(1, 100);
-      setEvents(eventsData.result.items);
-    } catch (error) {
-      console.error("Error fetching events:", error);
+  const fetchData = async () => {
+    const res = await getAllAttendeesByEventId(id);
+    if (res.isSuccess) {
+      setAttendees(res.result.items);
     }
   };
-
-  // Function to fetch attendees by event ID
-  const fetchAttendees = async (eventId) => {
-    try {
-      const attendeesData = await getAllAttendeesByEventId(eventId);
-      setAttendees(attendeesData.result.items);
-    } catch (error) {
-      console.error("Error fetching attendees:", error);
-    }
-  };
-
-  // Fetch events on component mount
   useEffect(() => {
-    fetchEvents();
+    fetchData();
   }, []);
-
-  // Fetch attendees when selectedEventId changes
-  useEffect(() => {
-    if (selectedEventId) {
-      fetchAttendees(selectedEventId);
-    }
-  }, [selectedEventId]);
-
-  // Function to manage check-in by QR code
-  const manageCheckInByQr = async (accountId) => {
-    try {
-      // Generate QR code for the account ID
-      const qrCodeResponse = await generateAccountQrCode(accountId);
-
-      if (!qrCodeResponse.isSuccess) {
-        throw new Error(qrCodeResponse.messages.join(", "));
-      }
-
-      const qrString = qrCodeResponse.result;
-
-      // Decode the QR code to get account details
-      const decodeResponse = await decodeQrCode(qrString);
-
-      if (!decodeResponse.isSuccess) {
-        throw new Error(decodeResponse.messages.join(", "));
-      }
-
-      // Add attendee to the selected event
-      const attendeeResponse = await addAttendee(accountId, selectedEventId);
-
-      if (!attendeeResponse.isSuccess) {
-        throw new Error(attendeeResponse.messages.join(", "));
-      }
-
-      // Refresh attendees list for the selected event
-      fetchAttendees(selectedEventId);
-
-      return {
-        isSuccess: true,
-        decodedData: decodeResponse.result,
-      };
-    } catch (error) {
-      console.error("Check-in process failed:", error);
-      return {
-        isSuccess: false,
-        message:
-          error.message || "An error occurred during the check-in process.",
-      };
-    }
-  };
-
-  // Function to handle form submission
-  const onSubmit = async (data) => {
-    try {
-      const accountId = await getAccountIdByName(data.name);
-
-      const result = await manageCheckInByQr(accountId);
-      setCheckInResult(result);
-    } catch (error) {
-      console.error("Error fetching accountId or performing check-in:", error);
-      setCheckInResult({
-        isSuccess: false,
-        message: "Failed to perform check-in. Please try again.",
-      });
-    }
-  };
-
-  // Function to handle QR code scan
   const handleScan = async (data) => {
     if (data) {
-      setValue("name", data.text);
-      try {
-        const accountId = await getAccountIdByName(data.text);
-
-        const result = await manageCheckInByQr(accountId);
-        setCheckInResult(result);
-      } catch (error) {
-        console.error(
-          "Error fetching accountId or performing check-in:",
-          error
-        );
-        setCheckInResult({
-          isSuccess: false,
-          message: "Failed to perform check-in. Please try again.",
-        });
+      debugger;
+      const checkInData = await checkIn(data.text);
+      if (checkInData?.isSuccess) {
+        message.success("Check in thành công");
+        setResult(checkInData.result);
+        await fetchData();
       }
     }
   };
-
-  // Function to handle QR code scan error
+  console.log(result);
   const handleError = (err) => {
-    console.error(err);
+    message.error(err);
   };
-
-  // Function to handle event selection change
-  const handleEventChange = (e) => {
-    setSelectedEventId(e.target.value);
-  };
-
+  const columns = [
+    {
+      title: "Ticket ID",
+      dataIndex: "id",
+      key: "id",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Sự kiện",
+      dataIndex: ["orderDetail", "seatRank", "event", "title"],
+      key: "event",
+    },
+    {
+      title: "Loại vé",
+      dataIndex: ["orderDetail", "seatRank", "name"],
+      key: "seatRank",
+    },
+    {
+      title: "Giá vé",
+      dataIndex: ["orderDetail", "seatRank", "price"],
+      key: "price",
+      render: (price) => `${formatPrice(price)} VND`,
+    },
+    {
+      title: "Người đại diện",
+      key: "attendee",
+      render: (_, record) =>
+        `${record.orderDetail?.order?.account?.firstName} ${record.orderDetail.order.account.lastName}`,
+    },
+    {
+      title: "Trạng thái",
+      key: "checkedIn",
+      dataIndex: "checkedIn",
+      render: (checkedIn) => (
+        <Tag color={checkedIn ? "green" : "volcano"}>
+          {checkedIn ? "Điểm danh" : "Chưa điểm danh"}
+        </Tag>
+      ),
+    },
+    {
+      title: "QR Code",
+      key: "qr",
+      render: (_, record) => (
+        <a href={record.qr} target="_blank" rel="noopener noreferrer">
+          <QrcodeOutlined style={{ fontSize: "24px" }} />
+        </a>
+      ),
+    },
+  ];
   return (
-    <div className="container grid grid-cols-2 gap-4">
-      <div className="mt-10 w-full">
-        <h1 className="text-primary font-bold uppercase text-center text-md my-2">
-          Check in automatically with Cóc Event
-        </h1>
-        <div className="p-4 rounded-md shadow-xl">
-          <QrReader
-            delay={300}
-            onError={handleError}
-            onScan={handleScan}
-            style={{ width: "100%" }}
-            facingMode="environment"
-          />
-        </div>
-      </div>
-      <div className="mt-8 rounded-lg p-4 shadow-lg">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <select
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus"
-            id="event"
-            name="event"
-            value={selectedEventId}
-            onChange={handleEventChange}
-          >
-            <option value="">Chọn Event</option>
-            {events.map((event) => (
-              <option key={event.id} value={event.id}>
-                {event.title}
-              </option>
-            ))}
-          </select>
-          <button
-            type="submit"
-            className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Check In
-          </button>
-        </form>
-        {checkInResult && (
-          <div className="mt-4">
-            {checkInResult.isSuccess ? (
-              <p className="text-green-500">
-                Check-in successful: {checkInResult.decodedData}
-              </p>
-            ) : (
-              <p className="text-red-500">
-                Check-in failed: {checkInResult.message}
-              </p>
-            )}
+    <div className="container">
+      <div className=" grid grid-cols-2 gap-4">
+        <div className="mt-10 w-full">
+          <h1 className="text-primary font-bold uppercase text-center text-md my-2">
+            Check in automatically with Cóc Event
+          </h1>
+          <div className="p-4 rounded-md shadow-xl">
+            <QrReader
+              delay={300}
+              onError={handleError}
+              onScan={handleScan}
+              style={{ width: "100%" }}
+              facingMode="environment"
+            />
           </div>
-        )}
+        </div>
+        <div className="shadow-md rounded-md ">
+          <h3 className="text-center text-primary font-bold text-xl">
+            Thông tin điểm danh
+          </h3>
+          <Card style={{ width: "100%", maxWidth: 600, margin: "0 auto" }}>
+            <Row gutter={[16, 16]}>
+              <Col span={24}>
+                <Card type="inner" title="Chi tiết sự kiện">
+                  <Descriptions column={1}>
+                    <Descriptions.Item label="Tên sự kiện">
+                      {result?.seatRank?.event?.title}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Ngày bắt đầu">
+                      {new Date(
+                        result?.seatRank?.event?.startEventDate
+                      ).toLocaleDateString()}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Ngày kết thúc">
+                      {new Date(
+                        result?.seatRank?.event?.endEventDate
+                      ).toLocaleDateString()}
+                    </Descriptions.Item>
+                  </Descriptions>
+                </Card>
+              </Col>
+
+              <Col span={24}>
+                <Card type="inner" title="Chi tiết vé">
+                  <Descriptions column={1}>
+                    <Descriptions.Item label="Hạng vé">
+                      {result?.seatRank?.name}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Giá">
+                      {formatPrice(result?.seatRank?.price)}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Ngày đặt vé">
+                      {formatDate(new Date(result?.orderDate))}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Trạng thái">
+                      {result?.checkedIn ? (
+                        <Tag icon={<CheckCircleOutlined />} color="success">
+                          Đã check in
+                        </Tag>
+                      ) : (
+                        <Tag icon={<CloseCircleOutlined />} color="error">
+                          Chưa check in
+                        </Tag>
+                      )}
+                    </Descriptions.Item>
+                  </Descriptions>
+                </Card>
+              </Col>
+
+              <Col span={24}>
+                <Card type="inner" title="Người đại diện">
+                  <Descriptions column={1}>
+                    <Descriptions.Item label="Tên">{`${result?.account?.firstName} ${result?.account?.lastName}`}</Descriptions.Item>
+                    <Descriptions.Item label="Email">
+                      {result?.account?.email}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Số điện thoại">
+                      {result?.account?.phoneNumber}
+                    </Descriptions.Item>
+                  </Descriptions>
+                </Card>
+              </Col>
+            </Row>
+          </Card>
+        </div>
       </div>
       <div className="mt-8 rounded-lg p-4 shadow-lg col-span-2">
         <h2 className="text-primary font-bold uppercase text-center text-md my-2">
-          Attendees for Selected Event
+          Những người tham gia sự kiện
         </h2>
-        <select
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus"
-          id="event"
-          name="event"
-          value={selectedEventId}
-          onChange={handleEventChange}
-        >
-          <option value="">Chọn Event</option>
-          {events.map((event) => (
-            <option key={event.id} value={event.id}>
-              {event.title}
-            </option>
-          ))}
-        </select>
+
         {attendees.length > 0 ? (
-          <ul className="list-disc list-inside">
-            {attendees.map((attendee) => (
-              <li key={attendee.id}>{attendee.name}</li>
-            ))}
-          </ul>
+          <Table
+            columns={columns}
+            dataSource={attendees}
+            rowKey="id"
+            pagination={{
+              total: attendees.length,
+              pageSize: 10,
+              showSizeChanger: true,
+              showQuickJumper: true,
+            }}
+          />
         ) : (
           <div className="flex flex-col items-center justify-center h-32">
             <BsFillPersonFill size={48} className="text-gray-300 mb-2" />

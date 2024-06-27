@@ -62,6 +62,20 @@ export const addAttendee = async (accountId, eventId) => {
     throw error;
   }
 };
+export const checkIn = async (qrString) => {
+  try {
+    const response = await axios.put(
+      `${baseUrl}/attendee?qrString=${qrString}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error adding attendee:", error);
+    if (error.response) {
+      console.error("Error response data:", error.response.data);
+    }
+    throw error;
+  }
+};
 
 // Get all attendees by event ID
 export const getAllAttendeesByEventId = async (eventId) => {

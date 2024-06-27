@@ -137,7 +137,7 @@ const ManageUser = () => {
                     {item.email}
                   </td>
                   <td className="text-center">{item.phoneNumber}</td>
-                  <td className="text-center">{renderRoles(item.role)}</td>
+                  <td className="text-center">{item.mainRole}</td>
                   <td className="text-center">
                     {item.isVerified ? (
                       <i className="fa-solid fa-circle-check text-green-600"></i>
@@ -145,7 +145,7 @@ const ManageUser = () => {
                       <i className="fa-solid fa-circle-xmark text-red-600"></i>
                     )}
                   </td>
-                  <td>{renderPermissionButtons(item.role)}</td>
+                  {/* <td>{renderPermissionButtons(item.role)}</td> */}
                 </tr>
               ))}
           </tbody>
