@@ -1,9 +1,13 @@
 import axios from "axios";
 import { baseUrl } from "./config";
 
-export const getAllSponsors = async () => {
+// sponsorApi.js
+
+export const getAllSponsors = async (pageNumber = 1, pageSize = 100) => {
   try {
-    const res = await axios.get(`${baseUrl}/sponsor/get-all-sponsors`);
+    const res = await axios.get(
+      `${baseUrl}/sponsor/get-all-sponsors?pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
     return res.data;
   } catch (err) {
     console.error("Error fetching sponsors:", err);
@@ -13,11 +17,7 @@ export const getAllSponsors = async () => {
 
 export const addSponsor = async (formData) => {
   try {
-    const res = await axios.post(`${baseUrl}/account/add-sponsor`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const res = await axios.post(`${baseUrl}/account/add-sponsor`, formData);
 
     return res.data;
   } catch (err) {
@@ -68,13 +68,13 @@ export const addSponsorMoneyToEvent = async (eventId, sponsorItems) => {
     const response = await axios.post(
       `${baseUrl}/sponsor/add-sponsor-money-to-event`,
       {
-        eventId,
-        sponsorItems,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        eventId: eventId,
+        sponsorItems: sponsorItems.map((item) => ({
+          sponsorType: item.sponsorType,
+          sponsorDescription: item.sponsorDescription,
+          moneySponsorAmount: item.moneySponsorAmount,
+          sponsorId: item.sponsorId,
+        })),
       }
     );
 

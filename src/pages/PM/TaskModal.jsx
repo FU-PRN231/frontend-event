@@ -69,11 +69,11 @@ const TaskModal = ({ eventId }) => {
   return (
     <div className="container mx-auto mt-">
       <h1 className="text-3xl font-semibold mb-4">Tasks for Event</h1>
-      <div className="mt-8">
+      <div className="pl-4 mt-8">
         <ViewTask />
       </div>
       {/* Task List */}
-      <div className="mt-8">
+      <div className="pl-4 mt-8">
         <ManageTaskEvent />
       </div>
     </div>

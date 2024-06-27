@@ -23,34 +23,25 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
 
   const onSubmit = async (data) => {
     const formData = new FormData();
-    formData.append("EventId", selectedEventId);
+    formData.append("Name", data.name);
+    formData.append("Description", data.description);
+    formData.append("PhoneNumber", data.phoneNumber);
+    formData.append("Email", data.email);
 
-    // Append other sponsor data
-    const sponsorDto = {
-      name: data.name,
-      description: data.description,
-      phoneNumber: data.phoneNumber,
-      email: data.email,
-    };
-
-    formData.append("SponsorDtos", JSON.stringify([sponsorDto]));
-
-    // Append multiple files
     for (let i = 0; i < data.img.length; i++) {
-      formData.append("img", data.img[i]);
+      formData.append("Img", data.img[i]);
     }
 
     try {
       const res = await addSponsor(formData);
-      if (res) {
+      if (res.isSuccess) {
         onSponsorAdded();
         reset();
+      } else {
+        console.error("Error response data:", res.messages);
       }
     } catch (error) {
       console.error("Error adding sponsor:", error);
-      if (error.response) {
-        console.error("Error response data:", error.response.data);
-      }
     }
   };
 
