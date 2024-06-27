@@ -21,6 +21,7 @@ const SideBar = () => {
     ORGANIZER: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
       { name: "Khảo sát", link: "surveys", icon: <FaClipboardList /> },
+      { name: "Sự kiện", link: "event", icon: <FaCalendarPlus /> },
     ],
     PM: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },

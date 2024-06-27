@@ -23,6 +23,7 @@ import AddSponsorMoney from "../pages/Sponsor/AddSponsorMoney";
 import SponsorHistory from "../pages/Sponsor/SponsorHistory";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
+import UpdateEventForm from "../pages/PM/UpdateEventForm";
 function Routers() {
   const routing = useRoutes([
     {
@@ -83,6 +84,10 @@ function Routers() {
       children: [
         { index: true, element: <Navigate to="dashboard" replace /> },
         {
+          path: "event",
+          element: <ManagementEvent />,
+        },
+        {
           path: "dashboard",
           element: <Dashboard />,
         },
@@ -90,7 +95,7 @@ function Routers() {
           path: "surveys",
           element: <SurveyModal />,
         },
-        { path: "manage-checkin", element: <CheckInModal /> },
+        { path: "event/manage-check-in/:id", element: <CheckInModal /> },
       ],
     },
 
@@ -111,6 +116,10 @@ function Routers() {
         {
           path: "event/create-event",
           element: <CreateEventForm />,
+        },
+        {
+          path: "event/update-event/:id",
+          element: <UpdateEventForm />,
         },
         {
           path: "task",

@@ -112,8 +112,8 @@ export const Dashboard = () => {
         <Col xs={24} sm={12} md={8} lg={6}>
           <Card>
             <Statistic
-              title="Tổng số nhà tài trợ"
-              value={data.totalSponsorAmount}
+              title="Tổng số tiền từ nhà tài trợ"
+              value={formatPrice(data.totalSponsorAmount)}
             />
           </Card>
         </Col>

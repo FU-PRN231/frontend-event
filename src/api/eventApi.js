@@ -40,3 +40,12 @@ export const createEvent = async (data) => {
     return null;
   }
 };
+
+export const updateEvent = async (id, data) => {
+  try {
+    const res = await axios.post(`${baseUrl}/event/update-event/${id}`, data);
+    return res.data;
+  } catch (err) {
+    return null;
+  }
+};
