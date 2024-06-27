@@ -45,6 +45,11 @@ const SideBar = () => {
     ADMIN: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
       { name: "Người dùng", link: "manage-user", icon: <FaUser /> },
+      {
+        name: "Kiểm duyệt sự kiện",
+        link: "event",
+        icon: <FaCalendarPlus />,
+      },
     ],
   };
 

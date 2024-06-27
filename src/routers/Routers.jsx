@@ -23,6 +23,7 @@ import SponsorHistory from "../pages/Sponsor/SponsorHistory";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
 import UpdateEventForm from "../pages/PM/UpdateEventForm";
+import CensorEvent from "../pages/Admin/CensorEvent";
 function Routers() {
   const routing = useRoutes([
     {
@@ -73,6 +74,10 @@ function Routers() {
         {
           path: "manage-user",
           element: <ManageUser />,
+        },
+        {
+          path: "event",
+          element: <CensorEvent />,
         },
       ],
     },
