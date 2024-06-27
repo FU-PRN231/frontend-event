@@ -22,7 +22,6 @@ import AddSponsorMoney from "../pages/Sponsor/AddSponsorMoney";
 import SponsorHistory from "../pages/Sponsor/SponsorHistory";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
-import Dashboard from "../pages/CommonManager/Dashboard";
 import UpdateEventForm from "../pages/PM/UpdateEventForm";
 function Routers() {
   const routing = useRoutes([
