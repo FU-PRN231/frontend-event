@@ -1,38 +1,31 @@
 import axios from "axios";
 import { baseUrl } from "./config";
 
-export const getAllSurveys = async () => {
+// Insert a new survey form
+export const insertSurveyForm = async (formData) => {
   try {
-    const res = await axios.get(`${baseUrl}/survey/get-all-survey`);
-    return res.data;
-  } catch (err) {
-    console.error("Error fetching survey:", err);
-    return null;
-  }
-};
-
-// Insert survey form
-export const insertSurveyForm = async (data) => {
-  try {
-    const res = await axios.post(`${baseUrl}/survey/insert-survey-form`, data);
+    const res = await axios.post(
+      `${baseUrl}/survey/insert-survey-form`,
+      formData
+    );
     return res.data;
   } catch (err) {
     console.error("Error inserting survey form:", err);
-    return null;
+    throw err;
   }
 };
 
-// Add answer to survey
-export const addAnswerToSurvey = async (data) => {
+// Add answer to a survey
+export const addAnswerToSurvey = async (answerData) => {
   try {
     const res = await axios.post(
       `${baseUrl}/survey/add-answer-to-survey`,
-      data
+      answerData
     );
     return res.data;
   } catch (err) {
     console.error("Error adding answer to survey:", err);
-    return null;
+    throw err;
   }
 };
 
@@ -42,8 +35,19 @@ export const getSurveyById = async (id) => {
     const res = await axios.get(`${baseUrl}/survey/get-survey-by-id/${id}`);
     return res.data;
   } catch (err) {
-    console.error("Error fetching survey by ID:", err);
-    return null;
+    console.error("Error getting survey by ID:", err);
+    throw err;
+  }
+};
+
+// Get all surveys
+export const getAllSurveys = async () => {
+  try {
+    const res = await axios.get(`${baseUrl}/survey/get-all-survey`);
+    return res.data;
+  } catch (err) {
+    console.error("Error getting all surveys:", err);
+    throw err;
   }
 };
 
@@ -55,7 +59,7 @@ export const getSurveysByOrganizationId = async (organizationId) => {
     );
     return res.data;
   } catch (err) {
-    console.error("Error fetching surveys by organization ID:", err);
-    return null;
+    console.error("Error getting surveys by organization ID:", err);
+    throw err;
   }
 };

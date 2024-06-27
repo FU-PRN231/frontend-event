@@ -4,12 +4,7 @@ import { baseUrl } from "./config";
 export const generateAccountQrCode = async (accountId) => {
   try {
     const response = await axios.get(
-      `${baseUrl}/account/generate-account-qr-code/${accountId}`,
-      {
-        headers: {
-          Accept: "text/plain",
-        },
-      }
+      `${baseUrl}/account/generate-account-qr-code/${accountId}`
     );
     return response.data;
   } catch (error) {
@@ -24,12 +19,7 @@ export const generateAccountQrCode = async (accountId) => {
 export const decodeQrCode = async (qrString) => {
   try {
     const response = await axios.get(
-      `${baseUrl}/account/decode-qr/${encodeURIComponent(qrString)}`,
-      {
-        headers: {
-          Accept: "text/plain",
-        },
-      }
+      `${baseUrl}/account/decode-qr/${encodeURIComponent(qrString)}`
     );
     return response.data;
   } catch (error) {
@@ -43,16 +33,10 @@ export const decodeQrCode = async (qrString) => {
 // Add an attendee
 export const addAttendee = async (accountId, eventId) => {
   try {
-    const response = await axios.put(
-      `${baseUrl}/attendee`,
-      { accountId, eventId },
-      {
-        headers: {
-          Accept: "text/plain",
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.put(`${baseUrl}/attendee`, {
+      accountId,
+      eventId,
+    });
     return response.data;
   } catch (error) {
     console.error("Error adding attendee:", error);
@@ -67,12 +51,7 @@ export const addAttendee = async (accountId, eventId) => {
 export const getAllAttendeesByEventId = async (eventId) => {
   try {
     const response = await axios.get(
-      `${baseUrl}/attendee/get-all-attendee-by-eventId/${eventId}`,
-      {
-        headers: {
-          Accept: "text/plain",
-        },
-      }
+      `${baseUrl}/attendee/get-all-attendee-by-eventId/${eventId}`
     );
     return response.data;
   } catch (error) {

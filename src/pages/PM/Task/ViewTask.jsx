@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FiCheckCircle, FiTrash2 } from "react-icons/fi";
+import {
+  FiAlertCircle,
+  FiCheckCircle,
+  FiLoader,
+  FiTrash2,
+} from "react-icons/fi";
 import { getAllEvent } from "../../../api/eventApi";
 import {
   deleteTask,
@@ -23,13 +28,16 @@ const ViewTask = ({ eventId }) => {
   const [events, setEvents] = useState([]);
   const [selectedEventId, setSelectedEventId] = useState(eventId || "");
   const [updateStatusMessage, setUpdateStatusMessage] = useState("");
+  const [selectedTaskStatus, setSelectedTaskStatus] = useState("");
+
   const TaskStatus = {
     No_status: "--",
-    NOT_YET: "Not Yet",
-    ONGOING: "Ongoing",
-    FINISHED: "Finished",
-    FAILED: "Failed",
+    NOT_YET: "Chưa",
+    ONGOING: "Đang diễn ra",
+    FINISHED: "Đã hoàn thành",
+    FAILED: "Thất bại",
   };
+
   const isSuccessful = {
     [TaskStatus.ONGOING]: true,
     [TaskStatus.FINISHED]: true,
@@ -49,13 +57,28 @@ const ViewTask = ({ eventId }) => {
         return TaskStatus.NOT_YET;
     }
   };
-  const [selectedTaskStatus, setSelectedTaskStatus] = useState("");
+  const getStatusDisplay = (status) => {
+    switch (status) {
+      case TaskStatusResponse.No_status:
+        return TaskStatus.No_status;
+      case TaskStatusResponse.NOT_YET:
+        return TaskStatus.NOT_YET;
+      case TaskStatusResponse.ONGOING:
+        return TaskStatus.ONGOING;
+      case TaskStatusResponse.FINISHED:
+        return TaskStatus.FINISHED;
+      case TaskStatusResponse.FAILED:
+        return TaskStatus.FAILED;
+      default:
+        return TaskStatus.No_status;
+    }
+  };
   useEffect(() => {
     const fetchTasks = async () => {
       setLoading(true);
       try {
         if (selectedEventId) {
-          const data = await getAllTasksOfEvent(selectedEventId, 1, 10);
+          const data = await getAllTasksOfEvent(selectedEventId, 1, 100);
           setTasks(data.result.items);
         } else {
           setTasks([]);
@@ -99,19 +122,19 @@ const ViewTask = ({ eventId }) => {
           let apiStatus;
           switch (selectedTaskStatus) {
             case TaskStatus.NOT_YET:
-              apiStatus = "0";
+              apiStatus = TaskStatusResponse.NOT_YET.toString();
               break;
             case TaskStatus.ONGOING:
-              apiStatus = "1";
+              apiStatus = TaskStatusResponse.ONGOING.toString();
               break;
             case TaskStatus.FINISHED:
-              apiStatus = "2";
+              apiStatus = TaskStatusResponse.FINISHED.toString();
               break;
             case TaskStatus.FAILED:
-              apiStatus = "3";
+              apiStatus = TaskStatusResponse.FAILED.toString();
               break;
             default:
-              apiStatus = "--";
+              apiStatus = "--"; // Default case
               break;
           }
 
@@ -136,8 +159,9 @@ const ViewTask = ({ eventId }) => {
       }
       setLoading(false);
     };
-
-    fetchTasksByStatus();
+    if (selectedEventId) {
+      fetchTasksByStatus();
+    }
   }, [selectedEventId, selectedTaskStatus]);
 
   const handleUpdateTaskStatus = async (taskId, currentStatus) => {
@@ -190,7 +214,7 @@ const ViewTask = ({ eventId }) => {
       <div className="mb-4 flex flex-wrap justify-between">
         <div className="w-full md:w-5/12 mb-4 md:mb-0">
           <label className="block text-sm font-semibold mb-2" htmlFor="event">
-            Select Event
+            Chọn sự kiện
           </label>
           <select
             className="shadow appearance-none border rounded w-full py-2 px-3 text-sm text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -199,7 +223,7 @@ const ViewTask = ({ eventId }) => {
             value={selectedEventId}
             onChange={handleEventChange}
           >
-            <option value="">Select Event</option>
+            <option value=""> Chọn sự kiện</option>
             {events.map((event) => (
               <option key={event.id} value={event.id}>
                 {event.title}
@@ -208,7 +232,7 @@ const ViewTask = ({ eventId }) => {
           </select>
           {errors.eventId && (
             <p className="text-red-500 text-xs italic mt-1">
-              Please select an event.
+              Trạng thái công việc
             </p>
           )}
         </div>
@@ -217,7 +241,7 @@ const ViewTask = ({ eventId }) => {
             className="block text-sm font-semibold mb-2"
             htmlFor="taskStatus"
           >
-            Select Task Status
+            Trạng thái công việc
           </label>
           <select
             className="shadow appearance-none border rounded w-full py-2 px-3 text-sm text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -236,28 +260,37 @@ const ViewTask = ({ eventId }) => {
       </div>
 
       {loading ? (
-        <div className="text-center">Loading...</div>
+        <div className="text-center">
+          <FiLoader className="inline-block animate-spin text-4xl" />
+          <p>Loading...</p>
+        </div>
       ) : error ? (
-        <div className="text-red-500">Error: {error}</div>
+        <div className="text-center text-red-500">
+          <FiAlertCircle className="inline-block text-4xl mb-2" />
+          <p>Error: {error}</p>
+        </div>
       ) : tasks.length === 0 ? (
-        <div>No tasks found.</div>
+        <div className="text-center">
+          <FiAlertCircle className="inline-block text-4xl mb-2" />
+          <p>No tasks found for the selected criteria.</p>
+        </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200">
+          <table className="min-w-full bg-white border border-gray-200 table-auto">
             <thead>
               <tr>
-                <th className="py-2 px-4 border-b">Task Name</th>
-                <th className="py-2 px-4 border-b">Description</th>
-                <th className="py-2 px-4 border-b">Person in Charge</th>
-                <th className="py-2 px-4 border-b">Phone Number</th>
-                <th className="py-2 px-4 border-b">Cost</th>
-                <th className="py-2 px-4 border-b">Created Date</th>
-                <th className="py-2 px-4 border-b">End Date</th>
-                <th className="py-2 px-4 border-b">Status</th>
-                <th className="py-2 px-4 border-b">Event Title</th>
-                <th className="py-2 px-4 border-b">Event Description</th>
-                <th className="py-2 px-4 border-b">Event Start Date</th>
-                <th className="py-2 px-4 border-b">Event End Date</th>
+                <th className="py-2 px-4 border-b">Công Việc</th>
+                <th className="py-2 px-4 border-b">Mô Tả</th>
+                <th className="py-2 px-4 border-b">Người Phụ Trách</th>
+                <th className="py-2 px-4 border-b">Số Điện Thoại</th>
+                <th className="py-2 px-4 border-b">Chi Phí</th>
+                <th className="py-2 px-4 border-b">Ngày Tạo</th>
+                <th className="py-2 px-4 border-b">Ngày Kết Thúc</th>
+                <th className="py-2 px-4 border-b">Trạng Thái</th>
+                <th className="py-2 px-4 border-b">Tiêu Đề Sự Kiện</th>
+                <th className="py-2 px-4 border-b">Mô Tả Sự Kiện</th>
+                <th className="py-2 px-4 border-b">Ngày Bắt Đầu Sự Kiện</th>
+                <th className="py-2 px-4 border-b">Ngày Kết Thúc Sự Kiện</th>
                 <th className="py-2 px-4 border-b">Actions</th>
               </tr>
             </thead>
@@ -277,7 +310,9 @@ const ViewTask = ({ eventId }) => {
                   <td className="py-2 px-4 border-b">
                     {formatDate(task.endDate)}
                   </td>
-                  <td className="py-2 px-4 border-b">{task.status}</td>
+                  <td className="py-2 px-4 border-b">
+                    {getStatusDisplay[task.status]}
+                  </td>
                   <td className="py-2 px-4 border-b">{task.event.title}</td>
                   <td className="py-2 px-4 border-b">
                     {task.event.description}
@@ -291,12 +326,6 @@ const ViewTask = ({ eventId }) => {
                   <td className="py-2 px-4 border-b">
                     <button
                       className="text-blue-500 hover:text-blue-700 mr-4"
-                      //   onClick={() =>
-                      //     handleUpdateTaskStatus(
-                      //     //   task.id,
-                      //           //   task.status === 0 ? "ONGOING" : "NOT_YET"
-
-                      //  }    )
                       onClick={() =>
                         handleUpdateTaskStatus(task.id, task.status)
                       }
