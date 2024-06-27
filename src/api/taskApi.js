@@ -95,7 +95,7 @@ export const updateTaskStatus = async (taskId, isSuccessful) => {
   try {
     const response = await axios.put(
       `${baseUrl}/task/update-status-of-task`,
-      null, // No request body needed for query params
+      null,
       {
         params: {
           taskId: taskId,
@@ -104,9 +104,12 @@ export const updateTaskStatus = async (taskId, isSuccessful) => {
       }
     );
 
-    return response.data;
+    return {
+      isSuccess: response.data.isSuccess,
+      messages: response.data.messages,
+    };
   } catch (error) {
     console.error("Error updating task status:", error);
-    throw error; // Optionally handle the error further up the call stack
+    throw error;
   }
 };

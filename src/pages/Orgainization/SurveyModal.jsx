@@ -1,63 +1,52 @@
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import "slick-carousel/slick/slick-theme.css";
-import "slick-carousel/slick/slick.css";
-import { getAccountById } from "../../api/accountApi";
+import { Calendar, Clock, Info, User } from "react-feather";
+import { getAccountById, getAllAccount } from "../../api/accountApi";
 import { getAllEvent } from "../../api/eventApi";
-import { getAllSurveys, insertSurveyForm } from "../../api/surveyApi";
-import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
+import { getAllOrganizations } from "../../api/organizationApi";
+import { getAllSurveys } from "../../api/surveyApi";
 
 const SurveyModal = () => {
   const [surveys, setSurveys] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isCreatingSurvey, setIsCreatingSurvey] = useState(false);
-  const [name, setName] = useState("");
-  const [questions, setQuestions] = useState([
-    { no: "", question: "", answerType: "", ratingMax: "" },
-  ]);
-  const [submitResult, setSubmitResult] = useState(null);
-  const [events, setEvents] = useState([]);
-  const [selectedEventId, setSelectedEventId] = useState("");
   const [accountDetails, setAccountDetails] = useState({});
-  const [isLoadingAccountDetails, setIsLoadingAccountDetails] = useState(false);
-
-  const fetchAccountDetails = async (accountId) => {
-    try {
-      setIsLoadingAccountDetails(true);
-      const account = await getAccountById(accountId);
-      return account;
-    } catch (error) {
-      console.error("Error fetching account details:", error);
-      return null;
-    } finally {
-      setIsLoadingAccountDetails(false);
-    }
-  };
+  const [isLoading, setIsLoading] = useState(false);
+  const [events, setEvents] = useState([]);
+  const [organizations, setOrganizations] = useState([]);
 
   useEffect(() => {
     fetchSurveys();
     fetchEvents();
+    fetchOrganizations();
   }, []);
 
   const fetchSurveys = async () => {
     setIsLoading(true);
     try {
       const data = await getAllSurveys();
-      setSurveys(data.result || []);
+      if (data.isSuccess) {
+        const surveysData = data.result || [];
 
-      const creatorIds = data.result.map((survey) => survey.createBy);
-      const accountsPromises = creatorIds.map((id) => getAccountById(id));
-      const accountsData = await Promise.all(accountsPromises);
+        // Fetch account details for creators
+        const creatorIds = surveysData.map((survey) => survey.survey.createBy);
+        const uniqueCreatorIds = [...new Set(creatorIds)]; // Lấy danh sách các ID người tạo duy nhất
+        const accountsPromises = uniqueCreatorIds.map((id) =>
+          getAccountById(id)
+        );
+        const accountsData = await Promise.all(accountsPromises);
 
-      const accountDetailsMap = {};
-      accountsData.forEach((account) => {
-        accountDetailsMap[account.id] = account;
-      });
+        // Tạo một bản đồ chi tiết tài khoản
+        const accountDetailsMap = {};
+        accountsData.forEach((account) => {
+          accountDetailsMap[account.id] = account;
+        });
 
-      setAccountDetails(accountDetailsMap);
+        // Cập nhật state với dữ liệu đã lấy được
+        setAccountDetails(accountDetailsMap);
+        setSurveys(surveysData);
+      } else {
+        console.error("Lỗi khi lấy danh sách khảo sát:", data.messages);
+      }
     } catch (error) {
-      console.error("Error fetching surveys:", error);
+      console.error("Lỗi khi lấy danh sách khảo sát:", error);
     } finally {
       setIsLoading(false);
     }
@@ -66,212 +55,149 @@ const SurveyModal = () => {
   const fetchEvents = async () => {
     try {
       const eventsData = await getAllEvent(1, 100);
-      setEvents(eventsData.result.items);
+      setEvents(eventsData.result.items); // Cập nhật trạng thái sự kiện với các mục đã lấy được
     } catch (error) {
-      console.error("Error fetching events:", error);
+      console.error("Lỗi khi lấy danh sách sự kiện:", error);
     }
   };
 
-  const handleCreateSurvey = async (e) => {
-    e.preventDefault();
-    setIsCreatingSurvey(true);
+  const fetchOrganizations = async () => {
     try {
-      const formData = {
-        name,
-        eventId: selectedEventId,
-        createBy: "string",
-        questionDetailRequests: questions,
-      };
-
-      const response = await insertSurveyForm(formData);
-
-      if (response && response.isSuccess) {
-        setSubmitResult(response);
-        fetchSurveys();
-        setName("");
-        setSelectedEventId("");
-        setQuestions([{ no: "", question: "", answerType: "", ratingMax: "" }]);
+      const res = await getAllOrganizations(1, 10);
+      if (res.isSuccess) {
+        const organizationsData = res.result.items || [];
+        setOrganizations(organizationsData);
       } else {
-        console.error("Error creating survey:", response);
-        if (response && response.messages) {
-          console.error("Validation errors:", response.messages);
-        } else if (!response) {
-          setSubmitResult(null);
-        }
+        console.error("Phản hồi không thành công:", res.messages);
       }
     } catch (error) {
-      console.error("Error creating survey:", error);
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-      }
-    } finally {
-      setIsCreatingSurvey(false);
+      console.error("Lỗi khi lấy danh sách tổ chức:", error);
     }
   };
 
-  const handleQuestionChange = (index, field, value) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[index][field] = value;
-    setQuestions(updatedQuestions);
+  const getAllAccountById = async (accountId) => {
+    try {
+      const accountData = await getAllAccount(accountId);
+      return accountData;
+    } catch (error) {
+      console.error("Lỗi khi lấy tài khoản theo ID:", error);
+    }
   };
 
-  const addQuestion = () => {
-    const newQuestion = {
-      no: questions.length,
-      question: "",
-      answerType: 0,
-      ratingMax: 0,
-    };
-    setQuestions([...questions, newQuestion]);
+  const formatDate = (dateString) => {
+    if (!dateString) {
+      return ""; // Xử lý ngày tháng rỗng hoặc null một cách dễ dàng
+    }
+
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      console.error(`Chuỗi ngày không hợp lệ: ${dateString}`);
+      return ""; // Xử lý các chuỗi ngày không hợp lệ
+    }
+
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
   };
 
-  const removeQuestion = (index) => {
-    const updatedQuestions = questions.filter((_, i) => i !== index);
-    setQuestions(updatedQuestions);
+  const getEventTitle = (eventId) => {
+    const event = events.find((event) => event.id === eventId);
+    return event ? event.title : ""; // Trả về tiêu đề sự kiện nếu tìm thấy, ngược lại trả về chuỗi rỗng
   };
 
-  if (isLoading) {
-    return <LoadingComponent isLoading={true} />;
-  }
+  const getAccountName = (accountId) => {
+    return accountDetails[accountId]?.name || "";
+  };
+
+  const SurveyItemDetail = ({ icon, label, value }) => (
+    <div className="mb-2">
+      <p className="text-sm text-gray-600 flex items-center">
+        {icon} <span className="ml-1">{label}</span> {value}
+      </p>
+    </div>
+  );
 
   return (
-    <div className="container mx-auto py-8">
-      <h2 className="text-3xl font-bold mb-4">Surveys</h2>
-      <div className="flex">
-        <div className="w-1/2 pr-4">
-          <div className="grid grid-cols-1 gap-4">
-            {surveys.map((survey) => (
-              <div
-                key={survey.id}
-                className="border p-4 rounded-lg shadow-lg mb-4"
-              >
-                <h3 className="text-lg font-bold">{survey.survey.name}</h3>
-                <p className="text-sm text-gray-600">
-                  Created by:{" "}
-                  {accountDetails[survey.survey.createBy]?.name || "Unknown"}
-                </p>
-                <p className="text-sm text-gray-600">
-                  Event:{" "}
-                  {events.find((event) => event.id === survey.survey.eventId)
-                    ?.title || "Unknown Event"}
-                </p>
-              </div>
-            ))}
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {surveys.map((item) => (
+        <div
+          key={item.survey.id}
+          className="border rounded-lg shadow-md p-6 flex items-start"
+        >
+          <div className="mr-4 flex-shrink-0">
+            <Calendar className="w-8 h-8 text-blue-500" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg font-bold mb-2 flex items-center">
+              <Info className="mr-2" /> {item.survey.name}
+            </h3>
+            <div>
+              <SurveyItemDetail
+                icon={<Info className="w-4 h-4 mr-1" />}
+                label="Sự kiện:"
+                value={getEventTitle(item.survey.eventId)}
+              />
+              <SurveyItemDetail
+                icon={<Clock className="w-4 h-4 mr-1" />}
+                label="Ngày bắt đầu sự kiện:"
+                value={formatDate(item.startEventDate)}
+              />
+              <SurveyItemDetail
+                icon={<Clock className="w-4 h-4 mr-1" />}
+                label="Ngày kết thúc sự kiện:"
+                value={formatDate(item.endEventDate)}
+              />
+              <SurveyItemDetail
+                icon={<User className="w-4 h-4 mr-1" />}
+                label="Người tạo:"
+                value={getAccountName(item.survey.createBy)}
+              />
+              <SurveyItemDetail
+                icon={<Calendar className="w-4 h-4 mr-1" />}
+                label="Ngày tạo:"
+                value={formatDate(item.survey.createDate)}
+              />
+              <SurveyItemDetail
+                icon={<Calendar className="w-4 h-4 mr-1" />}
+                label="Ngày cập nhật:"
+                value={formatDate(item.survey.updateDate)}
+              />
+              <SurveyItemDetail
+                icon={<Info className="w-4 h-4 mr-1" />}
+                label="Mô tả:"
+                value={item.survey.description}
+              />
+              <SurveyItemDetail
+                icon={<Info className="w-4 h-4 mr-1" />}
+                label="Thông tin bổ sung:"
+                value={item.additionalInfo}
+              />
+              {item.surveyQuestionDetails.length > 0 && (
+                <div className="mt-4">
+                  <h4 className="text-lg font-bold mb-2">Câu hỏi khảo sát</h4>
+                  {item.surveyQuestionDetails.map((question) => (
+                    <div key={question.id} className="mb-2">
+                      <p className="text-sm font-semibold">
+                        {question.question}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        Loại:{" "}
+                        {question.answerType === 0 ? "Văn bản" : "Đánh giá"}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center">
+            <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
+              Xem chi tiết
+            </button>
           </div>
         </div>
-        <div className="w-1/2 pl-4">
-          <div className="border border-gray-300 p-6 rounded-lg">
-            <h2 className="text-3xl font-bold mb-4">Create New Survey</h2>
-            <form onSubmit={handleCreateSurvey}>
-              <div className="mb-4">
-                <label
-                  htmlFor="surveyName"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Survey Name:
-                </label>
-                <input
-                  type="text"
-                  id="surveyName"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="event"
-                >
-                  Select Event
-                </label>
-                <select
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="event"
-                  name="event"
-                  value={selectedEventId}
-                  onChange={(e) => setSelectedEventId(e.target.value)}
-                >
-                  <option value="">Select Event</option>
-                  {events &&
-                    events.map((event) => (
-                      <option key={event.id} value={event.id}>
-                        {event.title}
-                      </option>
-                    ))}
-                </select>
-              </div>
-              <div className="mb-4">
-                <h3 className="text-lg font-bold mb-2">Questions:</h3>
-                {questions.map((question, index) => (
-                  <div key={index} className="mb-2 flex items-center">
-                    <label
-                      htmlFor={`question-${index}`}
-                      className="block text-sm font-medium text-gray-700 mr-2"
-                    >
-                      Question{index + 1}:
-                    </label>
-                    <input
-                      type="text"
-                      id={`question-${index}`}
-                      value={question.question}
-                      onChange={(e) =>
-                        handleQuestionChange(index, "question", e.target.value)
-                      }
-                      required
-                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeQuestion(index)}
-                      className="ml-2 inline-flex items-center px-2.5 py-1.5 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                      <FontAwesomeIcon icon={faTimes} className="h-3 w-3" />
-                      <span className="ml-1">Remove</span>
-                    </button>
-                  </div>
-                ))}
-              </div>
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={addQuestion}
-                  className="mt-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Add Question
-                </button>
-                <button
-                  type="submit"
-                  disabled={isCreatingSurvey}
-                  className="mt-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  {isCreatingSurvey ? "Creating Survey..." : "Create Survey"}
-                </button>
-              </div>
-            </form>
-            {submitResult && (
-              <div className="mt-4">
-                <p className="text-sm font-medium">
-                  Submission Result:{" "}
-                  <span
-                    className={`${
-                      submitResult.isSuccess ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {submitResult.isSuccess ? "Success" : "Failed"}
-                  </span>
-                </p>
-                {submitResult.messages.map((message, index) => (
-                  <p key={index} className="text-sm text-gray-600">
-                    {message}
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+      ))}
     </div>
   );
 };

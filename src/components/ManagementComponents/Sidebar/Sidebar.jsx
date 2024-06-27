@@ -1,10 +1,11 @@
 import { useState } from "react";
 import {
   FaCalendarPlus,
-  FaChartBar,
   FaClipboardList,
+  FaFileAlt,
   FaHistory,
   FaHome,
+  FaListAlt,
   FaMoneyBill,
   FaUser,
 } from "react-icons/fa";
@@ -20,12 +21,24 @@ const SideBar = () => {
   const menuItems = {
     ORGANIZER: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
-      { name: "Khảo sát", link: "surveys", icon: <FaClipboardList /> },
       { name: "Sự kiện", link: "event", icon: <FaCalendarPlus /> },
+      { name: "Khảo sát", link: "surveys", icon: <FaClipboardList /> },
+      { name: "Tạo khảo sát", link: "create-survey", icon: <FaFileAlt /> },
+      {
+        name: "Quản lí checkin",
+        link: "event/manage-check-in/:id",
+        icon: <FaListAlt />,
+      },
     ],
     PM: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
       { name: "Sự kiện", link: "event", icon: <FaCalendarPlus /> },
+      { name: "Quản lý công việc", link: "task", icon: <FaClipboardList /> },
+      {
+        name: "Phân công công việc",
+        link: "task-asign",
+        icon: <FaMoneyBill />,
+      },
     ],
     SPONSOR: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },

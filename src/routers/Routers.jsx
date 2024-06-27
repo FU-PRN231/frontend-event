@@ -8,22 +8,24 @@ import EventDetail from "../pages/Common/Event/EventDetail";
 import Home from "../pages/Common/Home";
 import LoginPage from "../pages/Common/LoginPage";
 import PersonalInformation from "../pages/Common/PersonalInformation";
+import SurveyForm from "../pages/Common/SurveyForm";
 import VerifyPayment from "../pages/Common/VerifyPayment";
 import Dashboard from "../pages/CommonManager/Dashboard";
 import ManageUser from "../pages/CommonManager/ManageUser";
 import ManagementEvent from "../pages/CommonManager/ManagementEvent";
 import CheckInModal from "../pages/Orgainization/CheckinModal";
+import QuestionSurvey from "../pages/Orgainization/QuestionSurvey";
 import SurveyModal from "../pages/Orgainization/SurveyModal";
 import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
 import ManageTaskEvent from "../pages/PM/Task/ManageTaskEvent";
 import ViewTask from "../pages/PM/Task/ViewTask";
+import UpdateEventForm from "../pages/PM/UpdateEventForm";
 import AddSponsorForm from "../pages/Sponsor/AddSponsorForm";
 import AddSponsorMoney from "../pages/Sponsor/AddSponsorMoney";
 import SponsorHistory from "../pages/Sponsor/SponsorHistory";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
-import UpdateEventForm from "../pages/PM/UpdateEventForm";
 function Routers() {
   const routing = useRoutes([
     {
@@ -41,6 +43,7 @@ function Routers() {
         { path: "event/:id", element: <EventDetail /> },
         { path: "cart", element: <Cart /> },
         { path: "personal-information", element: <PersonalInformation /> },
+        { path: "survey", element: <SurveyForm /> },
       ],
     },
     {
@@ -94,6 +97,10 @@ function Routers() {
         {
           path: "surveys",
           element: <SurveyModal />,
+        },
+        {
+          path: "create-survey",
+          element: <QuestionSurvey />,
         },
         { path: "event/manage-check-in/:id", element: <CheckInModal /> },
       ],

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FiAlertCircle, FiCheckCircle, FiTrash2 } from "react-icons/fi";
+import { FiAlertCircle, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { RiErrorWarningFill } from "react-icons/ri";
 import { getAllEvent } from "../../../api/eventApi";
 import {
   deleteTask,
   getAllTasksOfEvent,
   getAllTasksOfEventByStatus,
-  updateTaskStatus,
 } from "../../../api/taskApi";
 import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
+import UpdateTask from "./UpdateTask";
 
 const ViewTask = ({ eventId }) => {
   const {
@@ -39,6 +39,13 @@ const ViewTask = ({ eventId }) => {
     [TaskStatus.FINISHED]: true,
     [TaskStatus.FAILED]: false,
   };
+  const TaskStatusUpdate = {
+    No_status: "--",
+    NOT_YET: "Chưa bắt đầu",
+    ONGOING: "Đang tiến hành",
+    FINISHED: "Hoàn thành",
+    FAILED: "Thất bại",
+  };
   const getNextStatus = (currentStatus) => {
     switch (currentStatus) {
       case TaskStatus.NOT_YET:
@@ -51,6 +58,20 @@ const ViewTask = ({ eventId }) => {
         return TaskStatus.NOT_YET;
       default:
         return TaskStatus.NOT_YET;
+    }
+  };
+  const getStatusText = (status) => {
+    switch (status) {
+      case 0:
+        return "Chưa bắt đầu";
+      case 1:
+        return "Đang tiến hành";
+      case 2:
+        return "Hoàn thành";
+      case 3:
+        return "Thất bại";
+      default:
+        return "Chưa cập nhập";
     }
   };
   const [selectedTaskStatus, setSelectedTaskStatus] = useState("");
@@ -145,83 +166,6 @@ const ViewTask = ({ eventId }) => {
     fetchTasksByStatus();
   }, [selectedEventId, selectedTaskStatus]);
 
-  const handleUpdateTaskStatus = async (taskId, currentStatus) => {
-    const newStatus = getNextStatus(currentStatus);
-
-    // Check if the transition is valid
-    switch (currentStatus) {
-      case TaskStatus.No_status:
-        if (
-          newStatus === TaskStatus.NOT_YET ||
-          newStatus === TaskStatus.ONGOING ||
-          newStatus === TaskStatus.FINISHED ||
-          newStatus === TaskStatus.FAILED
-        ) {
-          break;
-        } else {
-          setError("Invalid status transition.");
-          return;
-        }
-      case TaskStatus.NOT_YET:
-        if (
-          newStatus === TaskStatus.ONGOING ||
-          newStatus === TaskStatus.FINISHED ||
-          newStatus === TaskStatus.FAILED
-        ) {
-          break;
-        } else {
-          setError("Invalid status transition.");
-          return;
-        }
-      case TaskStatus.ONGOING:
-        if (
-          newStatus === TaskStatus.FINISHED ||
-          newStatus === TaskStatus.FAILED
-        ) {
-          break;
-        } else {
-          setError("Invalid status transition.");
-          return;
-        }
-      case TaskStatus.FINISHED:
-        if (newStatus === TaskStatus.FAILED) {
-          break;
-        } else {
-          setError("Invalid status transition.");
-          return;
-        }
-      default:
-        setError("Invalid current status.");
-        return;
-    }
-
-    // If the transition is valid, proceed with updating the status
-    const isSuccessfulValue = isSuccessful[newStatus];
-
-    try {
-      const res = await updateTaskStatus(taskId, isSuccessfulValue);
-      if (res.isSuccess) {
-        setTasks((prevTasks) =>
-          prevTasks.map((task) =>
-            task.id === taskId ? { ...task, status: newStatus } : task
-          )
-        );
-        setUpdateStatusMessage(
-          `Cập nhật trạng thái nhiệm vụ thành công: ${
-            newStatus === TaskStatus.FINISHED ? "Hoàn thành" : "Đang tiến hành"
-          }`
-        );
-        setTimeout(() => {
-          setUpdateStatusMessage("");
-        }, 3000);
-      } else {
-        setError(res.messages[0] || "Lỗi khi cập nhật trạng thái nhiệm vụ.");
-      }
-    } catch (err) {
-      setError("Lỗi khi cập nhật trạng thái nhiệm vụ.");
-    }
-  };
-
   const formatDate = (dateTimeString) => {
     const date = new Date(dateTimeString);
     const day = date.getDate().toString().padStart(2, "0");
@@ -237,6 +181,30 @@ const ViewTask = ({ eventId }) => {
       console.error("Lỗi khi xóa nhiệm vụ:", error);
       setError("Lỗi khi xóa nhiệm vụ.");
     }
+  };
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+
+  const handleOpenUpdateModal = () => {
+    setShowUpdateModal(true);
+  };
+
+  const handleCloseUpdateModal = () => {
+    setShowUpdateModal(false);
+  };
+  const handleUpdateSuccess = async (newStatus) => {
+    console.log("Updated to:", newStatus);
+
+    // Reload task data after update
+    try {
+      const updatedTask = await fetchTaskById(task.id);
+      // Handle updated task state or context update here
+    } catch (error) {
+      console.error("Error fetching updated task:", error);
+    }
+  };
+
+  const handleError = (errorMessage) => {
+    console.error("Update error:", errorMessage);
   };
   return (
     <div className="container mx-auto px-4 py-8">
@@ -343,7 +311,9 @@ const ViewTask = ({ eventId }) => {
                   <td className="py-2 px-4 border-b">
                     {formatDate(task.endDate)}
                   </td>
-                  <td className="py-2 px-4 border-b">{task.status}</td>
+                  <td className="py-2 px-4 border-b">
+                    {getStatusText(task.status)}
+                  </td>
                   <td className="py-2 px-4 border-b">{task.event.title}</td>
                   <td className="py-2 px-4 border-b">
                     {task.event.description}
@@ -355,20 +325,28 @@ const ViewTask = ({ eventId }) => {
                     {formatDate(task.event.endEventDate)}
                   </td>
                   <td className="py-2 px-4 border-b">
-                    <button
-                      className="text-blue-500 hover:text-blue-700 mr-4"
-                      onClick={() =>
-                        handleUpdateTaskStatus(task.id, task.status)
-                      }
-                    >
-                      <FiCheckCircle />
-                    </button>
-                    <button
-                      className="text-red-500 hover:text-red-700"
-                      onClick={() => handleDeleteTask(task.id)}
-                    >
-                      <FiTrash2 />
-                    </button>
+                    <div>
+                      <button
+                        className="text-blue-500 hover:text-blue-700 mr-4"
+                        onClick={handleOpenUpdateModal}
+                      >
+                        <FiEdit2 className="mr-2" />
+                      </button>
+                      {showUpdateModal && (
+                        <UpdateTask
+                          task={task}
+                          onClose={handleCloseUpdateModal}
+                          onUpdateSuccess={handleUpdateSuccess}
+                          onError={handleError}
+                        />
+                      )}
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => handleDeleteTask(task.id)}
+                      >
+                        <FiTrash2 />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
