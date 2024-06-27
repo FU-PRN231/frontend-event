@@ -16,7 +16,8 @@ import CheckInModal from "../pages/Orgainization/CheckinModal";
 import SurveyModal from "../pages/Orgainization/SurveyModal";
 import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
-import TaskModal from "../pages/PM/TaskModal";
+import ManageTaskEvent from "../pages/PM/Task/ManageTaskEvent";
+import ViewTask from "../pages/PM/Task/ViewTask";
 import AddSponsorForm from "../pages/Sponsor/AddSponsorForm";
 import AddSponsorMoney from "../pages/Sponsor/AddSponsorMoney";
 import SponsorHistory from "../pages/Sponsor/SponsorHistory";
@@ -113,7 +114,11 @@ function Routers() {
         },
         {
           path: "task",
-          element: <TaskModal />,
+          element: <ViewTask />,
+        },
+        {
+          path: "task-asign",
+          element: <ManageTaskEvent />,
         },
       ],
     },

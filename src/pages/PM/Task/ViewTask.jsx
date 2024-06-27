@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  FiAlertCircle,
-  FiCheckCircle,
-  FiLoader,
-  FiTrash2,
-} from "react-icons/fi";
+import { FiAlertCircle, FiCheckCircle, FiTrash2 } from "react-icons/fi";
+import { RiErrorWarningFill } from "react-icons/ri";
 import { getAllEvent } from "../../../api/eventApi";
 import {
   deleteTask,
@@ -13,6 +9,7 @@ import {
   getAllTasksOfEventByStatus,
   updateTaskStatus,
 } from "../../../api/taskApi";
+import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
 
 const ViewTask = ({ eventId }) => {
   const {
@@ -28,16 +25,15 @@ const ViewTask = ({ eventId }) => {
   const [events, setEvents] = useState([]);
   const [selectedEventId, setSelectedEventId] = useState(eventId || "");
   const [updateStatusMessage, setUpdateStatusMessage] = useState("");
-  const [selectedTaskStatus, setSelectedTaskStatus] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const TaskStatus = {
     No_status: "--",
-    NOT_YET: "Chưa",
-    ONGOING: "Đang diễn ra",
-    FINISHED: "Đã hoàn thành",
+    NOT_YET: "Chưa bắt đầu",
+    ONGOING: "Đang tiến hành",
+    FINISHED: "Hoàn thành",
     FAILED: "Thất bại",
   };
-
   const isSuccessful = {
     [TaskStatus.ONGOING]: true,
     [TaskStatus.FINISHED]: true,
@@ -57,34 +53,20 @@ const ViewTask = ({ eventId }) => {
         return TaskStatus.NOT_YET;
     }
   };
-  const getStatusDisplay = (status) => {
-    switch (status) {
-      case TaskStatusResponse.No_status:
-        return TaskStatus.No_status;
-      case TaskStatusResponse.NOT_YET:
-        return TaskStatus.NOT_YET;
-      case TaskStatusResponse.ONGOING:
-        return TaskStatus.ONGOING;
-      case TaskStatusResponse.FINISHED:
-        return TaskStatus.FINISHED;
-      case TaskStatusResponse.FAILED:
-        return TaskStatus.FAILED;
-      default:
-        return TaskStatus.No_status;
-    }
-  };
+  const [selectedTaskStatus, setSelectedTaskStatus] = useState("");
+
   useEffect(() => {
     const fetchTasks = async () => {
       setLoading(true);
       try {
         if (selectedEventId) {
-          const data = await getAllTasksOfEvent(selectedEventId, 1, 100);
+          const data = await getAllTasksOfEvent(selectedEventId, 1, 10);
           setTasks(data.result.items);
         } else {
           setTasks([]);
         }
       } catch (err) {
-        setError("Error fetching tasks.");
+        setError("Lỗi khi lấy dữ liệu nhiệm vụ.");
         setTasks([]);
       }
       setLoading(false);
@@ -99,7 +81,7 @@ const ViewTask = ({ eventId }) => {
         const eventsData = await getAllEvent(1, 100);
         setEvents(eventsData.result.items);
       } catch (error) {
-        console.error("Error fetching events:", error);
+        console.error("Lỗi khi lấy dữ liệu sự kiện:", error);
       }
     };
 
@@ -122,19 +104,19 @@ const ViewTask = ({ eventId }) => {
           let apiStatus;
           switch (selectedTaskStatus) {
             case TaskStatus.NOT_YET:
-              apiStatus = TaskStatusResponse.NOT_YET.toString();
+              apiStatus = "0";
               break;
             case TaskStatus.ONGOING:
-              apiStatus = TaskStatusResponse.ONGOING.toString();
+              apiStatus = "1";
               break;
             case TaskStatus.FINISHED:
-              apiStatus = TaskStatusResponse.FINISHED.toString();
+              apiStatus = "2";
               break;
             case TaskStatus.FAILED:
-              apiStatus = TaskStatusResponse.FAILED.toString();
+              apiStatus = "3";
               break;
             default:
-              apiStatus = "--"; // Default case
+              apiStatus = "--";
               break;
           }
 
@@ -154,18 +136,66 @@ const ViewTask = ({ eventId }) => {
           setTasks([]);
         }
       } catch (err) {
-        setError("Error fetching tasks by status.");
+        setError("Lỗi khi lấy dữ liệu nhiệm vụ theo trạng thái.");
         setTasks([]);
       }
       setLoading(false);
     };
-    if (selectedEventId) {
-      fetchTasksByStatus();
-    }
+
+    fetchTasksByStatus();
   }, [selectedEventId, selectedTaskStatus]);
 
   const handleUpdateTaskStatus = async (taskId, currentStatus) => {
     const newStatus = getNextStatus(currentStatus);
+
+    // Check if the transition is valid
+    switch (currentStatus) {
+      case TaskStatus.No_status:
+        if (
+          newStatus === TaskStatus.NOT_YET ||
+          newStatus === TaskStatus.ONGOING ||
+          newStatus === TaskStatus.FINISHED ||
+          newStatus === TaskStatus.FAILED
+        ) {
+          break;
+        } else {
+          setError("Invalid status transition.");
+          return;
+        }
+      case TaskStatus.NOT_YET:
+        if (
+          newStatus === TaskStatus.ONGOING ||
+          newStatus === TaskStatus.FINISHED ||
+          newStatus === TaskStatus.FAILED
+        ) {
+          break;
+        } else {
+          setError("Invalid status transition.");
+          return;
+        }
+      case TaskStatus.ONGOING:
+        if (
+          newStatus === TaskStatus.FINISHED ||
+          newStatus === TaskStatus.FAILED
+        ) {
+          break;
+        } else {
+          setError("Invalid status transition.");
+          return;
+        }
+      case TaskStatus.FINISHED:
+        if (newStatus === TaskStatus.FAILED) {
+          break;
+        } else {
+          setError("Invalid status transition.");
+          return;
+        }
+      default:
+        setError("Invalid current status.");
+        return;
+    }
+
+    // If the transition is valid, proceed with updating the status
     const isSuccessfulValue = isSuccessful[newStatus];
 
     try {
@@ -177,18 +207,18 @@ const ViewTask = ({ eventId }) => {
           )
         );
         setUpdateStatusMessage(
-          `Task status updated successfully: ${
-            newStatus === TaskStatus.FINISHED ? "Finished" : "Ongoing"
+          `Cập nhật trạng thái nhiệm vụ thành công: ${
+            newStatus === TaskStatus.FINISHED ? "Hoàn thành" : "Đang tiến hành"
           }`
         );
         setTimeout(() => {
           setUpdateStatusMessage("");
         }, 3000);
       } else {
-        setError(res.messages[0] || "Error updating task status.");
+        setError(res.messages[0] || "Lỗi khi cập nhật trạng thái nhiệm vụ.");
       }
     } catch (err) {
-      setError("Error updating task status.");
+      setError("Lỗi khi cập nhật trạng thái nhiệm vụ.");
     }
   };
 
@@ -204,12 +234,14 @@ const ViewTask = ({ eventId }) => {
       await deleteTask(taskId, true);
       setTasks(tasks.filter((task) => task.id !== taskId));
     } catch (error) {
-      console.error("Error deleting task:", error);
-      setError("Error deleting task.");
+      console.error("Lỗi khi xóa nhiệm vụ:", error);
+      setError("Lỗi khi xóa nhiệm vụ.");
     }
   };
   return (
     <div className="container mx-auto px-4 py-8">
+      <LoadingComponent isLoading={isLoading} />
+
       <h1 className="text-2xl font-bold mb-4">Task List</h1>
       <div className="mb-4 flex flex-wrap justify-between">
         <div className="w-full md:w-5/12 mb-4 md:mb-0">
@@ -232,7 +264,7 @@ const ViewTask = ({ eventId }) => {
           </select>
           {errors.eventId && (
             <p className="text-red-500 text-xs italic mt-1">
-              Trạng thái công việc
+              Vui lòng chọn một sự kiện.
             </p>
           )}
         </div>
@@ -258,40 +290,41 @@ const ViewTask = ({ eventId }) => {
           </select>
         </div>
       </div>
-
-      {loading ? (
-        <div className="text-center">
-          <FiLoader className="inline-block animate-spin text-4xl" />
-          <p>Loading...</p>
+      {isLoading ? (
+        <div className="flex items-center justify-center">
+          <LoadingComponent isLoading={isLoading} />
+          <span className="ml-2 text-gray-600">Đang tải...</span>
         </div>
       ) : error ? (
-        <div className="text-center text-red-500">
-          <FiAlertCircle className="inline-block text-4xl mb-2" />
-          <p>Error: {error}</p>
+        <div className="flex items-center text-red-500">
+          <RiErrorWarningFill className="text-xl mr-2" />
+          <span>Lỗi: {error}</span>
         </div>
       ) : tasks.length === 0 ? (
-        <div className="text-center">
-          <FiAlertCircle className="inline-block text-4xl mb-2" />
-          <p>No tasks found for the selected criteria.</p>
+        <div className="flex items-center justify-center">
+          <span className="text-gray-600 mr-2">
+            Không tìm thấy nhiệm vụ nào.
+          </span>
+          <FiAlertCircle className="text-yellow-500 text-xl" />
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 table-auto">
+          <table className="min-w-full bg-white border border-gray-200">
             <thead>
               <tr>
-                <th className="py-2 px-4 border-b">Công Việc</th>
-                <th className="py-2 px-4 border-b">Mô Tả</th>
-                <th className="py-2 px-4 border-b">Người Phụ Trách</th>
-                <th className="py-2 px-4 border-b">Số Điện Thoại</th>
-                <th className="py-2 px-4 border-b">Chi Phí</th>
-                <th className="py-2 px-4 border-b">Ngày Tạo</th>
-                <th className="py-2 px-4 border-b">Ngày Kết Thúc</th>
-                <th className="py-2 px-4 border-b">Trạng Thái</th>
-                <th className="py-2 px-4 border-b">Tiêu Đề Sự Kiện</th>
-                <th className="py-2 px-4 border-b">Mô Tả Sự Kiện</th>
-                <th className="py-2 px-4 border-b">Ngày Bắt Đầu Sự Kiện</th>
-                <th className="py-2 px-4 border-b">Ngày Kết Thúc Sự Kiện</th>
-                <th className="py-2 px-4 border-b">Actions</th>
+                <th className="py-2 px-4 border-b">Công việc</th>
+                <th className="py-2 px-4 border-b">Mô tả</th>
+                <th className="py-2 px-4 border-b">Người phụ trách</th>
+                <th className="py-2 px-4 border-b">Số điện thoại</th>
+                <th className="py-2 px-4 border-b">Chi phí</th>
+                <th className="py-2 px-4 border-b">Ngày tạo</th>
+                <th className="py-2 px-4 border-b">Ngày kết thúc</th>
+                <th className="py-2 px-4 border-b">Trạng thái</th>
+                <th className="py-2 px-4 border-b">Tiêu đề sự kiện</th>
+                <th className="py-2 px-4 border-b">Mô tả sự kiện</th>
+                <th className="py-2 px-4 border-b">Ngày bắt đầu sự kiện</th>
+                <th className="py-2 px-4 border-b">Ngày kết thúc sự kiện</th>
+                <th className="py-2 px-4 border-b">Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -310,9 +343,7 @@ const ViewTask = ({ eventId }) => {
                   <td className="py-2 px-4 border-b">
                     {formatDate(task.endDate)}
                   </td>
-                  <td className="py-2 px-4 border-b">
-                    {getStatusDisplay[task.status]}
-                  </td>
+                  <td className="py-2 px-4 border-b">{task.status}</td>
                   <td className="py-2 px-4 border-b">{task.event.title}</td>
                   <td className="py-2 px-4 border-b">
                     {task.event.description}
