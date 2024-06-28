@@ -192,9 +192,9 @@ const SurveyModal = () => {
             </div>
           </div>
           <div className="flex items-center">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
+            {/* <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
               Xem chi tiết
-            </button>
+            </button> */}
           </div>
         </div>
       ))}

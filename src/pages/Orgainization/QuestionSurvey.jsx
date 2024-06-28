@@ -12,8 +12,8 @@ const QuestionSurvey = () => {
       {
         no: "",
         question: "",
-        answerType: null,
-        ratingMax: null,
+        answerType: "",
+        ratingMax: "",
       },
     ],
   });

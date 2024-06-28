@@ -26,7 +26,7 @@ const SideBar = () => {
       { name: "Tạo khảo sát", link: "create-survey", icon: <FaFileAlt /> },
       {
         name: "Quản lí checkin",
-        link: "event/manage-check-in/:id",
+        link: "event",
         icon: <FaListAlt />,
       },
     ],
