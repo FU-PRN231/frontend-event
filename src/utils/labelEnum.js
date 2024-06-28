@@ -10,3 +10,9 @@ export const reportType = {
   2: "6 tháng gần đây",
   3: "Năm nay",
 };
+
+export const eventStatusType = {
+  0: "Chưa xác nhận",
+  1: "Đã phê duyệt",
+  2: "Bị từ chối",
+};

@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import { formatDate, formatDateTime } from "../../../utils/util";
 import { FaEdit } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { eventStatusType } from "../../../utils/labelEnum";
 
 const EventTable = ({ events }) => {
   const role = useSelector((state) => state.user.role || "");
@@ -43,9 +44,7 @@ const EventTable = ({ events }) => {
                       {formatDateTime(event.endTime)}
                     </span>
                   </td>
-                  <td className="p-2">
-                    {event.status ? "Đang mở" : "Đã đóng"}
-                  </td>
+                  <td className="p-2">{eventStatusType[event.status]}</td>
                   <td className="p-2">
                     {role === "ADMIN" && (
                       <NavLink

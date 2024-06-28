@@ -49,3 +49,14 @@ export const updateEvent = async (id, data) => {
     return null;
   }
 };
+
+export const updateEventStatus = async (id, status) => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}/event/update-event-status?eventId=${id}&status=${status}`
+    );
+    return res.data;
+  } catch (err) {
+    return null;
+  }
+};
