@@ -1,12 +1,15 @@
-import { Tabs } from "antd";
+import { Tabs, message } from "antd";
 import { useEffect, useState } from "react";
-import { getAllEvent } from "../../api/eventApi";
+import { getAllEvent, updateEventStatus } from "../../api/eventApi";
 import { formatDate, formatDateTime } from "../../utils/util";
 import { FaStumbleuponCircle, FaTicketAlt } from "react-icons/fa";
+import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
+import { eventStatusType } from "../../utils/labelEnum";
 const { TabPane } = Tabs;
 const CensorEvent = () => {
   const [activeKey, setActiveKey] = useState(0);
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(false);
   const handleChangeTab = (activeKey) => {
     switch (activeKey) {
       case "all":
@@ -23,9 +26,16 @@ const CensorEvent = () => {
     }
   };
   const fetchData = async () => {
-    const data = await getAllEvent(1, 10);
-    if (data?.isSuccess) {
-      setEvents(data.result?.items);
+    try {
+      setLoading(true);
+      const data = await getAllEvent(1, 10);
+      if (data?.isSuccess) {
+        setEvents(data.result?.items);
+      }
+    } catch (err) {
+      message.error("Có lỗi xảy ra");
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -33,6 +43,7 @@ const CensorEvent = () => {
   }, [activeKey]);
   return (
     <>
+      <LoadingComponent isLoading={loading} />
       <h3 className="text-primary text-center font-bold">Kiểm duyệt sự kiện</h3>
       <Tabs defaultActiveKey="1" onChange={handleChangeTab}>
         <TabPane tab="Tất cả" key="all">
@@ -71,10 +82,50 @@ const CensorEvent = () => {
                           {formatDateTime(event.endTime)}
                         </span>
                       </td>
+                      <td className="p-2">{eventStatusType[event.status]}</td>
                       <td className="p-2">
-                        {event.status ? "Đang mở" : "Đã đóng"}
+                        <div className="flex justify-center">
+                          {event.status !== 1 && event.status !== 2 && (
+                            <>
+                              <i
+                                className="fa-solid fa-circle-check text-green-600 text-xl cursor-pointer"
+                                onClick={async () => {
+                                  setLoading(true);
+                                  const data = await updateEventStatus(
+                                    event.id,
+                                    1
+                                  );
+                                  if (data?.isSuccess) {
+                                    message.success(
+                                      "Xác nhận sự kiện thành công"
+                                    );
+                                    await fetchData();
+                                  }
+                                  setLoading(false);
+                                }}
+                              ></i>
+                              <i
+                                className="fa-solid fa-circle-xmark text-red-600 text-xl mx-4 cursor-pointer"
+                                onClick={async () => {
+                                  setLoading(true);
+
+                                  const data = await updateEventStatus(
+                                    event.id,
+                                    2
+                                  );
+                                  if (data?.isSuccess) {
+                                    message.success(
+                                      "Từ chối sự kiện thành công"
+                                    );
+                                    await fetchData();
+                                  }
+                                  setLoading(false);
+                                }}
+                              ></i>
+                            </>
+                          )}
+                        </div>
                       </td>
-                      <td className="p-2"></td>
                     </tr>
                   ))}
               </tbody>
