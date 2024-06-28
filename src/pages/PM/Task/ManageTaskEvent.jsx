@@ -15,10 +15,10 @@ const ManageTaskEvent = ({ setTasks }) => {
   const [selectedEventId, setSelectedEventId] = useState("");
   const [events, setEvents] = useState([]);
   const TaskStatus = {
-    NOT_YET: "Not Yet",
-    ONGOING: "Ongoing",
-    FINISHED: "Finished",
-    FAILED: "Failed",
+    NOT_YET: "Chưa diễn ra",
+    ONGOING: "Đang diễn ra",
+    FINISHED: "Đã hoàn thành",
+    FAILED: "Thất bại",
   };
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const ManageTaskEvent = ({ setTasks }) => {
         const eventsData = await getAllEvent(1, 100);
         setEvents(eventsData.result.items);
       } catch (error) {
-        console.error("Error fetching events:", error);
+        console.error("Lỗi khi lấy sự kiện:", error);
       }
     };
 
@@ -45,23 +45,21 @@ const ManageTaskEvent = ({ setTasks }) => {
     try {
       const data = await assignTaskForEvent(selectedEventId, formData);
       setTasks((prevTasks) => [...prevTasks, data]);
-      reset(); // Reset form fields
+      reset();
     } catch (err) {
-      console.error("Error assigning task for event:", err);
-      setError("Error assigning task. Please try again later.");
+      console.error("Lỗi khi gán công việc cho sự kiện:", err);
+      setError("Lỗi khi gán công việc. Vui lòng thử lại sau.");
     }
     setLoading(false);
   };
 
   const onSubmit = (formData) => {
-    handleAssignTask(formData.taskDetails[0]); // Pass taskDetails array directly
+    handleAssignTask(formData.taskDetails[0]);
   };
 
   return (
     <div className="max-w-md mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      <h2 className="text-xl font-semibold mb-4 text-center">
-        Assign New Task
-      </h2>
+      <h2 className="text-xl font-semibold mb-4 text-center">Công Việc Mới </h2>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
@@ -69,7 +67,7 @@ const ManageTaskEvent = ({ setTasks }) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="event"
           >
-            Select Event
+            Chọn Sự Kiện{" "}
           </label>
           <select
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -78,7 +76,7 @@ const ManageTaskEvent = ({ setTasks }) => {
             value={selectedEventId}
             onChange={handleEventChange}
           >
-            <option value="">Select Event</option>
+            <option value=""> Chọn Sự Kiện</option>
             {events &&
               events.map((event) => (
                 <option key={event.id} value={event.id}>
@@ -88,7 +86,7 @@ const ManageTaskEvent = ({ setTasks }) => {
           </select>
           {errors.eventId && (
             <p className="text-red-500 text-xs italic">
-              Please select an event.
+              Vui lòng chọn một sự kiện.
             </p>
           )}
         </div>
@@ -98,7 +96,7 @@ const ManageTaskEvent = ({ setTasks }) => {
             htmlFor="name"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Task Name
+            Công Việc
           </label>
           <input
             id="name"
@@ -109,7 +107,7 @@ const ManageTaskEvent = ({ setTasks }) => {
           />
           {errors.taskDetails?.[0]?.name?.type === "required" && (
             <p className="text-red-500 text-xs italic">
-              Task name is required.
+              Tên công việc là bắt buộc.
             </p>
           )}
         </div>
@@ -119,7 +117,7 @@ const ManageTaskEvent = ({ setTasks }) => {
             htmlFor="description"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Description
+            Nội dung
           </label>
           <input
             id="description"
@@ -129,9 +127,7 @@ const ManageTaskEvent = ({ setTasks }) => {
             className="border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
           {errors.taskDetails?.[0]?.description?.type === "required" && (
-            <p className="text-red-500 text-xs italic">
-              Description is required.
-            </p>
+            <p className="text-red-500 text-xs italic">Nội dung là bắt buộc</p>
           )}
         </div>
 
@@ -140,7 +136,7 @@ const ManageTaskEvent = ({ setTasks }) => {
             htmlFor="personInChargeName"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Person in Charge Name
+            Người Phụ Trách
           </label>
           <input
             id="personInChargeName"
@@ -156,7 +152,7 @@ const ManageTaskEvent = ({ setTasks }) => {
             htmlFor="phoneNumber"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Phone Number
+            Số Điện Thoại
           </label>
           <input
             id="phoneNumber"
@@ -172,7 +168,7 @@ const ManageTaskEvent = ({ setTasks }) => {
             htmlFor="cost"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Cost
+            Chi Phí
           </label>
           <input
             id="cost"
@@ -188,22 +184,23 @@ const ManageTaskEvent = ({ setTasks }) => {
             htmlFor="taskStatus"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Task Status
+            Trạng Thái
           </label>
           <select
             id="taskStatus"
             {...register("taskDetails[0].taskStatus", { required: true })}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           >
-            <option value="">Select Task Status</option>
-            <option value={TaskStatus.NOT_YET}>Not Yet</option>
-            <option value={TaskStatus.ONGOING}>Ongoing</option>
-            <option value={TaskStatus.FINISHED}>Finished</option>
-            <option value={TaskStatus.FAILED}>Failed</option>
+            <option value="">Chọn Trạng Thái Công Việc</option>
+            <option value={TaskStatus.NOT_YET}>Chưa diễn ra</option>
+            <option value={TaskStatus.ONGOING}>Đang diễn ra</option>
+            <option value={TaskStatus.FINISHED}>Đã hoàn thành</option>
+            <option value={TaskStatus.FAILED}>Thất bại</option>{" "}
           </select>
+
           {errors.taskDetails?.[0]?.taskStatus?.type === "required" && (
             <p className="text-red-500 text-xs italic">
-              Task status is required.
+              Trạng thái công việc là bắt buộc.
             </p>
           )}
         </div>
@@ -213,7 +210,7 @@ const ManageTaskEvent = ({ setTasks }) => {
             htmlFor="createDate"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Create Date
+            Ngày Tạo
           </label>
           <input
             id="createDate"
@@ -229,7 +226,7 @@ const ManageTaskEvent = ({ setTasks }) => {
             htmlFor="endDate"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            End Date
+            Ngày Kết Thúc
           </label>
           <input
             id="endDate"
@@ -245,7 +242,7 @@ const ManageTaskEvent = ({ setTasks }) => {
           className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           disabled={loading}
         >
-          {loading ? "Assigning..." : "Assign"}
+          {loading ? "Đang khởi tạp..." : "Khỏi tạo "}
         </button>
       </form>
 

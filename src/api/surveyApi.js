@@ -41,9 +41,9 @@ export const getSurveyById = async (id) => {
 };
 
 // Get all surveys
-export const getAllSurveys = async () => {
+export const getAllSurveys = async (formData) => {
   try {
-    const res = await axios.get(`${baseUrl}/survey/get-all-survey`);
+    const res = await axios.get(`${baseUrl}/survey/get-all-survey`, formData);
     return res.data;
   } catch (err) {
     console.error("Error getting all surveys:", err);
