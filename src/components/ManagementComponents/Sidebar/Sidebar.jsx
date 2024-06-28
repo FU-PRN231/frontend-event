@@ -21,11 +21,10 @@ const SideBar = () => {
   const menuItems = {
     ORGANIZER: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
-      { name: "Sự kiện", link: "event", icon: <FaCalendarPlus /> },
       { name: "Khảo sát", link: "surveys", icon: <FaClipboardList /> },
       { name: "Tạo khảo sát", link: "create-survey", icon: <FaFileAlt /> },
       {
-        name: "Quản lí checkin",
+        name: "Quản lí check-in",
         link: "event",
         icon: <FaListAlt />,
       },
