@@ -25,21 +25,18 @@ const SurveyModal = () => {
       if (data.isSuccess) {
         const surveysData = data.result || [];
 
-        // Fetch account details for creators
         const creatorIds = surveysData.map((survey) => survey.survey.createBy);
-        const uniqueCreatorIds = [...new Set(creatorIds)]; // Lấy danh sách các ID người tạo duy nhất
+        const uniqueCreatorIds = [...new Set(creatorIds)];
         const accountsPromises = uniqueCreatorIds.map((id) =>
           getAccountById(id)
         );
         const accountsData = await Promise.all(accountsPromises);
 
-        // Tạo một bản đồ chi tiết tài khoản
         const accountDetailsMap = {};
         accountsData.forEach((account) => {
           accountDetailsMap[account.id] = account;
         });
 
-        // Cập nhật state với dữ liệu đã lấy được
         setAccountDetails(accountDetailsMap);
         setSurveys(surveysData);
       } else {
@@ -130,7 +127,7 @@ const SurveyModal = () => {
           </div>
           <div className="flex-1">
             <h3 className="text-lg font-bold mb-2 flex items-center">
-              <Info className="mr-2" /> {item.survey.name}
+              {item.survey.name}
             </h3>
             <div>
               <SurveyItemDetail
