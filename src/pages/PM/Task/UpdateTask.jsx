@@ -11,16 +11,16 @@ const UpdateTask = ({ task, onClose, onUpdateSuccess, onError }) => {
 
   const TaskStatus = {
     No_status: "--",
-    NOT_YET: "Chưa bắt đầu",
-    ONGOING: "Đang tiến hành",
-    FINISHED: "Hoàn thành",
-    FAILED: "Thất bại",
+    0: "Chưa bắt đầu",
+    1: "Đang tiến hành",
+    2: "Hoàn thành",
+    3: "Thất bại",
   };
 
   const isSuccessful = {
-    [TaskStatus.ONGOING]: true,
-    [TaskStatus.FINISHED]: true,
-    [TaskStatus.FAILED]: false,
+    [TaskStatus["2"]]: true,
+    [TaskStatus["3"]]: true,
+    [TaskStatus["4"]]: false,
   };
 
   const getStatusText = (status) => {
@@ -40,14 +40,16 @@ const UpdateTask = ({ task, onClose, onUpdateSuccess, onError }) => {
 
   const getNextStatus = (currentStatus) => {
     switch (currentStatus) {
-      case TaskStatus.NOT_YET:
-        return TaskStatus.ONGOING;
-      case TaskStatus.ONGOING:
-        return TaskStatus.FINISHED;
-      case TaskStatus.FINISHED:
-        return TaskStatus.FINISHED;
-      case TaskStatus.FAILED:
-        return TaskStatus.FAILED;
+      case TaskStatus["0"]:
+        return TaskStatus["1"];
+      case TaskStatus["1"]:
+        return TaskStatus["2"];
+      case TaskStatus["2"]:
+        return TaskStatus["3"];
+      case TaskStatus["2"]:
+        return TaskStatus["4"];
+      case TaskStatus["2"]:
+        return TaskStatus["4"];
       default:
         return currentStatus;
     }
@@ -67,6 +69,7 @@ const UpdateTask = ({ task, onClose, onUpdateSuccess, onError }) => {
         onError(res.messages[0] || "Lỗi khi cập nhật trạng thái nhiệm vụ.");
       }
     } catch (err) {
+      console.error("Error updating task status:", err);
       onError("Lỗi khi cập nhật trạng thái nhiệm vụ.");
     }
   };
