@@ -30,16 +30,17 @@ export const addAnswerToSurvey = async (answerData) => {
 };
 
 // Get survey by ID
-export const getSurveyById = async (id) => {
+export const getSurveyById = async (surveyId) => {
   try {
-    const res = await axios.get(`${baseUrl}/survey/get-survey-by-id/${id}`);
-    return res.data;
-  } catch (err) {
-    console.error("Error getting survey by ID:", err);
-    throw err;
+    const response = await axios.get(
+      `${baseUrl}/survey/get-survey-by-id/${surveyId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting survey by ID:", error);
+    throw error;
   }
 };
-
 // Get all surveys
 export const getAllSurveys = async (formData) => {
   try {
