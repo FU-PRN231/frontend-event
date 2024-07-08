@@ -46,10 +46,9 @@ const UpdateTask = ({ task, onClose, onUpdateSuccess, onError }) => {
         return TaskStatus["2"];
       case TaskStatus["2"]:
         return TaskStatus["3"];
-      case TaskStatus["2"]:
-        return TaskStatus["4"];
-      case TaskStatus["2"]:
-        return TaskStatus["4"];
+      case TaskStatus["1"]:
+        return TaskStatus["3"];
+
       default:
         return currentStatus;
     }

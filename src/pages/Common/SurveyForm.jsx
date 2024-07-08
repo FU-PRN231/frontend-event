@@ -31,13 +31,13 @@ const SurveyForm = ({ accountId }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [surveys, setSurveys] = useState([]);
-  const [selectedSurveyId, setSelectedSurveyId] = useState();
+  const [selectedSurveyId, setSelectedSurveyId] = useState("");
+
   useEffect(() => {
     const fetchSurveys = async () => {
       try {
         const surveyData = await getAllSurveys();
-
-        setSurveys(surveyData.result.survey);
+        setSurveys(surveyData.survey);
       } catch (error) {
         console.error("Error fetching surveys:", error);
       }
@@ -49,6 +49,7 @@ const SurveyForm = ({ accountId }) => {
   const handleSurveyChange = (value) => {
     setSelectedSurveyId(value);
   };
+
   const onSubmit = async (data) => {
     setLoading(true);
     setError(null);
@@ -60,7 +61,7 @@ const SurveyForm = ({ accountId }) => {
 
     const answerData = {
       accountId,
-      surveyId: data.surveyId,
+      surveyId: selectedSurveyId,
       answerDetails,
     };
 
@@ -95,13 +96,16 @@ const SurveyForm = ({ accountId }) => {
                 {...field}
                 placeholder="Chọn khảo sát"
                 className="w-full"
-                onChange={handleSurveyChange}
+                onChange={(value) => {
+                  field.onChange(value);
+                  handleSurveyChange(value);
+                }}
                 value={selectedSurveyId}
                 disabled={loading || surveys?.length === 0}
               >
                 {surveys?.map((survey) => (
                   <Option key={survey.id} value={survey.id}>
-                    {survey.name}
+                    {survey.name} (Event: {survey.eventtitle})
                   </Option>
                 ))}
               </Select>
