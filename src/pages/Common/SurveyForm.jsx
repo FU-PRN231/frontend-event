@@ -37,7 +37,7 @@ const SurveyForm = ({ accountId }) => {
     const fetchSurveys = async () => {
       try {
         const surveyData = await getAllSurveys();
-        setSurveys(surveyData.survey);
+        setSurveys(surveyData.result);
       } catch (error) {
         console.error("Error fetching surveys:", error);
       }
@@ -104,8 +104,8 @@ const SurveyForm = ({ accountId }) => {
                 disabled={loading || surveys?.length === 0}
               >
                 {surveys?.map((survey) => (
-                  <Option key={survey.id} value={survey.id}>
-                    {survey.name} (Event: {survey.eventtitle})
+                  <Option key={survey.survey.id} value={survey.survey.id}>
+                    {survey.survey.name} (Event: {survey.survey.eventtitle})
                   </Option>
                 ))}
               </Select>
@@ -178,7 +178,7 @@ const SurveyForm = ({ accountId }) => {
             <Controller
               name={`answerDetails.${index}.surveyQuestionDetailId`}
               control={control}
-              render={({ field }) => <input type="hidden" {...field} />}
+              render={({ field }) => <input type="text" {...field} />}
             />
             <Button
               type="button"
