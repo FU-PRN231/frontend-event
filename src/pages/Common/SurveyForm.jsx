@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
 import ReactStars from "react-rating-stars-component";
+import { getEventById } from "../../api/eventApi";
 import { addAnswerToSurvey, getAllSurveys } from "../../api/surveyApi";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 
@@ -34,16 +35,25 @@ const SurveyForm = ({ accountId }) => {
   const [selectedSurveyId, setSelectedSurveyId] = useState("");
 
   useEffect(() => {
-    const fetchSurveys = async () => {
+    const fetchSurveysWithEvents = async () => {
       try {
         const surveyData = await getAllSurveys();
-        setSurveys(surveyData.result);
+        const surveysWithEvents = await Promise.all(
+          surveyData.result.map(async (survey) => {
+            const event = await getEventById(survey.survey.eventId);
+            return {
+              ...survey.survey,
+              eventTitle: event?.title || "N/A",
+            };
+          })
+        );
+        setSurveys(surveysWithEvents);
       } catch (error) {
-        console.error("Error fetching surveys:", error);
+        console.error("Error fetching surveys or events:", error);
       }
     };
 
-    fetchSurveys();
+    fetchSurveysWithEvents();
   }, []);
 
   const handleSurveyChange = (value) => {
@@ -104,8 +114,8 @@ const SurveyForm = ({ accountId }) => {
                 disabled={loading || surveys?.length === 0}
               >
                 {surveys?.map((survey) => (
-                  <Option key={survey.survey.id} value={survey.survey.id}>
-                    {survey.survey.name} (Event: {survey.survey.eventtitle})
+                  <Option key={survey.id} value={survey.id}>
+                    {survey.name} (Event: {survey.eventTitle})
                   </Option>
                 ))}
               </Select>
@@ -178,7 +188,7 @@ const SurveyForm = ({ accountId }) => {
             <Controller
               name={`answerDetails.${index}.surveyQuestionDetailId`}
               control={control}
-              render={({ field }) => <input type="text" {...field} />}
+              render={({ field }) => <input type="hidden" {...field} />}
             />
             <Button
               type="button"
