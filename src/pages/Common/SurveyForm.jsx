@@ -13,6 +13,7 @@ const SurveyForm = ({ accountId }) => {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -58,6 +59,14 @@ const SurveyForm = ({ accountId }) => {
 
   const handleSurveyChange = (value) => {
     setSelectedSurveyId(value);
+    reset({
+      surveyId: value,
+      answerDetails: [
+        { textAnswer: "", rating: 0, surveyQuestionDetailId: "" },
+      ],
+    });
+    setSuccess(false);
+    setError(null);
   };
 
   const onSubmit = async (data) => {
@@ -79,6 +88,12 @@ const SurveyForm = ({ accountId }) => {
       const response = await addAnswerToSurvey(answerData);
       if (response.isSuccess) {
         setSuccess(true);
+        reset({
+          surveyId: selectedSurveyId,
+          answerDetails: [
+            { textAnswer: "", rating: 0, surveyQuestionDetailId: "" },
+          ],
+        });
       } else {
         setError(response.messages.join(", "));
       }
@@ -199,20 +214,7 @@ const SurveyForm = ({ accountId }) => {
           </div>
         ))}
 
-        <div className="flex justify-between items-center">
-          <Button
-            type="button"
-            onClick={() =>
-              append({
-                textAnswer: "",
-                rating: 0,
-                surveyQuestionDetailId: "",
-              })
-            }
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Thêm câu trả lời
-          </Button>
+        <div className="flex justify-end">
           <Button
             type="submit"
             disabled={loading}
