@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   FaCalendarPlus,
   FaClipboardList,
+  FaEyeSlash,
   FaFileAlt,
   FaHistory,
   FaHome,
@@ -41,13 +42,18 @@ const SideBar = () => {
     ],
     SPONSOR: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
-      { name: "Tiền từ nhà tài trợ", link: "sponsor-money", icon: <FaHome /> },
+      { name: "Tổng Quan", link: "sponsor-money", icon: <FaHome /> },
       {
         name: "Thêm mới nhà tài trợ",
         link: "add-new",
         icon: <FaCalendarPlus />,
       },
-      { name: "Lịch sử dòng tiền", link: "history", icon: <FaHistory /> },
+      {
+        name: "Lịch sử dòng tiền",
+        link: "money-history",
+        icon: <FaEyeSlash />,
+      },
+      { name: "Lịch sử nhà tài trợ", link: "history", icon: <FaHistory /> },
       {
         name: "Thêm dòng tiền vào dự án",
         link: "add-money-sponsor",

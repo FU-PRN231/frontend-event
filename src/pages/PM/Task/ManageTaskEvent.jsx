@@ -269,11 +269,11 @@ const ManageTaskEvent = ({ setTasks }) => {
           className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           disabled={loading}
         >
-          {loading ? "Creating..." : "Create Task"}
+          {loading ? "Assigning..." : "Assign Task"}
         </button>
-      </form>
 
-      {error && <p className="text-red-500 mt-2">{error}</p>}
+        {error && <p className="text-red-500 text-xs italic mt-4">{error}</p>}
+      </form>
     </div>
   );
 };

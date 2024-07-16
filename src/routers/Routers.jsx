@@ -24,8 +24,9 @@ import ViewTask from "../pages/PM/Task/ViewTask";
 import UpdateEventForm from "../pages/PM/UpdateEventForm";
 import AddSponsorForm from "../pages/Sponsor/AddSponsorForm";
 import AddSponsorMoney from "../pages/Sponsor/AddSponsorMoney";
-import SponsorHistory from "../pages/Sponsor/SponsorHistory";
+import SponsorHistoryByEventId from "../pages/Sponsor/SponsorHistoryByEventId";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
+import SponsorMoney from "../pages/Sponsor/SponsorMoney";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
 function Routers() {
   const routing = useRoutes([
@@ -56,9 +57,10 @@ function Routers() {
 
         { path: "dashboard", element: <Dashboard /> },
         { path: "sponsor-money", element: <SponsorModal /> },
-        { path: "history", element: <SponsorHistory /> },
+        { path: "history", element: <SponsorHistoryByEventId /> },
         { path: "add-new", element: <AddSponsorForm /> },
         { path: "add-money-sponsor", element: <AddSponsorMoney /> },
+        { path: "money-history", element: <SponsorMoney /> },
       ],
     },
     {
