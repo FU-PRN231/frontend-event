@@ -21,6 +21,8 @@ import Chart from "chart.js/auto";
 Chart.register(...registerables);
 import moment from "moment-timezone";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 function App() {
   return (
     <>

@@ -90,13 +90,7 @@ const EventDetail = () => {
   const sectionMargin = "mt-12";
   const titleMargin = "mb-6";
   const cardPadding = "p-6";
-  const settingsSpeaker = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 3,
-  };
+
   console.log(eventData.speakers);
   return (
     <div className={`container mx-auto py-12 ${sectionMargin}`}>
@@ -113,16 +107,26 @@ const EventDetail = () => {
             Hình ảnh sự kiện
           </h4>
           <Slider {...settings}>
-            {eventData.staticFiles?.map((file, index) => (
-              <div key={index}>
-                <img
-                  src={file.img}
-                  alt="Event"
-                  className="object-cover w-full h-full rounded-lg"
-                />
-              </div>
-            ))}
+            {eventData.staticFiles?.length > 1 &&
+              eventData.staticFiles?.map((file, index) => (
+                <div key={index}>
+                  <img
+                    src={file.img}
+                    alt="Event"
+                    className="object-cover w-full h-full rounded-lg"
+                  />
+                </div>
+              ))}
           </Slider>
+          {eventData?.staticFiles?.length == 1 && (
+            <div>
+              <img
+                src={eventData?.staticFiles[0].img}
+                alt="Event"
+                className="object-cover w-full h-full rounded-lg"
+              />
+            </div>
+          )}
         </div>
         <div
           className={`bg-white rounded-lg shadow-md overflow-hidden ${cardPadding}`}

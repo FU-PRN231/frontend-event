@@ -103,6 +103,13 @@ const NavBar = () => {
           >
             Trang chủ
           </NavLink>
+          <NavLink
+            to="/survey-form"
+            className="text-base font-semibold hover:text-gray-500 no-underline text-primary"
+            onClick={() => setExpand(false)}
+          >
+            Khảo sát
+          </NavLink>
           {/* {Object.keys(clothTypeLabels).map((key, index) => (
             <NavLink
               key={key}
