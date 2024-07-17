@@ -22,7 +22,7 @@ const MangementEvent = () => {
         QUẢN LÝ SỰ KIỆN
       </h1>
       <div className="flex justify-end my-10">
-        {role === "ADMIN" && (
+        {role === "PM" && (
           <NavLink className="btn bg-primary text-white" to={`create-event`}>
             Thêm sự kiện
           </NavLink>
