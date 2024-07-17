@@ -11,9 +11,8 @@ import {
   message,
   Select,
 } from "antd";
-import moment from "moment";
+import moment from "moment-timezone";
 import { useSelector } from "react-redux";
-import axios from "axios"; // Assuming you're using axios for API calls
 import {
   addAnswerToSurvey,
   getAllSurveys,
@@ -97,7 +96,7 @@ const SurveyForm = () => {
       case 1:
         return <Rate count={question.ratingMax || 5} />;
       case 2:
-        return <DatePicker style={{ width: "100%" }} />;
+        return <DatePicker style={{ width: "100%" }} format={"dd/MM/YYYY"} />;
       default:
         return <Input placeholder="Nhập câu trả lời của bạn" />;
     }
@@ -154,7 +153,7 @@ const SurveyForm = () => {
                     ]}
                     getValueFromEvent={(e) => {
                       if (question.answerType === 2) {
-                        return e ? e.format("YYYY-MM-DD") : null;
+                        // return e ? e.format("YYYY-MM-DD") : null;
                       }
                       return e && e.target ? e.target.value : e;
                     }}
