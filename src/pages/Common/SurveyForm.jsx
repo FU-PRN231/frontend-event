@@ -1,236 +1,179 @@
-import { Button, Form, Input, Select } from "antd";
-import React, { useEffect, useState } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { FaTrash } from "react-icons/fa";
-import ReactStars from "react-rating-stars-component";
-import { getEventById } from "../../api/eventApi";
-import { addAnswerToSurvey, getAllSurveys } from "../../api/surveyApi";
-import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
+import React, { useState, useEffect } from "react";
+import {
+  Form,
+  Input,
+  DatePicker,
+  Rate,
+  Card,
+  Typography,
+  Space,
+  Button,
+  message,
+  Select,
+} from "antd";
+import moment from "moment";
+import { useSelector } from "react-redux";
+import axios from "axios"; // Assuming you're using axios for API calls
+import {
+  addAnswerToSurvey,
+  getAllSurveys,
+  getSurveyById,
+  insertSurveyForm,
+} from "../../api/surveyApi";
 
+const { Title, Text } = Typography;
 const { Option } = Select;
 
-const SurveyForm = ({ accountId }) => {
-  const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      surveyId: "",
-      answerDetails: [
-        { textAnswer: "", rating: 0, surveyQuestionDetailId: "" },
-      ],
-    },
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "answerDetails",
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(null);
+const SurveyForm = () => {
+  const [form] = Form.useForm();
+  const user = useSelector((state) => state.user.user || {});
+  const [surveyData, setSurveyData] = useState({});
   const [surveys, setSurveys] = useState([]);
-  const [selectedSurveyId, setSelectedSurveyId] = useState("");
-
+  const [selectedSurveyId, setSelectedSurveyId] = useState(null);
   useEffect(() => {
-    const fetchSurveysWithEvents = async () => {
-      try {
-        const surveyData = await getAllSurveys();
-        const surveysWithEvents = await Promise.all(
-          surveyData.result.map(async (survey) => {
-            const event = await getEventById(survey.survey.eventId);
-            return {
-              ...survey.survey,
-              eventTitle: event?.title || "N/A",
-            };
-          })
-        );
-        setSurveys(surveysWithEvents);
-      } catch (error) {
-        console.error("Error fetching surveys or events:", error);
-      }
-    };
-
-    fetchSurveysWithEvents();
+    fetchSurveys();
   }, []);
 
-  const handleSurveyChange = (value) => {
-    setSelectedSurveyId(value);
-    reset({
-      surveyId: value,
-      answerDetails: [
-        { textAnswer: "", rating: 0, surveyQuestionDetailId: "" },
-      ],
-    });
-    setSuccess(false);
-    setError(null);
+  const fetchSurveys = async () => {
+    try {
+      const response = await getAllSurveys();
+      if (response?.isSuccess) {
+        setSurveys(response.result);
+      }
+    } catch (error) {
+      message.error("Failed to fetch surveys: " + error.message);
+    }
   };
 
-  const onSubmit = async (data) => {
-    setLoading(true);
-    setError(null);
+  const fetchSurveyById = async (id) => {
+    try {
+      const response = await getSurveyById(id);
+      setSurveyData(response.result);
+    } catch (error) {
+      message.error("Failed to fetch survey details: " + error.message);
+    }
+  };
 
-    const answerDetails = data.answerDetails.map((detail) => ({
-      ...detail,
-      surveyQuestionDetailId: detail.surveyQuestionDetailId || "",
-    }));
+  const handleSurveySelect = (value) => {
+    setSelectedSurveyId(value);
+    fetchSurveyById(value);
+    form.resetFields();
+  };
 
-    const answerData = {
-      accountId,
-      surveyId: selectedSurveyId,
-      answerDetails,
+  const handleSubmit = async (values) => {
+    const formattedResponses = {
+      accountId: user.id,
+      surveyId: surveyData.survey.id,
+      answerDetails: Object.entries(values).map(([key, value]) => {
+        const question = surveyData.surveyQuestionDetails.find(
+          (q) => q.id === key
+        );
+        return {
+          surveyQuestionDetailId: key,
+          textAnswer:
+            question.answerType === 0 || question.answerType === 2
+              ? value
+              : null,
+          rating: question.answerType === 1 ? value : null,
+        };
+      }),
     };
 
-    try {
-      const response = await addAnswerToSurvey(answerData);
-      if (response.isSuccess) {
-        setSuccess(true);
-        reset({
-          surveyId: selectedSurveyId,
-          answerDetails: [
-            { textAnswer: "", rating: 0, surveyQuestionDetailId: "" },
-          ],
-        });
-      } else {
-        setError(response.messages.join(", "));
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    console.log("Formatted responses:", formattedResponses);
+    const response = await addAnswerToSurvey(formattedResponses);
+    if (response?.isSuccess) {
+      message.success(
+        "Khảo sát đã được gửi đi, cảm ơn bạn đã tham gia khảo sát"
+      );
+    } else {
+      message.error("Có lỗi xảy ra. Vui lòng submit lại");
+    }
+  };
+
+  const renderQuestionInput = (question) => {
+    switch (question.answerType) {
+      case 0:
+        return <Input placeholder="Nhập câu trả lời của bạn" />;
+      case 1:
+        return <Rate count={question.ratingMax || 5} />;
+      case 2:
+        return <DatePicker style={{ width: "100%" }} />;
+      default:
+        return <Input placeholder="Nhập câu trả lời của bạn" />;
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded shadow-md">
-      <Form onFinish={handleSubmit(onSubmit)} className="space-y-6">
-        <Form.Item
-          label="Chọn khảo sát"
-          validateStatus={errors.surveyId ? "error" : ""}
-          help={errors.surveyId && errors.surveyId.message}
+    <Card className="max-w-2xl mx-auto mt-8">
+      <Space direction="vertical" size="large" style={{ width: "100%" }}>
+        <Select
+          style={{ width: "100%" }}
+          placeholder="Chọn khảo sát"
+          onChange={handleSurveySelect}
         >
-          <Controller
-            name="surveyId"
-            control={control}
-            rules={{ required: "Vui lòng chọn khảo sát" }}
-            render={({ field }) => (
-              <Select
-                {...field}
-                placeholder="Chọn khảo sát"
-                className="w-full"
-                onChange={(value) => {
-                  field.onChange(value);
-                  handleSurveyChange(value);
-                }}
-                value={selectedSurveyId}
-                disabled={loading || surveys?.length === 0}
+          {surveys.map((survey) => (
+            <Option key={survey.survey.id} value={survey.survey.id}>
+              {survey.survey.name}
+            </Option>
+          ))}
+        </Select>
+
+        {selectedSurveyId && (
+          <>
+            <Title level={2}>{surveyData.survey?.name}</Title>
+            <Text type="secondary">
+              Được tạo vào ngày:
+              {moment(surveyData.survey?.createDate).format("MMMM D, YYYY")}
+            </Text>
+
+            <Form
+              form={form}
+              onFinish={handleSubmit}
+              layout="vertical"
+              className="mt-6"
+            >
+              <Space
+                direction="vertical"
+                size="large"
+                style={{ width: "100%" }}
               >
-                {surveys?.map((survey) => (
-                  <Option key={survey.id} value={survey.id}>
-                    {survey.name} (Event: {survey.eventTitle})
-                  </Option>
+                {surveyData?.surveyQuestionDetails?.map((question) => (
+                  <Form.Item
+                    key={question.id}
+                    name={question.id}
+                    label={
+                      <Text strong>
+                        {question.no}. {question.question}
+                      </Text>
+                    }
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please answer this question",
+                      },
+                    ]}
+                    getValueFromEvent={(e) => {
+                      if (question.answerType === 2) {
+                        return e ? e.format("YYYY-MM-DD") : null;
+                      }
+                      return e && e.target ? e.target.value : e;
+                    }}
+                  >
+                    {renderQuestionInput(question)}
+                  </Form.Item>
                 ))}
-              </Select>
-            )}
-          />
-          {errors.surveyId && (
-            <p className="text-red-500 text-xs italic">
-              {errors.surveyId.message}
-            </p>
-          )}
-        </Form.Item>
 
-        {fields.map((item, index) => (
-          <div key={item.id} className="flex items-start space-x-6">
-            <div className="flex-1">
-              <Form.Item
-                label={`Câu trả lời ${index + 1}`}
-                validateStatus={
-                  errors.answerDetails?.[index]?.textAnswer ? "error" : ""
-                }
-                help={
-                  errors.answerDetails?.[index]?.textAnswer &&
-                  errors.answerDetails[index].textAnswer.message
-                }
-              >
-                <Controller
-                  name={`answerDetails.${index}.textAnswer`}
-                  control={control}
-                  rules={{ required: "Câu trả lời là bắt buộc" }}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      className="w-full"
-                      placeholder="Nhập câu trả lời"
-                    />
-                  )}
-                />
-              </Form.Item>
-            </div>
-            <div className="flex-1">
-              <Form.Item
-                label="Đánh giá"
-                validateStatus={
-                  errors.answerDetails?.[index]?.rating ? "error" : ""
-                }
-                help={
-                  errors.answerDetails?.[index]?.rating &&
-                  errors.answerDetails[index].rating.message
-                }
-              >
-                <Controller
-                  name={`answerDetails.${index}.rating`}
-                  control={control}
-                  rules={{
-                    min: { value: 0, message: "Đánh giá phải ít nhất là 0" },
-                    max: { value: 5, message: "Đánh giá phải tối đa là 5" },
-                  }}
-                  render={({ field }) => (
-                    <ReactStars
-                      count={5}
-                      onChange={(newValue) => field.onChange(newValue)}
-                      size={24}
-                      activeColor="#ffd700"
-                      value={field.value}
-                    />
-                  )}
-                />
-              </Form.Item>
-            </div>
-            <Controller
-              name={`answerDetails.${index}.surveyQuestionDetailId`}
-              control={control}
-              render={({ field }) => <input type="hidden" {...field} />}
-            />
-            <Button
-              type="button"
-              onClick={() => remove(index)}
-              className="mt-6 text-red-600 hover:text-red-800"
-              icon={<FaTrash />}
-            />
-          </div>
-        ))}
-
-        <div className="flex justify-end">
-          <Button
-            type="submit"
-            disabled={loading}
-            className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white ${
-              loading ? "bg-gray-400" : "bg-indigo-600 hover:bg-indigo-700"
-            } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
-          >
-            {loading ? <LoadingComponent /> : "Gửi"}
-          </Button>
-        </div>
-      </Form>
-      {success && (
-        <p className="mt-4 text-green-600">Gửi khảo sát thành công!</p>
-      )}
-      {error && <p className="mt-4 text-red-600">Lỗi: {error}</p>}
-    </div>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit" block>
+                    Gửi trả lời khảo sát
+                  </Button>
+                </Form.Item>
+              </Space>
+            </Form>
+          </>
+        )}
+      </Space>
+    </Card>
   );
 };
 
