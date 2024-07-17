@@ -17,6 +17,7 @@ import ManagementEvent from "../pages/CommonManager/ManagementEvent";
 import CheckInModal from "../pages/Orgainization/CheckinModal";
 import QuestionSurvey from "../pages/Orgainization/QuestionSurvey";
 import SurveyModal from "../pages/Orgainization/SurveyModal";
+import ViewModalBySurveyID from "../pages/Orgainization/ViewModalBySurveyID";
 import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
 import ManageTaskEvent from "../pages/PM/Task/ManageTaskEvent";
@@ -108,6 +109,10 @@ function Routers() {
         {
           path: "create-survey",
           element: <QuestionSurvey />,
+        },
+        {
+          path: "view-survey",
+          element: <ViewModalBySurveyID />,
         },
         { path: "event/manage-check-in/:id", element: <CheckInModal /> },
       ],

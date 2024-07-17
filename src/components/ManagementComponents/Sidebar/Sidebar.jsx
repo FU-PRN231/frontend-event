@@ -22,8 +22,13 @@ const SideBar = () => {
   const menuItems = {
     ORGANIZER: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
-      { name: "Khảo sát", link: "surveys", icon: <FaClipboardList /> },
+      {
+        name: "Danh sách kháo sát hiện tai",
+        link: "surveys",
+        icon: <FaClipboardList />,
+      },
       { name: "Tạo khảo sát", link: "create-survey", icon: <FaFileAlt /> },
+      { name: "Xem Khảo sát", link: "view-survey", icon: <FaFileAlt /> },
       {
         name: "Quản lí check-in",
         link: "event",

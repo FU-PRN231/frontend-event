@@ -1,60 +1,98 @@
 import {
-  CalendarOutlined,
-  InfoCircleOutlined,
-  MailOutlined,
-  PhoneOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import { Card, Col, List, Row, Skeleton, Spin, Typography } from "antd";
+  Button,
+  Card,
+  Col,
+  List,
+  message,
+  Modal,
+  Row,
+  Select,
+  Skeleton,
+  Spin,
+  Typography,
+} from "antd";
 import React, { useEffect, useState } from "react";
-import { getAccountById } from "../../api/accountApi";
 import { getAllEvent } from "../../api/eventApi";
 import { getAllOrganizations } from "../../api/organizationApi";
-import { getAllSurveys } from "../../api/surveyApi";
+import { getSurveysBySurveyId } from "../../api/surveyApi";
+const { Option } = Select;
+const { Text, Title, Paragraph } = Typography;
 
-const { Title, Text, Paragraph } = Typography;
-
-const SurveyModal = () => {
+const ViewModalBySurveyID = ({ surveyId, open, onClose }) => {
+  const [loading, setLoading] = useState(false);
+  const [surveyData, setSurveyData] = useState(null);
+  const [error, setError] = useState(null);
   const [surveys, setSurveys] = useState([]);
-  const [accountDetails, setAccountDetails] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [events, setEvents] = useState([]);
-  const [organizations, setOrganizations] = useState([]);
-
-  useEffect(() => {
-    fetchSurveys();
-    fetchEvents();
-    fetchOrganizations();
-  }, []);
+  const [selectedSurveyId, setSelectedSurveyId] = useState(null);
 
   const fetchSurveys = async () => {
-    setIsLoading(true);
     try {
-      const data = await getAllSurveys();
-      if (data.isSuccess) {
-        const surveysData = data.result || [];
-        const creatorIds = [
-          ...new Set(surveysData.map((survey) => survey.survey.createBy)),
-        ];
-        const accountsData = await Promise.all(
-          creatorIds.map((id) => getAccountById(id).catch(() => null))
-        );
-        const accountDetailsMap = accountsData.reduce((acc, account) => {
-          if (account && account.result) {
-            acc[account.result.id] = account.result;
-          }
-          return acc;
-        }, {});
-        setAccountDetails(accountDetailsMap);
-        setSurveys(surveysData);
-      } else {
-        console.error("Error fetching surveys:", data.messages);
+      const response = await getAllSurveys();
+      if (response?.isSuccess) {
+        setSurveys(response.result);
       }
     } catch (error) {
-      console.error("Error fetching surveys:", error);
-    } finally {
-      setIsLoading(false);
+      message.error("Failed to fetch surveys: " + error.message);
     }
+  };
+
+  const fetchSurveyById = async (id) => {
+    try {
+      const response = await getSurveyById(id);
+      setSurveyData(response.result);
+    } catch (error) {
+      message.error("Failed to fetch survey details: " + error.message);
+    }
+  };
+
+  const handleSurveySelect = (value) => {
+    setSelectedSurveyId(value);
+    fetchSurveyById(value);
+  };
+
+  useEffect(() => {
+    if (open) {
+      fetchSurveys();
+    }
+  }, [open]);
+
+  useEffect(() => {
+    const fetchSurveyData = async () => {
+      setLoading(true);
+      try {
+        const data = await getSurveysBySurveyId(surveyId);
+        setSurveyData(data.result);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (open && surveyId) {
+      fetchSurveyData();
+    }
+  }, [surveyId, open]);
+
+  const handleClose = () => {
+    onClose();
+    setSurveyData(null);
+  };
+
+  const getEventTitle = (eventId) => {
+    const event = events.find((event) => event.id === eventId);
+    return event ? event.title : "Unknown";
+  };
+
+  const getAccountDetails = (accountId) => {
+    const account = accountDetails[accountId];
+    if (!account)
+      return { name: "Unknown", phoneNumber: "Unknown", email: "Unknown" };
+    return {
+      name: `${account.firstName} ${account.lastName}`,
+      phoneNumber: account.phoneNumber || "Unknown",
+      email: account.email || "Unknown",
+    };
   };
 
   const fetchEvents = async () => {
@@ -89,22 +127,6 @@ const SurveyModal = () => {
     return date.toLocaleDateString("en-GB");
   };
 
-  const getEventTitle = (eventId) => {
-    const event = events.find((event) => event.id === eventId);
-    return event ? event.title : "Unknown";
-  };
-
-  const getAccountDetails = (accountId) => {
-    const account = accountDetails[accountId];
-    if (!account)
-      return { name: "Unknown", phoneNumber: "Unknown", email: "Unknown" };
-    return {
-      name: `${account.firstName} ${account.lastName}`,
-      phoneNumber: account.phoneNumber || "Unknown",
-      email: account.email || "Unknown",
-    };
-  };
-
   const SurveyItemDetail = ({ icon, label, value }) => (
     <div className="mb-2">
       <Text>
@@ -114,9 +136,34 @@ const SurveyModal = () => {
   );
 
   return (
-    <Spin spinning={isLoading}>
+    <Modal
+      title={`Survey Details - ${surveyId}`}
+      open={open}
+      onCancel={handleClose}
+      footer={[
+        <Button key="close" onClick={handleClose}>
+          Close
+        </Button>,
+      ]}
+    >
+      <Select
+        style={{ width: "100%" }}
+        placeholder="Select a survey"
+        onChange={handleSurveySelect}
+      >
+        {surveys.map((survey) => (
+          <Option key={survey.id} value={survey.id}>
+            {survey.name}
+          </Option>
+        ))}
+      </Select>
+
+      {loading && <Spin />}
+
+      {error && <div>Error: {error}</div>}
+
       <Row gutter={16}>
-        {isLoading
+        {loading
           ? [1, 2, 3].map((item) => (
               <Col xs={24} sm={12} lg={8} key={item}>
                 <Card>
@@ -197,8 +244,27 @@ const SurveyModal = () => {
               </Col>
             ))}
       </Row>
-    </Spin>
+
+      {surveyData && (
+        <div>
+          <h3>Survey Responses</h3>
+          {surveyData.surveyAnswerDetailDtos.map((answerDetail, index) => (
+            <div key={index}>
+              <h4>
+                Question {answerDetail.surveyQuestionDetail.no}:{" "}
+                {answerDetail.surveyQuestionDetail.question}
+              </h4>
+              {answerDetail.surveyResponseDetails.map((response, idx) => (
+                <div key={idx}>
+                  <p>Response: {response.textAnswer}</p>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+    </Modal>
   );
 };
 
-export default SurveyModal;
+export default ViewModalBySurveyID;

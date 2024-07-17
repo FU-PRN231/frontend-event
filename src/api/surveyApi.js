@@ -64,3 +64,15 @@ export const getSurveysByOrganizationId = async (organizationId) => {
     throw err;
   }
 };
+
+export const getSurveysBySurveyId = async (surveyId) => {
+  try {
+    const response = await axios.get(
+      `${baseUrl}/survey/get-survey-response-by-survey-id/${surveyId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching survey data:", error);
+    throw error;
+  }
+};
