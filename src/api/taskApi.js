@@ -18,16 +18,16 @@ export const getAllEventTasksByStatus = async (
   }
 };
 
-export const assignTaskForEvent = async (eventId, taskDetails) => {
+export const assignTaskForEvent = async (eventId, payload) => {
   try {
-    const res = await axios.post(`${baseUrl}/task/assign-task-for-event`, {
-      eventId,
-      taskDetails,
-    });
-    return res.data;
-  } catch (err) {
-    console.error("Error assigning task:", err);
-    return null;
+    const response = await axios.post(
+      `${baseUrl}/task/assign-task-for-event`,
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    throw error;
   }
 };
 export const getAllTasksOfEventByStatus = async (
