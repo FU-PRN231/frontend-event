@@ -2,6 +2,7 @@ import React from "react";
 import { Navigate, useRoutes } from "react-router-dom";
 import CommonLayout from "../layouts/CommonLayout";
 import ManagementLayOut from "../layouts/ManagementLayout/ManagementLayOut";
+import CensorEvent from "../pages/Admin/CensorEvent";
 import Cart from "../pages/Common/Cart";
 import ErrorPage from "../pages/Common/ErrorPage";
 import EventDetail from "../pages/Common/Event/EventDetail";
@@ -23,10 +24,10 @@ import ViewTask from "../pages/PM/Task/ViewTask";
 import UpdateEventForm from "../pages/PM/UpdateEventForm";
 import AddSponsorForm from "../pages/Sponsor/AddSponsorForm";
 import AddSponsorMoney from "../pages/Sponsor/AddSponsorMoney";
-import SponsorHistory from "../pages/Sponsor/SponsorHistory";
+import SponsorHistoryByEventId from "../pages/Sponsor/SponsorHistoryByEventId";
 import SponsorModal from "../pages/Sponsor/SponsorModal";
+import SponsorMoney from "../pages/Sponsor/SponsorMoney";
 import ProtectedRouteAdmin from "./PrivateRoute/ProtectedRouteAdmin";
-import CensorEvent from "../pages/Admin/CensorEvent";
 function Routers() {
   const routing = useRoutes([
     {
@@ -44,7 +45,7 @@ function Routers() {
         { path: "event/:id", element: <EventDetail /> },
         { path: "cart", element: <Cart /> },
         { path: "personal-information", element: <PersonalInformation /> },
-        { path: "survey", element: <SurveyForm /> },
+        { path: "survey-form", element: <SurveyForm /> },
       ],
     },
     {
@@ -56,9 +57,10 @@ function Routers() {
 
         { path: "dashboard", element: <Dashboard /> },
         { path: "sponsor-money", element: <SponsorModal /> },
-        { path: "history", element: <SponsorHistory /> },
+        { path: "history", element: <SponsorHistoryByEventId /> },
         { path: "add-new", element: <AddSponsorForm /> },
         { path: "add-money-sponsor", element: <AddSponsorMoney /> },
+        { path: "money-history", element: <SponsorMoney /> },
       ],
     },
     {
