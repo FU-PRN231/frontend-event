@@ -15,6 +15,7 @@ const SponsorMoney = ({ eventId }) => {
   const [events, setEvents] = useState([]);
   const [selectedEventId, setSelectedEventId] = useState(eventId);
   const user = useSelector((state) => state.user.user || {});
+
   useEffect(() => {
     fetchEvents();
   }, []);
@@ -32,7 +33,7 @@ const SponsorMoney = ({ eventId }) => {
       );
       setEvents(eventsData.result.items);
     } catch (error) {
-      console.error("Lỗi tải sự kiện:", error);
+      console.error("Error loading events:", error);
     }
   };
 
@@ -52,8 +53,8 @@ const SponsorMoney = ({ eventId }) => {
       setSponsorItems(data.result.items);
       setTotalItems(data.result.totalPages * pageSize);
     } catch (error) {
-      message.error("Lỗi tải các mục tài trợ");
-      console.error("Lỗi tải các mục tài trợ:", error);
+      message.error("Error loading sponsor items");
+      console.error("Error loading sponsor items:", error);
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,4 @@
-import { Button, Modal, Pagination, Select, Spin, Table, message } from "antd";
+import { Button, Modal, Select, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getAllEvent } from "../../api/eventApi";
@@ -8,7 +8,6 @@ import {
 } from "../../api/sponsorApi";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import AddSponsorMoney from "../Sponsor/AddSponsorMoney";
-import SponsorHistoryByEventId from "./SponsorHistoryByEventId";
 import SponsorMoney from "./SponsorMoney";
 import ViewSponsor from "./ViewSponsor";
 
@@ -162,7 +161,7 @@ const SponsorModal = () => {
           onSponsorAdded={handleSponsorAdded}
         />
       </Modal>
-      <div className="mt-8">
+      {/* <div className="mt-8">
         <h3 className="text-3xl font-bold mb-6">
           Lịch sử giao dịch tài trợ theo sự kiện
         </h3>
@@ -200,7 +199,7 @@ const SponsorModal = () => {
           pageSizeOptions={["10", "20", "50", "100"]}
         />
         <SponsorHistoryByEventId eventId={eventId} />
-      </div>
+      </div> */}
       <SponsorMoney />
       <ViewSponsor />
     </div>

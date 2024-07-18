@@ -58,7 +58,7 @@ function Routers() {
         { index: true, element: <Navigate to="dashboard" replace /> },
 
         { path: "dashboard", element: <Dashboard /> },
-        { path: "sponsor-money", element: <SponsorModal /> },
+        { path: "sponsor-overview", element: <SponsorModal /> },
         { path: "history", element: <SponsorHistoryByEventId /> },
         // { path: "add-new", element: <AddSponsorForm /> },
         // { path: "add-money-sponsor", element: <AddSponsorMoney /> },
@@ -120,8 +120,8 @@ function Routers() {
         {
           path: "event/create-event",
           element: <CreateEventForm />,
-        },   
-         {
+        },
+        {
           path: "event/update-event/:id",
           element: <UpdateEventForm />,
         },
@@ -137,12 +137,11 @@ function Routers() {
           path: "task-update",
           element: <UpdateTaskForEvent />,
         },
-        { path: "sponsor-money", element: <SponsorModal /> },
+        { path: "sponsor-overview", element: <SponsorModal /> },
         { path: "history", element: <SponsorHistoryByEventId /> },
         { path: "add-new", element: <AddSponsorForm /> },
         { path: "add-money-sponsor", element: <AddSponsorMoney /> },
         { path: "money-history", element: <SponsorMoney /> },
-      
       ],
     },
 
@@ -180,7 +179,7 @@ function Routers() {
           path: "task-update",
           element: <UpdateTaskForEvent />,
         },
-        { path: "sponsor-money", element: <SponsorModal /> },
+        { path: "sponsor-overview", element: <SponsorModal /> },
         { path: "history", element: <SponsorHistoryByEventId /> },
         { path: "add-new", element: <AddSponsorForm /> },
         { path: "add-money-sponsor", element: <AddSponsorMoney /> },

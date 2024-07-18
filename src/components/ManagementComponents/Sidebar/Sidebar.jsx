@@ -23,7 +23,7 @@ const SideBar = () => {
   const menuItems = {
     ORGANIZER: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
-      { name: "Tổng Quan", link: "sponsor-money", icon: <FaHome /> },
+      { name: "Tổng Quan", link: "sponsor-overview", icon: <FaHome /> },
       {
         name: "Danh sách kháo sát hiện tai",
         link: "surveys",
@@ -58,7 +58,6 @@ const SideBar = () => {
         link: "add-money-sponsor",
         icon: <FaMoneyBill />,
       },
-
     ],
     // PM: [
     //   { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
@@ -87,15 +86,14 @@ const SideBar = () => {
     // ],
     SPONSOR: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
-      { name: "Tổng Quan", link: "sponsor-money", icon: <FaHome /> },
-      
+      { name: "Tổng Quan", link: "sponsor-overview", icon: <FaHome /> },
+
       {
         name: "Lịch sử dòng tiền",
         link: "money-history",
         icon: <FaEyeSlash />,
       },
       { name: "Lịch sử nhà tài trợ", link: "history", icon: <FaHistory /> },
-    
     ],
     ADMIN: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
