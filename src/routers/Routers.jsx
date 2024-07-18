@@ -60,8 +60,8 @@ function Routers() {
         { path: "dashboard", element: <Dashboard /> },
         { path: "sponsor-money", element: <SponsorModal /> },
         { path: "history", element: <SponsorHistoryByEventId /> },
-        { path: "add-new", element: <AddSponsorForm /> },
-        { path: "add-money-sponsor", element: <AddSponsorMoney /> },
+        // { path: "add-new", element: <AddSponsorForm /> },
+        // { path: "add-money-sponsor", element: <AddSponsorMoney /> },
         { path: "money-history", element: <SponsorMoney /> },
       ],
     },
@@ -116,6 +116,33 @@ function Routers() {
           element: <ViewModalBySurveyID />,
         },
         { path: "event/manage-check-in/:id", element: <CheckInModal /> },
+        { path: "add-new", element: <AddSponsorForm /> },
+        {
+          path: "event/create-event",
+          element: <CreateEventForm />,
+        },   
+         {
+          path: "event/update-event/:id",
+          element: <UpdateEventForm />,
+        },
+        {
+          path: "task",
+          element: <ViewTask />,
+        },
+        {
+          path: "task-asign",
+          element: <ManageTaskEvent />,
+        },
+        {
+          path: "task-update",
+          element: <UpdateTaskForEvent />,
+        },
+        { path: "sponsor-money", element: <SponsorModal /> },
+        { path: "history", element: <SponsorHistoryByEventId /> },
+        { path: "add-new", element: <AddSponsorForm /> },
+        { path: "add-money-sponsor", element: <AddSponsorMoney /> },
+        { path: "money-history", element: <SponsorMoney /> },
+      
       ],
     },
 
@@ -153,6 +180,11 @@ function Routers() {
           path: "task-update",
           element: <UpdateTaskForEvent />,
         },
+        { path: "sponsor-money", element: <SponsorModal /> },
+        { path: "history", element: <SponsorHistoryByEventId /> },
+        { path: "add-new", element: <AddSponsorForm /> },
+        { path: "add-money-sponsor", element: <AddSponsorMoney /> },
+        { path: "money-history", element: <SponsorMoney /> },
       ],
     },
   ]);

@@ -1,13 +1,14 @@
 import { Button, Form, Input, Select, Space, message } from "antd";
 import React, { useEffect, useState } from "react";
-import { getAllEvent } from "../../api/eventApi";
+import { getAllEvent, getEventByOrganizerId } from "../../api/eventApi";
 import { addSponsorMoneyToEvent, getAllSponsors } from "../../api/sponsorApi";
+import { useSelector } from "react-redux";
 
 const { Option } = Select;
 
 const AddSponsorMoney = ({ eventId, onSponsorAdded }) => {
   const [form] = Form.useForm();
-
+const user = useSelector((state)=> state.user.user || {})
   const SponsorType = {
     MONEY_FULL_SPONSOR: 0,
     MONEY_PARTIAL_SPONSOR: 1,
@@ -22,7 +23,7 @@ const AddSponsorMoney = ({ eventId, onSponsorAdded }) => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const eventsData = await getAllEvent(1, 100);
+        const eventsData = await getEventByOrganizerId(user.organizationId,1, 100);
         setEvents(eventsData.result.items);
       } catch (error) {
         console.error("Error fetching events:", error);

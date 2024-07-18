@@ -16,7 +16,7 @@ const ManagementHeader = () => {
             </span>
           </NavLink>
         </div>
-        <div className="navbar-end">
+        {/* <div className="navbar-end">
           <button className="btn btn-ghost btn-circle">
             <i className="fas fa-search"></i>
           </button>
@@ -26,7 +26,7 @@ const ManagementHeader = () => {
               <span className="badge badge-xs badge-primary indicator-item"></span>
             </div>
           </button>
-        </div>
+        </div> */}
       </header>
     </>
   );

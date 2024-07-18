@@ -1,15 +1,15 @@
-import axios from "axios";
-import { baseUrl } from "./config";
+import api from "../api/config"
+
 export const getOverAllReport = async (organizationId, timePeriod) => {
   try {
     if (organizationId == null) {
-      const response = await axios.get(
-        `${baseUrl}/report/get-overall-report?timePeriod=${timePeriod}`
+      const response = await api.get(
+        `/report/get-overall-report?timePeriod=${timePeriod}`
       );
       return response.data;
     }
-    const response = await axios.get(
-      `${baseUrl}/report/get-overall-report?organizationId=${organizationId}&timePeriod=${timePeriod}`
+    const response = await api.get(
+      `/report/get-overall-report?organizationId=${organizationId}&timePeriod=${timePeriod}`
     );
     return response.data;
   } catch (err) {
@@ -19,8 +19,8 @@ export const getOverAllReport = async (organizationId, timePeriod) => {
 
 export const getEventDetailReport = async (id) => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/report/get-event-detail-report/${id}`
+    const response = await api.get(
+      `/report/get-event-detail-report/${id}`
     );
     return response.data;
   } catch (err) {

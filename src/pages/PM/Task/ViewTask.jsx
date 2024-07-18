@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiAlertCircle, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { RiErrorWarningFill } from "react-icons/ri";
-import { getAllEvent } from "../../../api/eventApi";
+import { getAllEvent, getEventByOrganizerId } from "../../../api/eventApi";
 import {
   deleteTask,
   getAllTasksOfEvent,
@@ -10,6 +10,7 @@ import {
 } from "../../../api/taskApi";
 import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
 import UpdateTask from "./UpdateTask";
+import { useSelector } from "react-redux";
 
 const ViewTask = ({ eventId }) => {
   const {
@@ -26,7 +27,7 @@ const ViewTask = ({ eventId }) => {
   const [selectedEventId, setSelectedEventId] = useState(eventId || "");
   const [updateStatusMessage, setUpdateStatusMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+const user = useSelector((state)=> state.user.user|| {})
   const TaskStatus = {
     No_status: "--",
     NOT_YET: "Chưa bắt đầu",
@@ -99,7 +100,7 @@ const ViewTask = ({ eventId }) => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const eventsData = await getAllEvent(1, 100);
+        const eventsData = await getEventByOrganizerId(user.organizationId,1, 100);
         setEvents(eventsData.result.items);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu sự kiện:", error);

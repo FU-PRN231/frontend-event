@@ -5,6 +5,7 @@ import {
   getSurveyById,
   getSurveysResponseBySurveyId,
 } from "../../api/surveyApi";
+import { formatPrice } from "../../utils/util";
 
 const { Option } = Select;
 const { Text, Title, Paragraph } = Typography;
@@ -118,11 +119,11 @@ const ViewModalBySurveyID = ({ surveyId, visible, onClose }) => {
             </Paragraph>
             <Paragraph>
               <Text strong>Ngày tạo:</Text>{" "}
-              {formatDate(surveyData.survey.createDate)}
+              {formatDate(surveyData.survey.createDate) === "01/01/1" ? "N/A" : formatDate(surveyData.survey.createDate)} 
             </Paragraph>
             <Paragraph>
               <Text strong>Ngày cập nhật:</Text>{" "}
-              {formatDate(surveyData.survey.updateDate)}
+              {formatDate(surveyData.survey.updateDate)  === "01/01/1" ? "N/A" : formatDate(surveyData.survey.updateDate)}
             </Paragraph>
 
             <Title level={5}>Các Câu Hỏi Khảo Sát</Title>
@@ -137,16 +138,19 @@ const ViewModalBySurveyID = ({ surveyId, visible, onClose }) => {
                   Loại:{" "}
                   {answerDetail.surveyQuestionDetail.answerType === 0
                     ? "Văn bản"
-                    : `Đánh giá (Tối đa: ${answerDetail.surveyQuestionDetail.ratingMax})`}
+                    : answerDetail.surveyQuestionDetail.answerType === 2 ? "Ngày": `Đánh giá (Tối đa: ${answerDetail.surveyQuestionDetail.ratingMax})`}
                 </Text>
                 {answerDetail.surveyResponseDetails.map((response, index) => (
                   <div key={response.id}>
                     <Text>{`Phản hồi ${index + 1}: `}</Text>
-                    {response.textAnswer ? (
+                    {answerDetail.surveyQuestionDetail.answerType == 2 ? <Text>{formatDate(response.textAnswer)}</Text> :
+                    response.textAnswer ? (
                       <Text>{response.textAnswer}</Text>
                     ) : (
                       <Text>{`Đánh giá: ${response.rating}`}</Text>
-                    )}
+                    )
+                    }
+                   
                   </div>
                 ))}
               </Paragraph>

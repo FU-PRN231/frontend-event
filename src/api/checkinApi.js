@@ -1,10 +1,10 @@
-import axios from "axios";
-import { baseUrl } from "./config";
+import api from "../api/config"
+
 
 export const generateAccountQrCode = async (accountId) => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/account/generate-account-qr-code/${accountId}`
+    const response = await api.get(
+      `/account/generate-account-qr-code/${accountId}`
     );
     return response.data;
   } catch (error) {
@@ -18,8 +18,8 @@ export const generateAccountQrCode = async (accountId) => {
 
 export const decodeQrCode = async (qrString) => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/account/decode-qr/${encodeURIComponent(qrString)}`
+    const response = await api.get(
+      `/account/decode-qr/${encodeURIComponent(qrString)}`
     );
     return response.data;
   } catch (error) {
@@ -33,7 +33,7 @@ export const decodeQrCode = async (qrString) => {
 // Add an attendee
 export const addAttendee = async (accountId, eventId) => {
   try {
-    const response = await axios.put(`${baseUrl}/attendee`, {
+    const response = await api.put(`/attendee`, {
       accountId,
       eventId,
     });
@@ -48,8 +48,8 @@ export const addAttendee = async (accountId, eventId) => {
 };
 export const checkIn = async (qrString) => {
   try {
-    const response = await axios.put(
-      `${baseUrl}/attendee?qrString=${qrString}`
+    const response = await api.put(
+      `/attendee?qrString=${qrString}`
     );
     return response.data;
   } catch (error) {
@@ -64,8 +64,8 @@ export const checkIn = async (qrString) => {
 // Get all attendees by event ID
 export const getAllAttendeesByEventId = async (eventId) => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/attendee/get-all-attendee-by-eventId/${eventId}`
+    const response = await api.get(
+      `/attendee/get-all-attendee-by-eventId/${eventId}`
     );
     return response.data;
   } catch (error) {
