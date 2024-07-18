@@ -136,17 +136,17 @@ const SurveyModal = () => {
                     dataSource={[
                       {
                         icon: <InfoCircleOutlined />,
-                        label: "Event:",
+                        label: "Sự kiện:",
                         value: getEventTitle(item.survey.eventId),
                       },
                       {
                         icon: <UserOutlined />,
-                        label: "Created by:",
+                        label: "Người tạo:",
                         value: getAccountDetails(item.survey.createBy).name,
                       },
                       {
                         icon: <PhoneOutlined />,
-                        label: "Phone:",
+                        label: "Số điện thoại:",
                         value: getAccountDetails(item.survey.createBy)
                           .phoneNumber,
                       },
@@ -157,28 +157,19 @@ const SurveyModal = () => {
                       },
                       {
                         icon: <CalendarOutlined />,
-                        label: "Created on:",
+                        label: "Ngày tạo:",
                         value: formatDate(item.survey.createDate),
                       },
                       {
                         icon: <CalendarOutlined />,
-                        label: "Updated on:",
+                        label: "Ngày cập nhật:",
                         value: formatDate(item.survey.updateDate),
                       },
                     ]}
-                    renderItem={(detail) => (
-                      <List.Item>
-                        <SurveyItemDetail
-                          icon={detail.icon}
-                          label={detail.label}
-                          value={detail.value}
-                        />
-                      </List.Item>
-                    )}
                   />
                   {item.surveyQuestionDetails.length > 0 && (
                     <div className="mt-4">
-                      <Title level={5}>Survey Questions</Title>
+                      <Title level={5}>Các Câu Hỏi Khảo Sát</Title>{" "}
                       {item.surveyQuestionDetails.map((question) => (
                         <Paragraph key={question.id}>
                           <Text strong>{question.question}</Text>
@@ -186,8 +177,8 @@ const SurveyModal = () => {
                           <Text type="secondary">
                             Type:{" "}
                             {question.answerType === 0
-                              ? "Text"
-                              : `Rating (Max: ${question.ratingMax})`}
+                              ? "Văn bản"
+                              : `Đánh giá (Tối đa: ${question.ratingMax})`}
                           </Text>
                         </Paragraph>
                       ))}

@@ -105,11 +105,11 @@ const ViewModalBySurveyID = ({ surveyId, visible, onClose }) => {
           <>
             <Title level={4}>{surveyData.survey.name}</Title>
             <Paragraph>
-              <Text strong>Created By:</Text>{" "}
+              <Text strong>Người tạo:</Text>{" "}
               {getAccountDetails(surveyData.survey.createByAccount).name}
             </Paragraph>
             <Paragraph>
-              <Text strong>Phone:</Text>{" "}
+              <Text strong>Số điện thoại:</Text>{" "}
               {getAccountDetails(surveyData.survey.createByAccount).phoneNumber}
             </Paragraph>
             <Paragraph>
@@ -117,35 +117,35 @@ const ViewModalBySurveyID = ({ surveyId, visible, onClose }) => {
               {getAccountDetails(surveyData.survey.createByAccount).email}
             </Paragraph>
             <Paragraph>
-              <Text strong>Created on:</Text>{" "}
+              <Text strong>Ngày tạo:</Text>{" "}
               {formatDate(surveyData.survey.createDate)}
             </Paragraph>
             <Paragraph>
-              <Text strong>Updated on:</Text>{" "}
+              <Text strong>Ngày cập nhật:</Text>{" "}
               {formatDate(surveyData.survey.updateDate)}
             </Paragraph>
 
-            <Title level={5}>Survey Questions</Title>
+            <Title level={5}>Các Câu Hỏi Khảo Sát</Title>
             {surveyData.surveyAnswerDetailDtos.map((answerDetail) => (
               <Paragraph key={answerDetail.surveyQuestionDetail.id}>
                 <Text strong>
-                  Question {answerDetail.surveyQuestionDetail.no}:{" "}
+                  Câu hỏi {answerDetail.surveyQuestionDetail.no}:{" "}
                   {answerDetail.surveyQuestionDetail.question}
                 </Text>
                 <br />
                 <Text type="secondary">
-                  Type:{" "}
+                  Loại:{" "}
                   {answerDetail.surveyQuestionDetail.answerType === 0
-                    ? "Text"
-                    : `Rating (Max: ${answerDetail.surveyQuestionDetail.ratingMax})`}
+                    ? "Văn bản"
+                    : `Đánh giá (Tối đa: ${answerDetail.surveyQuestionDetail.ratingMax})`}
                 </Text>
                 {answerDetail.surveyResponseDetails.map((response, index) => (
                   <div key={response.id}>
-                    <Text>{`Response ${index + 1}: `}</Text>
+                    <Text>{`Phản hồi ${index + 1}: `}</Text>
                     {response.textAnswer ? (
                       <Text>{response.textAnswer}</Text>
                     ) : (
-                      <Text>{`Rating: ${response.rating}`}</Text>
+                      <Text>{`Đánh giá: ${response.rating}`}</Text>
                     )}
                   </div>
                 ))}

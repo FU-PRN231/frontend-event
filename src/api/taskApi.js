@@ -113,3 +113,15 @@ export const updateTaskStatus = async (taskId, isSuccessful) => {
     throw error;
   }
 };
+export const updateTaskForEvent = async (eventId, taskData) => {
+  try {
+    const response = await axios.put(
+      `${baseUrl}/task/update-task-for-event`,
+      taskData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating task for event:", error);
+    throw error;
+  }
+};

@@ -346,6 +346,12 @@ const ViewTask = ({ eventId }) => {
                       >
                         <FiTrash2 />
                       </button>
+                      {/* <button
+                        className="text-green-500 hover:text-green-700 focus:outline-none ml-2"
+                        onClick={handleOpenUpdateTaskForEventModal}
+                      >
+                        <FiEdit size={20} />
+                      </button> */}
                     </div>
                   </td>
                 </tr>

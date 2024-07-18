@@ -21,6 +21,7 @@ import ViewModalBySurveyID from "../pages/Orgainization/ViewModalBySurveyID";
 import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
 import ManageTaskEvent from "../pages/PM/Task/ManageTaskEvent";
+import UpdateTaskForEvent from "../pages/PM/Task/UpdateTaskforEvent";
 import ViewTask from "../pages/PM/Task/ViewTask";
 import UpdateEventForm from "../pages/PM/UpdateEventForm";
 import AddSponsorForm from "../pages/Sponsor/AddSponsorForm";
@@ -147,6 +148,10 @@ function Routers() {
         {
           path: "task-asign",
           element: <ManageTaskEvent />,
+        },
+        {
+          path: "task-update",
+          element: <UpdateTaskForEvent />,
         },
       ],
     },
