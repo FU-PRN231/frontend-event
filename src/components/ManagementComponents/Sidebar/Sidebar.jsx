@@ -23,6 +23,7 @@ const SideBar = () => {
   const menuItems = {
     ORGANIZER: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
+      { name: "Tổng Quan", link: "sponsor-money", icon: <FaHome /> },
       {
         name: "Danh sách kháo sát hiện tai",
         link: "surveys",
@@ -35,14 +36,11 @@ const SideBar = () => {
         link: "event",
         icon: <FaListAlt />,
       },
-      // {
-      //   name: "Danh sách kháo sát của bạn",
-      //   link: "surveys-org",
-      //   icon: <FaClipboardList />,
-      // },
-    ],
-    PM: [
-      { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
+      {
+        name: "Thêm mới nhà tài trợ",
+        link: "add-new",
+        icon: <FaCalendarPlus />,
+      },
       { name: "Sự kiện", link: "event", icon: <FaCalendarPlus /> },
       { name: "Quản lý công việc", link: "task", icon: <FaClipboardList /> },
       {
@@ -50,26 +48,54 @@ const SideBar = () => {
         link: "task-asign",
         icon: <FaMoneyBill />,
       },
+      {
+        name: "Lịch sử dòng tiền",
+        link: "money-history",
+        icon: <FaEyeSlash />,
+      },
+      {
+        name: "Thêm dòng tiền vào dự án",
+        link: "add-money-sponsor",
+        icon: <FaMoneyBill />,
+      },
+
     ],
+    // PM: [
+    //   { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
+    //   { name: "Sự kiện", link: "event", icon: <FaCalendarPlus /> },
+    //   { name: "Quản lý công việc", link: "task", icon: <FaClipboardList /> },
+    //   {
+    //     name: "Phân công công việc",
+    //     link: "task-asign",
+    //     icon: <FaMoneyBill />,
+    //   },
+    //   {
+    //     name: "Lịch sử dòng tiền",
+    //     link: "money-history",
+    //     icon: <FaEyeSlash />,
+    //   },
+    //   {
+    //     name: "Thêm dòng tiền vào dự án",
+    //     link: "add-money-sponsor",
+    //     icon: <FaMoneyBill />,
+    //   },
+    //   {
+    //     name: "Thêm mới nhà tài trợ",
+    //     link: "add-new",
+    //     icon: <FaCalendarPlus />,
+    //   },
+    // ],
     SPONSOR: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
       { name: "Tổng Quan", link: "sponsor-money", icon: <FaHome /> },
-      {
-        name: "Thêm mới nhà tài trợ",
-        link: "add-new",
-        icon: <FaCalendarPlus />,
-      },
+      
       {
         name: "Lịch sử dòng tiền",
         link: "money-history",
         icon: <FaEyeSlash />,
       },
       { name: "Lịch sử nhà tài trợ", link: "history", icon: <FaHistory /> },
-      {
-        name: "Thêm dòng tiền vào dự án",
-        link: "add-money-sponsor",
-        icon: <FaMoneyBill />,
-      },
+    
     ],
     ADMIN: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },

@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from "antd";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
-import { getAllEvent } from "../../api/eventApi";
+import { getAllEvent, getEventByOrganizerId } from "../../api/eventApi";
 import { insertSurveyForm } from "../../api/surveyApi";
 
 const { Option } = Select;
@@ -24,6 +24,7 @@ const QuestionSurvey = () => {
   const [form] = Form.useForm();
   const [events, setEvents] = useState([]);
   const user = useSelector((state) => state.user.user || {});
+  const role = useSelector((state) => state.user.role || "");
 
   useEffect(() => {
     fetchEvents();
@@ -31,8 +32,10 @@ const QuestionSurvey = () => {
 
   const fetchEvents = async () => {
     try {
-      const eventsData = await getAllEvent(1, 100);
-      setEvents(eventsData.result.items);
+      if(role === "ORGANIZER"){
+        const eventsData = await getEventByOrganizerId(user.organizationId,1, 100);
+        setEvents(eventsData.result.items);
+      }
     } catch (error) {
       message.error("Lỗi khi tải danh sách sự kiện: " + error.message);
     }

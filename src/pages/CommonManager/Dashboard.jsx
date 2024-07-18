@@ -11,7 +11,7 @@ import {
 } from "../../utils/util";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import MangementEvent from "./ManagementEvent";
-import { getAllEvent } from "../../api/eventApi";
+import { getAllEvent, getEventByOrganizerId, getEventBySponsorId } from "../../api/eventApi";
 import EventTable from "../Common/Event/EventTable";
 import EventDetailDashboard from "./EventDetailDashboard";
 
@@ -45,10 +45,26 @@ export const Dashboard = () => {
     setIsLoading(false);
   };
   const fetchData = async () => {
-    const res = await getAllEvent(1, 10);
-    if (res.isSuccess) {
-      setEvents(res.result.items);
+    if(role === "ADMIN"){
+      const res = await getAllEvent(1, 10);
+      if (res.isSuccess) {
+        setEvents(res.result.items);
+      }
+    }else if(role === "ORGANIZER"){
+      const res = await getEventByOrganizerId(user.organizationId,1, 10);
+      if (res.isSuccess) {
+        setEvents(res.result.items);
+      }
+
+    }else if(role === "SPONSOR"){
+      const res = await getEventBySponsorId(user.sponsorId,1, 10);
+      if (res.isSuccess) {
+        setEvents(res.result.items);
+      }
+
     }
+
+   
   };
   useEffect(() => {
     fetchData();
@@ -61,7 +77,9 @@ export const Dashboard = () => {
       <h3 className="text-center text-primary font-bold text-2xl my-4">
         Thống kê
       </h3>
-      <div className="mb-6">
+      {role == "ADMIN" &&<>
+      
+        <div className="mb-6">
         <Select
           className="w-full md:w-64"
           placeholder="Select time range"
@@ -127,6 +145,8 @@ export const Dashboard = () => {
           </Card>
         </Col>
       </Row>
+      </>}
+      
       <div>
         <h3 className="text-center text-primary font-bold text-2xl my-4">
           Thống kê chi tiết về các sự kiện

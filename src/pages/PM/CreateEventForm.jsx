@@ -59,7 +59,7 @@ const CreateEventForm = () => {
       formatDateToISOString(new Date(values.dateRange[1]))
     );
     formData.append("LocationId", values.locationId);
-    formData.append("OrganizationId", values.organizationId);
+    formData.append("OrganizationId", user.organizationId);
 
     // For arrays of objects, stringify each object
     values.createSeatRankDtoRequests.forEach((item, index) => {
@@ -268,23 +268,9 @@ const CreateEventForm = () => {
               <Form.Item
                 label="Ban tổ chức sự kiện"
                 name="organizationId"
-                rules={[
-                  {
-                    required: true,
-                    message: "Chọn ban tổ chức sự kiện!",
-                  },
-                ]}
+               hidden
               >
-                <Select
-                  style={{ width: "100%" }}
-                  placeholder="Chọn ban tổ chức sự kiện"
-                >
-                  {organization.map((item) => (
-                    <Option key={item.id} value={item.id}>
-                      {`${item.name} - ${item.contactEmail} - ${item.address}`}
-                    </Option>
-                  ))}
-                </Select>
+               <Input hidden/>
               </Form.Item>
               <div className="form-group">
                 <label className="label">

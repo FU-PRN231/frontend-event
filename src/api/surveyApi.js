@@ -1,11 +1,11 @@
-import axios from "axios";
-import { baseUrl } from "./config";
+import api from "../api/config"
+
 
 // Insert a new survey form
 export const insertSurveyForm = async (formData) => {
   try {
-    const res = await axios.post(
-      `${baseUrl}/survey/insert-survey-form`,
+    const res = await api.post(
+      `/survey/insert-survey-form`,
       formData
     );
     return res.data;
@@ -18,8 +18,8 @@ export const insertSurveyForm = async (formData) => {
 // Add answer to a survey
 export const addAnswerToSurvey = async (answerData) => {
   try {
-    const res = await axios.post(
-      `${baseUrl}/survey/add-answer-to-survey`,
+    const res = await api.post(
+      `/survey/add-answer-to-survey`,
       answerData
     );
     return res.data;
@@ -32,8 +32,8 @@ export const addAnswerToSurvey = async (answerData) => {
 // Get survey by ID
 export const getSurveyById = async (surveyId) => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/survey/get-survey-by-id/${surveyId}`
+    const response = await api.get(
+      `/survey/get-survey-by-id/${surveyId}`
     );
     return response.data;
   } catch (error) {
@@ -44,7 +44,7 @@ export const getSurveyById = async (surveyId) => {
 // Get all surveys
 export const getAllSurveys = async (formData) => {
   try {
-    const res = await axios.get(`${baseUrl}/survey/get-all-survey`, formData);
+    const res = await api.get(`/survey/get-all-survey`, formData);
     return res.data;
   } catch (err) {
     console.error("Error getting all surveys:", err);
@@ -55,8 +55,8 @@ export const getAllSurveys = async (formData) => {
 // Get surveys by organization ID
 export const getSurveysByOrganizationId = async (organizationId) => {
   try {
-    const res = await axios.get(
-      `${baseUrl}/survey/get-survey-by-organization-id/${organizationId}`
+    const res = await api.get(
+      `/survey/get-survey-by-organization-id/${organizationId}`
     );
     return res.data;
   } catch (err) {
@@ -67,8 +67,8 @@ export const getSurveysByOrganizationId = async (organizationId) => {
 
 export const getSurveysResponseBySurveyId = async (surveyId) => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/survey/get-survey-response-by-survey-id/${surveyId}`
+    const response = await api.get(
+      `/survey/get-survey-response-by-survey-id/${surveyId}`
     );
     return response.data;
   } catch (error) {

@@ -14,6 +14,7 @@ const Home = () => {
   const [events, setEvents] = useState([]);
   const [countdowns, setCountdowns] = useState({});
   const navigate = useNavigate();
+  const [isLoading,setIsLoading] = useState(false);
   const images = [
     {
       url: "https://images.pexels.com/photos/976862/pexels-photo-976862.jpeg?cs=srgb&dl=pexels-joshsorenson-976862.jpg&fm=jpg",
@@ -45,8 +46,10 @@ const Home = () => {
   };
 
   const fetchData = async () => {
+    setIsLoading(true)
     const res = await getAllAvailableEvent(1, 10);
     if (res.isSuccess) {
+      setIsLoading(false)
       setEvents(res.result.items);
       const initialCountdowns = {};
       res.result.items.forEach((event, index) => {
@@ -69,7 +72,7 @@ const Home = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, [events]);
-  if (events.length === 0) {
+  if (isLoading) {
     return <LoadingComponent isLoading={true} />;
   }
   return (
@@ -116,8 +119,8 @@ const Home = () => {
                   <div className="flex items-center mb-2">
                     <i className="fas fa-clock text-[#0c4a6e] mr-2"></i>
                     <span className="text-gray-600">
-                      {formatDateTime(event.startTime)} -{" "}
-                      {formatDateTime(event.endTime)}
+                      {formatDateTime(event.startEventDate)} -{" "}
+                      {formatDateTime(event.endEventDate)}
                     </span>
                   </div>
                   <div className="flex items-center mb-2">
