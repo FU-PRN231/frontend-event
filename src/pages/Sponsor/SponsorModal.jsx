@@ -146,61 +146,28 @@ const SponsorModal = () => {
 
   return (
     <div className="container mx-auto py-12">
-      <h3 className="text-3xl font-bold mb-6">Nhà tài trợ</h3>
-      <Button type="primary" onClick={() => setShowAddSponsor(!showAddSponsor)}>
-        Thêm tiền tài trợ vào sự kiện
-      </Button>
-      <Modal
-        title="Thêm tiền tài trợ vào sự kiện"
-        visible={showAddSponsor}
-        onCancel={() => setShowAddSponsor(false)}
-        footer={null}
-      >
-        <AddSponsorMoney
-          eventId={eventId}
-          onSponsorAdded={handleSponsorAdded}
-        />
-      </Modal>
-      {/* <div className="mt-8">
-        <h3 className="text-3xl font-bold mb-6">
-          Lịch sử giao dịch tài trợ theo sự kiện
-        </h3>
-        <Select
-          className="w-full"
-          value={selectedEventId}
-          onChange={handleEventChange}
-          placeholder="Chọn Sự Kiện"
+      <div className="flex justify-end mb-4">
+        <Button
+          type="primary"
+          onClick={() => setShowAddSponsor(!showAddSponsor)}
         >
-          {events.map((event) => (
-            <Option key={event.id} value={event.id}>
-              {event.title}
-            </Option>
-          ))}
-        </Select>
-        {isLoading ? ( // Sử dụng isLoading thay vì loading
-          <Spin size="large" />
-        ) : (
-          <Table
-            dataSource={sponsorItems}
-            columns={columns}
-            rowKey="id"
-            pagination={false}
+          Thêm tiền tài trợ vào sự kiện
+        </Button>
+        <Modal
+          title="Thêm tiền tài trợ vào sự kiện"
+          visible={showAddSponsor}
+          onCancel={() => setShowAddSponsor(false)}
+          footer={null}
+        >
+          <AddSponsorMoney
+            eventId={eventId}
+            onSponsorAdded={handleSponsorAdded}
           />
-        )}
-        <Pagination
-          current={pageNumber}
-          pageSize={pageSize}
-          total={totalItems}
-          onChange={(page, size) => {
-            setPageNumber(page);
-            setPageSize(size);
-          }}
-          showSizeChanger
-          pageSizeOptions={["10", "20", "50", "100"]}
-        />
-        <SponsorHistoryByEventId eventId={eventId} />
-      </div> */}
-      <SponsorMoney />
+        </Modal>
+      </div>
+
+      <SponsorMoney eventId={eventId} />
+
       <ViewSponsor />
     </div>
   );

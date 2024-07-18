@@ -25,7 +25,7 @@ const SideBar = () => {
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
       { name: "Tổng Quan", link: "sponsor-overview", icon: <FaHome /> },
       {
-        name: "Danh sách kháo sát hiện tai",
+        name: "Danh sách kháo sát hiện tại",
         link: "surveys",
         icon: <FaClipboardList />,
       },

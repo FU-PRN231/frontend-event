@@ -1,20 +1,20 @@
-import React from "react";
-import {
-  Card,
-  Row,
-  Col,
-  Statistic,
-  Table,
-  Progress,
-  Typography,
-  Descriptions,
-  Tag,
-} from "antd";
 import {
   ClockCircleOutlined,
   EnvironmentOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
+import {
+  Card,
+  Col,
+  Descriptions,
+  Progress,
+  Row,
+  Statistic,
+  Table,
+  Tag,
+  Typography,
+} from "antd";
+import React from "react";
 import { formatPrice } from "../../utils/util";
 
 const { Title, Text } = Typography;
@@ -72,7 +72,7 @@ const EventDetailDashboard = ({ data }) => {
       title: "Chi phí cho nhiệm vụ",
       dataIndex: "cost",
       key: "cost",
-      render: (cost) => `$${cost.toLocaleString()}`,
+      render: (cost) => `VND ${cost.toLocaleString()}`,
     },
     {
       title: "Trạng thái",
