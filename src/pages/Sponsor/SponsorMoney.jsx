@@ -47,8 +47,8 @@ const SponsorMoney = ({ eventId }) => {
 
       const data = await getAllSponsorItemsOfEvent(
         selectedEventId,
-        pageNumber,
-        pageSize
+        pageNumber, // Ensure pageNumber is defined
+        pageSize // Ensure pageSize is defined
       );
       setSponsorItems(data.result.items);
       setTotalItems(data.result.totalPages * pageSize);
