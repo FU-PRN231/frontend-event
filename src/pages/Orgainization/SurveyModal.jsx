@@ -5,12 +5,24 @@ import {
   PhoneOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Card, Col, List, Row, Skeleton, Spin, Typography } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  List,
+  Modal,
+  Row,
+  Skeleton,
+  Spin,
+  Typography,
+} from "antd";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { getAccountById } from "../../api/accountApi";
 import { getAllEvent } from "../../api/eventApi";
 import { getAllOrganizations } from "../../api/organizationApi";
-import { getAllSurveys } from "../../api/surveyApi";
+import { getSurveysByOrganizationId } from "../../api/surveyApi";
+import QuestionSurvey from "./QuestionSurvey";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -20,7 +32,12 @@ const SurveyModal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [events, setEvents] = useState([]);
   const [organizations, setOrganizations] = useState([]);
-
+  const [showQuestionSurvey, setShowQuestionSurvey] = useState(false);
+  const [selectedSurveyId, setSelectedSurveyId] = useState(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedSurvey, setSelectedSurvey] = useState(null); // State to store selected survey details
+  const user = useSelector((state) => state.user.user || {});
+  const role = useSelector((state) => state.user.role || "");
   useEffect(() => {
     fetchSurveys();
     fetchEvents();
@@ -30,25 +47,31 @@ const SurveyModal = () => {
   const fetchSurveys = async () => {
     setIsLoading(true);
     try {
-      const data = await getAllSurveys();
-      if (data.isSuccess) {
-        const surveysData = data.result || [];
-        const creatorIds = [
-          ...new Set(surveysData.map((survey) => survey.survey.createBy)),
-        ];
-        const accountsData = await Promise.all(
-          creatorIds.map((id) => getAccountById(id).catch(() => null))
+      if (role === "ORGANIZER") {
+        const data = await getSurveysByOrganizationId(
+          user.organizationId,
+          1,
+          100
         );
-        const accountDetailsMap = accountsData.reduce((acc, account) => {
-          if (account && account.result) {
-            acc[account.result.id] = account.result;
-          }
-          return acc;
-        }, {});
-        setAccountDetails(accountDetailsMap);
-        setSurveys(surveysData);
-      } else {
-        console.error("Error fetching surveys:", data.messages);
+        if (data.isSuccess) {
+          const surveysData = data.result || [];
+          const creatorIds = [
+            ...new Set(surveysData.map((survey) => survey.survey.createBy)),
+          ];
+          const accountsData = await Promise.all(
+            creatorIds.map((id) => getAccountById(id).catch(() => null))
+          );
+          const accountDetailsMap = accountsData.reduce((acc, account) => {
+            if (account && account.result) {
+              acc[account.result.id] = account.result;
+            }
+            return acc;
+          }, {});
+          setAccountDetails(accountDetailsMap);
+          setSurveys(surveysData);
+        } else {
+          console.error("Error fetching surveys:", data.messages);
+        }
       }
     } catch (error) {
       console.error("Error fetching surveys:", error);
@@ -97,11 +120,22 @@ const SurveyModal = () => {
   const getAccountDetails = (accountId) => {
     const account = accountDetails[accountId];
     if (!account)
-      return { name: "Unknown", phoneNumber: "Unknown", email: "Unknown" };
+      return {
+        name: "Unknown",
+        phoneNumber: "Unknown",
+        email: "Unknown",
+        organization: {},
+        gender: "Unknown",
+        userName: "Unknown",
+      };
+
     return {
       name: `${account.firstName} ${account.lastName}`,
       phoneNumber: account.phoneNumber || "Unknown",
       email: account.email || "Unknown",
+      organization: account.organization || {},
+      gender: account.gender ? "Male" : "Female",
+      userName: account.userName || "Unknown",
     };
   };
 
@@ -113,9 +147,38 @@ const SurveyModal = () => {
     </div>
   );
 
+  const handleViewSurveyDetails = (survey) => {
+    setSelectedSurvey(survey);
+    setShowDetailsModal(true);
+  };
+
+  const handleCloseDetailsModal = () => {
+    setShowDetailsModal(false);
+    setSelectedSurvey(null);
+  };
+
   return (
     <Spin spinning={isLoading}>
-      <Row gutter={16}>
+      <div className="mt-2">
+        <Button
+          type="primary"
+          onClick={() => {
+            setSelectedSurveyId(null); // Clear selection
+            setShowQuestionSurvey(true);
+          }}
+        >
+          Tạo form khảo sát
+        </Button>
+        <Modal
+          title="Tạo form khảo sát"
+          open={showQuestionSurvey}
+          onCancel={() => setShowQuestionSurvey(false)}
+          footer={null}
+        >
+          <QuestionSurvey surveyId={selectedSurveyId} />
+        </Modal>
+      </div>
+      <Row gutter={16} className="mt-4">
         {isLoading
           ? [1, 2, 3].map((item) => (
               <Col xs={24} sm={12} lg={8} key={item}>
@@ -156,28 +219,45 @@ const SurveyModal = () => {
                         value: getAccountDetails(item.survey.createBy).email,
                       },
                       {
+                        icon: <InfoCircleOutlined />,
+                        label: "Tổ chức:",
+                        value: getAccountDetails(item.survey.createBy)
+                          .organization.name,
+                      },
+
+                      {
+                        icon: <UserOutlined />,
+                        label: "Tên người dùng:",
+                        value: getAccountDetails(item.survey.createBy).userName,
+                      },
+
+                      {
                         icon: <CalendarOutlined />,
                         label: "Ngày tạo:",
                         value: formatDate(item.survey.createDate),
                       },
-                      {
-                        icon: <CalendarOutlined />,
-                        label: "Ngày cập nhật:",
-                        value: formatDate(item.survey.updateDate),
-                      },
                     ]}
+                    renderItem={(detail) => (
+                      <SurveyItemDetail
+                        icon={detail.icon}
+                        label={detail.label}
+                        value={detail.value}
+                      />
+                    )}
                   />
                   {item.surveyQuestionDetails.length > 0 && (
                     <div className="mt-4">
-                      <Title level={5}>Các Câu Hỏi Khảo Sát</Title>{" "}
+                      <Title level={5}>Các Câu Hỏi Khảo Sát</Title>
                       {item.surveyQuestionDetails.map((question) => (
                         <Paragraph key={question.id}>
                           <Text strong>{question.question}</Text>
                           <br />
                           <Text type="secondary">
-                            Type:{" "}
+                            Loại:{" "}
                             {question.answerType === 0
                               ? "Văn bản"
+                              : question.answerType === 2
+                              ? "Ngày"
                               : `Đánh giá (Tối đa: ${question.ratingMax})`}
                           </Text>
                         </Paragraph>
