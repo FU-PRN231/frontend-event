@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   Button,
+  Card,
+  Divider,
   Form,
   Input,
   InputNumber,
   message,
   Select,
-  Card,
-  Typography,
   Space,
-  Divider,
   Tooltip,
+  Typography,
 } from "antd";
-import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
-import { getAllEvent, getEventByOrganizerId } from "../../api/eventApi";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { getEventByOrganizerId } from "../../api/eventApi";
 import { insertSurveyForm } from "../../api/surveyApi";
 
 const { Option } = Select;
@@ -32,12 +32,23 @@ const QuestionSurvey = () => {
 
   const fetchEvents = async () => {
     try {
-      if(role === "ORGANIZER"){
-        const eventsData = await getEventByOrganizerId(user.organizationId,1, 100);
-        setEvents(eventsData.result.items);
+      if (role === "ORGANIZER") {
+        const eventsData = await getEventByOrganizerId(
+          user.organizationId,
+          1,
+          100
+        );
+        if (eventsData && eventsData.isSuccess) {
+          setEvents(eventsData.result.items);
+        } else {
+          message.error(
+            "Failed to fetch events: " +
+              (eventsData.messages ? eventsData.messages[0] : "Unknown error")
+          );
+        }
       }
     } catch (error) {
-      message.error("Lỗi khi tải danh sách sự kiện: " + error.message);
+      message.error("Failed to fetch events: " + error.message);
     }
   };
 

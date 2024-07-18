@@ -1,5 +1,4 @@
-import api from "../api/config"
-
+import api from "../api/config";
 
 export const getAllEvent = async (pageNumber, pageSize) => {
   try {
@@ -61,7 +60,7 @@ export const updateEventStatus = async (id, status) => {
   }
 };
 
-export const getEventBySponsorId= async (id,pageNumber, pageSize) =>{
+export const getEventBySponsorId = async (id, pageNumber, pageSize) => {
   try {
     const res = await api.get(
       `/event/get-sponsor-event/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`
@@ -71,10 +70,10 @@ export const getEventBySponsorId= async (id,pageNumber, pageSize) =>{
     return null;
   }
 };
-export const getEventByOrganizerId= async (id,pageNumber, pageSize) =>{
+export const getEventByOrganizerId = async (id, pageNumber, pageSize) => {
   try {
     const res = await api.get(
-      `/event/get-organization-event/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`
+      `/event/get-all-event-by-organization-id/${id}/${pageNumber}/${pageSize}`
     );
     return res.data;
   } catch (err) {
