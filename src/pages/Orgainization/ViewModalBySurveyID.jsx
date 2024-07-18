@@ -92,7 +92,7 @@ const ViewModalBySurveyID = ({ surveyId, visible, onClose }) => {
           onChange={handleSurveySelect}
           value={selectedSurveyId}
         >
-          {surveys.map((survey) => (
+          {surveys?.map((survey) => (
             <Option key={survey.survey.id} value={survey.survey.id}>
               {survey.survey.name}
             </Option>
