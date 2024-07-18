@@ -1,13 +1,15 @@
+import { UploadOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Upload, message } from "antd";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { getAllEvent } from "../../api/eventApi";
 import { addSponsor } from "../../api/sponsorApi";
 
 const AddSponsorForm = ({ onSponsorAdded }) => {
-  const { register, handleSubmit, reset } = useForm();
+  const [form] = Form.useForm();
   const [events, setEvents] = useState([]);
-  const [selectedEventId, setSelectedEventId] = useState("");
+  const [fileList, setFileList] = useState([]);
 
+  // Fetch events from the API
   const fetchEvents = async () => {
     try {
       const eventsData = await getAllEvent(1, 100);
@@ -21,28 +23,75 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
     fetchEvents();
   }, []);
 
-  const onSubmit = async (data) => {
+  // Convert file to binary data and handle form submission
+  const getBinaryDataFromFile = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result); // Binary data
+      };
+      reader.onerror = () => {
+        reject(new Error("Error reading file"));
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
+  const onFinish = async (values) => {
     const formData = new FormData();
-    formData.append("Name", data.name);
-    formData.append("Description", data.description);
-    formData.append("PhoneNumber", data.phoneNumber);
-    formData.append("Email", data.email);
+    formData.append("Name", values.name);
+    formData.append("Description", values.description);
+    formData.append("PhoneNumber", values.phoneNumber);
+    formData.append("Email", values.email);
 
-    for (let i = 0; i < data.img.length; i++) {
-      formData.append("Img", data.img[i]);
-    }
-
+    // Convert image files to binary data and append to formData
     try {
+      for (const file of fileList) {
+        if (file.originFileObj) {
+          formData.append("Img", file.originFileObj);
+        }
+      }
+
+      console.log("Sending data:", {
+        name: values.name,
+        description: values.description,
+        phoneNumber: values.phoneNumber,
+        email: values.email,
+        files: fileList.map((file) => file.name),
+      });
+
       const res = await addSponsor(formData);
+
+      // Check for success and handle response
       if (res.isSuccess) {
-        onSponsorAdded();
-        reset();
+        onSponsorAdded(); // Notify parent component
+        form.resetFields(); // Reset form fields
+        setFileList([]); // Clear file list
+        message.success("Sponsor added successfully");
       } else {
+        // Log error and show message
         console.error("Error response data:", res.messages);
+        message.error(res.messages.join("\n"));
       }
     } catch (error) {
+      // Log unexpected errors and show a message
       console.error("Error adding sponsor:", error);
+      message.error("An unexpected error occurred. Please try again later.");
     }
+  };
+
+  // Handle file upload change
+  const handleUploadChange = ({ fileList }) => {
+    setFileList(fileList);
+  };
+
+  // Validate file type
+  const beforeUpload = (file) => {
+    const isImage = file.type.startsWith("image/");
+    if (!isImage) {
+      message.error("You can only upload image files!");
+    }
+    return isImage; // Return false to prevent upload if not an image
   };
 
   return (
@@ -50,98 +99,63 @@ const AddSponsorForm = ({ onSponsorAdded }) => {
       <h3 className="text-2xl font-bold text-center mb-6">
         Thêm đơn vị tài trợ
       </h3>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="name"
-            >
-              Tên nhà tài trợ
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="name"
-              type="text"
-              {...register("name")}
-              placeholder="Nhập tên nhà tài trợ"
-            />
-          </div>
-
-          <div className="flex flex-col mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="description"
-            >
-              Mô tả chi tiết
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="description"
-              type="text"
-              {...register("description")}
-              placeholder="Nhập mô tả chi tiết về nhà tài trợ"
-            />
-          </div>
-
-          <div className="flex flex-col mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="phoneNumber"
-            >
-              Số điện thoại
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="phoneNumber"
-              type="text"
-              {...register("phoneNumber")}
-              placeholder="Nhập số điện thoại"
-            />
-          </div>
-
-          <div className="flex flex-col mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="email"
-            >
-              Email
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="email"
-              type="text"
-              {...register("email")}
-              placeholder="Nhập email liên hệ"
-            />
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="img"
-          >
-            Hình ảnh
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="img"
-            type="file"
+      <Form
+        form={form}
+        onFinish={onFinish}
+        layout="vertical"
+        initialValues={{}}
+      >
+        <Form.Item
+          label="Tên nhà tài trợ"
+          name="name"
+          rules={[
+            { required: true, message: "Please enter the sponsor's name" },
+          ]}
+        >
+          <Input placeholder="Nhập tên nhà tài trợ" />
+        </Form.Item>
+        <Form.Item
+          label="Mô tả chi tiết"
+          name="description"
+          rules={[{ required: true, message: "Please enter the description" }]}
+        >
+          <Input placeholder="Nhập mô tả chi tiết về nhà tài trợ" />
+        </Form.Item>
+        <Form.Item
+          label="Số điện thoại"
+          name="phoneNumber"
+          rules={[{ required: true, message: "Please enter the phone number" }]}
+        >
+          <Input placeholder="Nhập số điện thoại" />
+        </Form.Item>
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[{ required: true, message: "Please enter the email" }]}
+        >
+          <Input placeholder="Nhập email liên hệ" />
+        </Form.Item>
+        <Form.Item
+          label="Hình ảnh"
+          name="img"
+          rules={[{ required: true, message: "Please upload an image" }]}
+        >
+          <Upload
+            listType="picture"
+            fileList={fileList}
+            onChange={handleUploadChange}
+            beforeUpload={beforeUpload}
             multiple
-            {...register("img")}
-          />
-        </div>
-
-        <div className="flex items-center justify-center">
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
+            <Button icon={<UploadOutlined />}>Chọn hình ảnh</Button>
+          </Upload>
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
             Thêm nhà tài trợ
-          </button>
-        </div>
-      </form>
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };
