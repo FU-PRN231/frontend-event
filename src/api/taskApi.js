@@ -116,12 +116,18 @@ export const updateTaskStatus = async (taskId, isSuccessful) => {
 export const updateTaskForEvent = async (eventId, taskData) => {
   try {
     const response = await axios.put(
-      `${baseUrl}/task/update-task-for-event`,
+      `${BASE_URL}/task/update-task-for-event?eventId=${eventId}`,
       taskData
     );
-    return response.data;
+    return {
+      isSuccess: true,
+      messages: ["Task updated successfully!"],
+    };
   } catch (error) {
     console.error("Error updating task for event:", error);
-    throw error;
+    return {
+      isSuccess: false,
+      messages: [error.message || "Failed to update task. Please try again."],
+    };
   }
 };

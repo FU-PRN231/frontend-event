@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { updateTaskForEvent } from "../../../api/taskApi"; // Điều chỉnh đường dẫn import nếu cần
+import Modal from "react-modal";
+import { updateTaskForEvent } from "../../../api/taskApi"; // Adjust the import path as needed
 
-const UpdateTaskForEvent = ({ eventId }) => {
+const UpdateTaskForEvent = ({ isOpen, onRequestClose, eventId }) => {
   const [taskData, setTaskData] = useState({
     id: "",
     name: "",
@@ -32,18 +33,22 @@ const UpdateTaskForEvent = ({ eventId }) => {
       setIsSuccess(response.isSuccess);
       setMessages(response.messages);
     } catch (error) {
-      console.error("Lỗi khi cập nhật nhiệm vụ cho sự kiện:", error);
+      console.error("Error updating task for event:", error);
       setIsSuccess(false);
       setMessages([error.message]);
     }
   };
 
   return (
-    <div>
-      <h2>Cập Nhật Nhiệm Vụ Cho Sự Kiện</h2>
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+      contentLabel="Update Task For Event"
+    >
+      <h2>Update Task For Event</h2>
       <form onSubmit={handleSubmit}>
         <label>
-          ID Nhiệm Vụ:
+          Task ID:
           <input
             type="text"
             name="id"
@@ -53,7 +58,7 @@ const UpdateTaskForEvent = ({ eventId }) => {
           />
         </label>
         <label>
-          Tên:
+          Name:
           <input
             type="text"
             name="name"
@@ -63,7 +68,7 @@ const UpdateTaskForEvent = ({ eventId }) => {
           />
         </label>
         <label>
-          Mô Tả:
+          Description:
           <textarea
             name="description"
             value={taskData.description}
@@ -72,7 +77,7 @@ const UpdateTaskForEvent = ({ eventId }) => {
           />
         </label>
         <label>
-          Người Phụ Trách:
+          Person In Charge:
           <input
             type="text"
             name="personInChargeName"
@@ -82,7 +87,7 @@ const UpdateTaskForEvent = ({ eventId }) => {
           />
         </label>
         <label>
-          Số Điện Thoại:
+          Phone Number:
           <input
             type="text"
             name="phoneNumber"
@@ -92,7 +97,7 @@ const UpdateTaskForEvent = ({ eventId }) => {
           />
         </label>
         <label>
-          Chi Phí:
+          Cost:
           <input
             type="number"
             name="cost"
@@ -102,7 +107,7 @@ const UpdateTaskForEvent = ({ eventId }) => {
           />
         </label>
         <label>
-          Trạng Thái Nhiệm Vụ:
+          Task Status:
           <input
             type="number"
             name="taskStatus"
@@ -112,7 +117,7 @@ const UpdateTaskForEvent = ({ eventId }) => {
           />
         </label>
         <label>
-          Ngày Tạo:
+          Created Date:
           <input
             type="datetime-local"
             name="createdDate"
@@ -122,7 +127,7 @@ const UpdateTaskForEvent = ({ eventId }) => {
           />
         </label>
         <label>
-          Ngày Kết Thúc:
+          End Date:
           <input
             type="datetime-local"
             name="endDate"
@@ -131,18 +136,18 @@ const UpdateTaskForEvent = ({ eventId }) => {
             required
           />
         </label>
-        <button type="submit">Cập Nhật Nhiệm Vụ</button>
+        <button type="submit">Update Task</button>
       </form>
       {isSuccess !== null && (
         <div>
           {isSuccess ? (
-            <p>Cập nhật nhiệm vụ thành công!</p>
+            <p>Task updated successfully!</p>
           ) : (
-            <p>Lỗi khi cập nhật nhiệm vụ: {messages.join(", ")}</p>
+            <p>Error updating task: {messages.join(", ")}</p>
           )}
         </div>
       )}
-    </div>
+    </Modal>
   );
 };
 
