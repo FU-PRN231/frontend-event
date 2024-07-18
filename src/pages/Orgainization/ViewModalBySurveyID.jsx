@@ -1,120 +1,66 @@
-import {
-  Button,
-  Card,
-  Col,
-  List,
-  message,
-  Modal,
-  Row,
-  Select,
-  Skeleton,
-  Spin,
-  Typography,
-} from "antd";
+import { Card, message, Select, Space, Spin, Typography } from "antd";
 import React, { useEffect, useState } from "react";
-import { getAllEvent } from "../../api/eventApi";
-import { getAllOrganizations } from "../../api/organizationApi";
-import { getSurveysBySurveyId } from "../../api/surveyApi";
+import {
+  getAllSurveys,
+  getSurveyById,
+  getSurveysResponseBySurveyId,
+} from "../../api/surveyApi";
+
 const { Option } = Select;
 const { Text, Title, Paragraph } = Typography;
 
-const ViewModalBySurveyID = ({ surveyId, open, onClose }) => {
+const ViewModalBySurveyID = ({ surveyId, visible, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [surveyData, setSurveyData] = useState(null);
-  const [error, setError] = useState(null);
   const [surveys, setSurveys] = useState([]);
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
 
-  const fetchSurveys = async () => {
+  useEffect(() => {
+    const fetchSurveys = async () => {
+      try {
+        const response = await getAllSurveys();
+        if (response?.isSuccess) {
+          setSurveys(response.result);
+        }
+      } catch (error) {
+        message.error("Failed to fetch surveys: " + error.message);
+      }
+    };
+
+    fetchSurveys();
+  }, []);
+
+  const fetchSurveyById = async (id) => {
+    setLoading(true);
     try {
-      const response = await getAllSurveys();
+      const response = await getSurveyById(id);
       if (response?.isSuccess) {
-        setSurveys(response.result);
+        setSurveyData(response.result);
+      } else {
+        setSurveyData(null);
       }
     } catch (error) {
-      message.error("Failed to fetch surveys: " + error.message);
+      message.error("Failed to fetch survey details: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const fetchSurveyById = async (id) => {
+  const fetchSurveyData = async (id) => {
     try {
-      const response = await getSurveyById(id);
-      setSurveyData(response.result);
+      setLoading(true);
+      const data = await getSurveysResponseBySurveyId(id);
+      setSurveyData(data.result);
     } catch (error) {
-      message.error("Failed to fetch survey details: " + error.message);
+      message.error("Failed to fetch survey data: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSurveySelect = (value) => {
     setSelectedSurveyId(value);
-    fetchSurveyById(value);
-  };
-
-  useEffect(() => {
-    if (open) {
-      fetchSurveys();
-    }
-  }, [open]);
-
-  useEffect(() => {
-    const fetchSurveyData = async () => {
-      setLoading(true);
-      try {
-        const data = await getSurveysBySurveyId(surveyId);
-        setSurveyData(data.result);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (open && surveyId) {
-      fetchSurveyData();
-    }
-  }, [surveyId, open]);
-
-  const handleClose = () => {
-    onClose();
-    setSurveyData(null);
-  };
-
-  const getEventTitle = (eventId) => {
-    const event = events.find((event) => event.id === eventId);
-    return event ? event.title : "Unknown";
-  };
-
-  const getAccountDetails = (accountId) => {
-    const account = accountDetails[accountId];
-    if (!account)
-      return { name: "Unknown", phoneNumber: "Unknown", email: "Unknown" };
-    return {
-      name: `${account.firstName} ${account.lastName}`,
-      phoneNumber: account.phoneNumber || "Unknown",
-      email: account.email || "Unknown",
-    };
-  };
-
-  const fetchEvents = async () => {
-    try {
-      const eventsData = await getAllEvent(1, 100);
-      setEvents(eventsData.result.items);
-    } catch (error) {
-      console.error("Error fetching events:", error);
-    }
-  };
-
-  const fetchOrganizations = async () => {
-    try {
-      const res = await getAllOrganizations(1, 10);
-      if (res.isSuccess) {
-        setOrganizations(res.result.items || []);
-      } else {
-        console.error("Unsuccessful response:", res.messages);
-      }
-    } catch (error) {
-      console.error("Error fetching organizations:", error);
-    }
+    fetchSurveyData(value);
   };
 
   const formatDate = (dateString) => {
@@ -127,143 +73,88 @@ const ViewModalBySurveyID = ({ surveyId, open, onClose }) => {
     return date.toLocaleDateString("en-GB");
   };
 
-  const SurveyItemDetail = ({ icon, label, value }) => (
-    <div className="mb-2">
-      <Text>
-        {icon} <strong>{label}</strong> {value}
-      </Text>
-    </div>
-  );
+  const getAccountDetails = (account) => {
+    if (!account)
+      return { name: "Unknown", phoneNumber: "Unknown", email: "Unknown" };
+    return {
+      name: `${account.firstName} ${account.lastName}`,
+      phoneNumber: account.phoneNumber || "Unknown",
+      email: account.email || "Unknown",
+    };
+  };
 
   return (
-    <Modal
-      title={`Survey Details - ${surveyId}`}
-      open={open}
-      onCancel={handleClose}
-      footer={[
-        <Button key="close" onClick={handleClose}>
-          Close
-        </Button>,
-      ]}
-    >
-      <Select
-        style={{ width: "100%" }}
-        placeholder="Select a survey"
-        onChange={handleSurveySelect}
-      >
-        {surveys.map((survey) => (
-          <Option key={survey.id} value={survey.id}>
-            {survey.name}
-          </Option>
-        ))}
-      </Select>
-
-      {loading && <Spin />}
-
-      {error && <div>Error: {error}</div>}
-
-      <Row gutter={16}>
-        {loading
-          ? [1, 2, 3].map((item) => (
-              <Col xs={24} sm={12} lg={8} key={item}>
-                <Card>
-                  <Skeleton active />
-                </Card>
-              </Col>
-            ))
-          : surveys.map((item) => (
-              <Col xs={24} sm={12} lg={8} key={item.survey.id}>
-                <Card
-                  title={<Title level={4}>{item.survey.name}</Title>}
-                  bordered={true}
-                  style={{ marginBottom: "16px" }}
-                >
-                  <List
-                    size="small"
-                    dataSource={[
-                      {
-                        icon: <InfoCircleOutlined />,
-                        label: "Event:",
-                        value: getEventTitle(item.survey.eventId),
-                      },
-                      {
-                        icon: <UserOutlined />,
-                        label: "Created by:",
-                        value: getAccountDetails(item.survey.createBy).name,
-                      },
-                      {
-                        icon: <PhoneOutlined />,
-                        label: "Phone:",
-                        value: getAccountDetails(item.survey.createBy)
-                          .phoneNumber,
-                      },
-                      {
-                        icon: <MailOutlined />,
-                        label: "Email:",
-                        value: getAccountDetails(item.survey.createBy).email,
-                      },
-                      {
-                        icon: <CalendarOutlined />,
-                        label: "Created on:",
-                        value: formatDate(item.survey.createDate),
-                      },
-                      {
-                        icon: <CalendarOutlined />,
-                        label: "Updated on:",
-                        value: formatDate(item.survey.updateDate),
-                      },
-                    ]}
-                    renderItem={(detail) => (
-                      <List.Item>
-                        <SurveyItemDetail
-                          icon={detail.icon}
-                          label={detail.label}
-                          value={detail.value}
-                        />
-                      </List.Item>
-                    )}
-                  />
-                  {item.surveyQuestionDetails.length > 0 && (
-                    <div className="mt-4">
-                      <Title level={5}>Survey Questions</Title>
-                      {item.surveyQuestionDetails.map((question) => (
-                        <Paragraph key={question.id}>
-                          <Text strong>{question.question}</Text>
-                          <br />
-                          <Text type="secondary">
-                            Type:{" "}
-                            {question.answerType === 0
-                              ? "Text"
-                              : `Rating (Max: ${question.ratingMax})`}
-                          </Text>
-                        </Paragraph>
-                      ))}
-                    </div>
-                  )}
-                </Card>
-              </Col>
-            ))}
-      </Row>
-
-      {surveyData && (
-        <div>
-          <h3>Survey Responses</h3>
-          {surveyData.surveyAnswerDetailDtos.map((answerDetail, index) => (
-            <div key={index}>
-              <h4>
-                Question {answerDetail.surveyQuestionDetail.no}:{" "}
-                {answerDetail.surveyQuestionDetail.question}
-              </h4>
-              {answerDetail.surveyResponseDetails.map((response, idx) => (
-                <div key={idx}>
-                  <p>Response: {response.textAnswer}</p>
-                </div>
-              ))}
-            </div>
+    <Card className="max-w-2xl mx-auto mt-8">
+      <Space direction="vertical" size="large" style={{ width: "100%" }}>
+        <Select
+          style={{ width: "100%" }}
+          placeholder="Select a survey"
+          onChange={handleSurveySelect}
+          value={selectedSurveyId}
+        >
+          {surveys.map((survey) => (
+            <Option key={survey.survey.id} value={survey.survey.id}>
+              {survey.survey.name}
+            </Option>
           ))}
-        </div>
-      )}
-    </Modal>
+        </Select>
+
+        {loading && <Spin />}
+
+        {surveyData && (
+          <>
+            <Title level={4}>{surveyData.survey.name}</Title>
+            <Paragraph>
+              <Text strong>Created By:</Text>{" "}
+              {getAccountDetails(surveyData.survey.createByAccount).name}
+            </Paragraph>
+            <Paragraph>
+              <Text strong>Phone:</Text>{" "}
+              {getAccountDetails(surveyData.survey.createByAccount).phoneNumber}
+            </Paragraph>
+            <Paragraph>
+              <Text strong>Email:</Text>{" "}
+              {getAccountDetails(surveyData.survey.createByAccount).email}
+            </Paragraph>
+            <Paragraph>
+              <Text strong>Created on:</Text>{" "}
+              {formatDate(surveyData.survey.createDate)}
+            </Paragraph>
+            <Paragraph>
+              <Text strong>Updated on:</Text>{" "}
+              {formatDate(surveyData.survey.updateDate)}
+            </Paragraph>
+
+            <Title level={5}>Survey Questions</Title>
+            {surveyData.surveyAnswerDetailDtos.map((answerDetail) => (
+              <Paragraph key={answerDetail.surveyQuestionDetail.id}>
+                <Text strong>
+                  Question {answerDetail.surveyQuestionDetail.no}:{" "}
+                  {answerDetail.surveyQuestionDetail.question}
+                </Text>
+                <br />
+                <Text type="secondary">
+                  Type:{" "}
+                  {answerDetail.surveyQuestionDetail.answerType === 0
+                    ? "Text"
+                    : `Rating (Max: ${answerDetail.surveyQuestionDetail.ratingMax})`}
+                </Text>
+                {answerDetail.surveyResponseDetails.map((response, index) => (
+                  <div key={response.id}>
+                    <Text>{`Response ${index + 1}: `}</Text>
+                    {response.textAnswer ? (
+                      <Text>{response.textAnswer}</Text>
+                    ) : (
+                      <Text>{`Rating: ${response.rating}`}</Text>
+                    )}
+                  </div>
+                ))}
+              </Paragraph>
+            ))}
+          </>
+        )}
+      </Space>
+    </Card>
   );
 };
 

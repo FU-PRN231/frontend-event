@@ -65,7 +65,7 @@ export const getSurveysByOrganizationId = async (organizationId) => {
   }
 };
 
-export const getSurveysBySurveyId = async (surveyId) => {
+export const getSurveysResponseBySurveyId = async (surveyId) => {
   try {
     const response = await axios.get(
       `${baseUrl}/survey/get-survey-response-by-survey-id/${surveyId}`
