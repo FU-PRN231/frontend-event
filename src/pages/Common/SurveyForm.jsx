@@ -1,23 +1,22 @@
-import React, { useState, useEffect } from "react";
 import {
+  Button,
+  Card,
+  DatePicker,
   Form,
   Input,
-  DatePicker,
-  Rate,
-  Card,
-  Typography,
-  Space,
-  Button,
   message,
+  Rate,
   Select,
+  Space,
+  Typography,
 } from "antd";
 import moment from "moment-timezone";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   addAnswerToSurvey,
   getAllSurveys,
   getSurveyById,
-  insertSurveyForm,
 } from "../../api/surveyApi";
 
 const { Title, Text } = Typography;

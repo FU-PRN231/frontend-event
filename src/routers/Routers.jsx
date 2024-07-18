@@ -17,9 +17,11 @@ import ManagementEvent from "../pages/CommonManager/ManagementEvent";
 import CheckInModal from "../pages/Orgainization/CheckinModal";
 import QuestionSurvey from "../pages/Orgainization/QuestionSurvey";
 import SurveyModal from "../pages/Orgainization/SurveyModal";
+import ViewModalBySurveyID from "../pages/Orgainization/ViewModalBySurveyID";
 import CheckInPage from "../pages/PM/CheckInPage";
 import CreateEventForm from "../pages/PM/CreateEventForm";
 import ManageTaskEvent from "../pages/PM/Task/ManageTaskEvent";
+import UpdateTaskForEvent from "../pages/PM/Task/UpdateTaskforEvent";
 import ViewTask from "../pages/PM/Task/ViewTask";
 import UpdateEventForm from "../pages/PM/UpdateEventForm";
 import AddSponsorForm from "../pages/Sponsor/AddSponsorForm";
@@ -109,6 +111,10 @@ function Routers() {
           path: "create-survey",
           element: <QuestionSurvey />,
         },
+        {
+          path: "view-survey",
+          element: <ViewModalBySurveyID />,
+        },
         { path: "event/manage-check-in/:id", element: <CheckInModal /> },
       ],
     },
@@ -142,6 +148,10 @@ function Routers() {
         {
           path: "task-asign",
           element: <ManageTaskEvent />,
+        },
+        {
+          path: "task-update",
+          element: <UpdateTaskForEvent />,
         },
       ],
     },

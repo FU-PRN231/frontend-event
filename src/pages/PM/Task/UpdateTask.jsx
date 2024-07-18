@@ -1,3 +1,4 @@
+import { notification } from "antd";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { updateTaskStatus } from "../../../api/taskApi";
@@ -18,9 +19,8 @@ const UpdateTask = ({ task, onClose, onUpdateSuccess, onError }) => {
   };
 
   const isSuccessful = {
-    [TaskStatus["2"]]: true,
-    [TaskStatus["3"]]: true,
-    [TaskStatus["4"]]: false,
+    "Hoàn thành": true,
+    "Thất bại": false,
   };
 
   const getStatusText = (status) => {
@@ -38,38 +38,36 @@ const UpdateTask = ({ task, onClose, onUpdateSuccess, onError }) => {
     }
   };
 
-  const getNextStatus = (currentStatus) => {
-    switch (currentStatus) {
-      case TaskStatus["0"]:
-        return TaskStatus["1"];
-      case TaskStatus["1"]:
-        return TaskStatus["2"];
-      case TaskStatus["2"]:
-        return TaskStatus["3"];
-      case TaskStatus["1"]:
-        return TaskStatus["3"];
-
-      default:
-        return currentStatus;
-    }
-  };
-
   const onSubmit = async (data) => {
-    const { taskId, currentStatus } = data;
-    const newStatus = getNextStatus(currentStatus);
+    const { taskId, newStatus } = data;
     const isSuccessfulValue = isSuccessful[newStatus];
 
     try {
       const res = await updateTaskStatus(taskId, isSuccessfulValue);
       if (res.isSuccess) {
         onUpdateSuccess(newStatus);
-        onClose(); // Close the modal after update
+        notification.success({
+          message: "Success",
+          description: "Task status updated successfully.",
+          placement: "topRight",
+        });
+        onClose();
       } else {
-        onError(res.messages[0] || "Lỗi khi cập nhật trạng thái nhiệm vụ.");
+        onError(res.messages[0] || "Error updating task status.");
+        notification.error({
+          message: "Error",
+          description: "Error updating task status.",
+          placement: "topRight",
+        });
       }
     } catch (err) {
       console.error("Error updating task status:", err);
-      onError("Lỗi khi cập nhật trạng thái nhiệm vụ.");
+      onError("Error updating task status.");
+      notification.error({
+        message: "Error",
+        description: "Error updating task status.",
+        placement: "topRight",
+      });
     }
   };
 
@@ -92,7 +90,7 @@ const UpdateTask = ({ task, onClose, onUpdateSuccess, onError }) => {
               id="currentStatus"
               type="text"
               className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              value={getStatusText(task.status)} // Use getStatusText to fetch status dynamically
+              value={getStatusText(task.status)}
               disabled
             />
           </div>
@@ -105,16 +103,19 @@ const UpdateTask = ({ task, onClose, onUpdateSuccess, onError }) => {
             </label>
             <select
               id="newStatus"
-              {...register("currentStatus", { required: true })}
+              {...register("newStatus", { required: true })}
               className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             >
-              {Object.values(TaskStatus).map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
+              {Object.entries(TaskStatus).map(
+                ([key, value]) =>
+                  key !== "No_status" && (
+                    <option key={key} value={value}>
+                      {value}
+                    </option>
+                  )
+              )}
             </select>
-            {errors.currentStatus && (
+            {errors.newStatus && (
               <span className="text-red-500 text-sm italic">
                 Vui lòng chọn trạng thái mới cho nhiệm vụ.
               </span>
