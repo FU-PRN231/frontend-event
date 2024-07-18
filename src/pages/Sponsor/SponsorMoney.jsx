@@ -1,7 +1,8 @@
 import { message, Pagination, Select, Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
-import { getAllEvent } from "../../api/eventApi";
+import { getAllEvent, getEventByOrganizerId } from "../../api/eventApi";
 import { getAllSponsorItemsOfEvent } from "../../api/sponsorApi";
+import { useSelector } from "react-redux";
 
 const { Option } = Select;
 
@@ -13,7 +14,7 @@ const SponsorMoney = ({ eventId }) => {
   const [totalItems, setTotalItems] = useState(0);
   const [events, setEvents] = useState([]);
   const [selectedEventId, setSelectedEventId] = useState(eventId);
-
+const user = useSelector((state)=> state.user.user || {})
   useEffect(() => {
     fetchEvents();
   }, []);
@@ -24,7 +25,7 @@ const SponsorMoney = ({ eventId }) => {
 
   const fetchEvents = async () => {
     try {
-      const eventsData = await getAllEvent(1, 100);
+      const eventsData = await getEventByOrganizerId(user.organizationId,1, 100);
       setEvents(eventsData.result.items);
     } catch (error) {
       console.error("Lỗi tải sự kiện:", error);

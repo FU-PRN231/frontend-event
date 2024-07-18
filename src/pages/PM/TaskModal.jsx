@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { getAllEvent } from "../../api/eventApi";
+import { getAllEvent, getEventByOrganizerId } from "../../api/eventApi";
 import { getAllTasksOfEvent } from "../../api/taskApi";
 import ManageTaskEvent from "./Task/ManageTaskEvent";
 import ViewTask from "./Task/ViewTask";
+import { useSelector } from "react-redux";
 
 const TaskModal = ({ eventId }) => {
   const {
@@ -35,9 +36,10 @@ const TaskModal = ({ eventId }) => {
     const selectedId = e.target.value;
     setSelectedEventId(selectedId);
   };
+  const user = useSelector((state)=> state.user.user || {})
   const fetchEvents = async () => {
     try {
-      const eventsData = await getAllEvent(1, 100);
+      const eventsData = await getEventByOrganizerId(user.organizationId,1, 100);
       setEvents(eventsData.result.items);
     } catch (error) {
       console.error("Error fetching events:", error);

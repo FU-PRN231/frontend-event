@@ -1,10 +1,10 @@
-import axios from "axios";
-import { baseUrl } from "./config";
+import api from "../api/config"
+
 
 export const getAllEvent = async (pageNumber, pageSize) => {
   try {
-    const res = await axios.get(
-      `${baseUrl}/event/get-all-event?pageNumber=${pageNumber}&pageSize=${pageSize}`
+    const res = await api.get(
+      `/event/get-all-event?pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
     return res.data;
   } catch (err) {
@@ -13,8 +13,8 @@ export const getAllEvent = async (pageNumber, pageSize) => {
 };
 export const getAllAvailableEvent = async (pageNumber, pageSize) => {
   try {
-    const res = await axios.get(
-      `${baseUrl}/event/get-available-event?pageNumber=${pageNumber}&pageSize=${pageSize}`
+    const res = await api.get(
+      `/event/get-available-event?pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
     return res.data;
   } catch (err) {
@@ -24,7 +24,7 @@ export const getAllAvailableEvent = async (pageNumber, pageSize) => {
 
 export const getEventById = async (id) => {
   try {
-    const res = await axios.get(`${baseUrl}/event/get-event-by-id/${id}`);
+    const res = await api.get(`/event/get-event-by-id/${id}`);
 
     return res.data;
   } catch (err) {
@@ -34,7 +34,7 @@ export const getEventById = async (id) => {
 
 export const createEvent = async (data) => {
   try {
-    const res = await axios.post(`${baseUrl}/event/add-event`, data);
+    const res = await api.post(`/event/add-event`, data);
     return res.data;
   } catch (err) {
     return null;
@@ -43,7 +43,7 @@ export const createEvent = async (data) => {
 
 export const updateEvent = async (id, data) => {
   try {
-    const res = await axios.post(`${baseUrl}/event/update-event/${id}`, data);
+    const res = await api.post(`/event/update-event/${id}`, data);
     return res.data;
   } catch (err) {
     return null;
@@ -52,8 +52,29 @@ export const updateEvent = async (id, data) => {
 
 export const updateEventStatus = async (id, status) => {
   try {
-    const res = await axios.post(
-      `${baseUrl}/event/update-event-status?eventId=${id}&status=${status}`
+    const res = await api.post(
+      `/event/update-event-status?eventId=${id}&status=${status}`
+    );
+    return res.data;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const getEventBySponsorId= async (id,pageNumber, pageSize) =>{
+  try {
+    const res = await api.get(
+      `/event/get-sponsor-event/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
+    return res.data;
+  } catch (err) {
+    return null;
+  }
+};
+export const getEventByOrganizerId= async (id,pageNumber, pageSize) =>{
+  try {
+    const res = await api.get(
+      `/event/get-organization-event/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
     return res.data;
   } catch (err) {

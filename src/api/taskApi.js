@@ -1,6 +1,5 @@
-import axios from "axios";
+import api from "../api/config"
 
-import { baseUrl } from "./config";
 // Function to get all event tasks by status
 export const getAllEventTasksByStatus = async (
   eventId,
@@ -9,8 +8,8 @@ export const getAllEventTasksByStatus = async (
   taskStatus
 ) => {
   try {
-    const res = await axios.get(
-      `${baseUrl}/task/get-all-event-task-by-status/${eventId}/${pageNumber}/${pageSize}`
+    const res = await api.get(
+      `/task/get-all-event-task-by-status/${eventId}/${pageNumber}/${pageSize}`
     );
   } catch (err) {
     console.error("Error fetching event tasks:", err);
@@ -20,8 +19,8 @@ export const getAllEventTasksByStatus = async (
 
 export const assignTaskForEvent = async (eventId, payload) => {
   try {
-    const response = await axios.post(
-      `${baseUrl}/task/assign-task-for-event`,
+    const response = await api.post(
+      `/task/assign-task-for-event`,
       payload
     );
     return response.data;
@@ -37,9 +36,9 @@ export const getAllTasksOfEventByStatus = async (
   taskStatus = null
 ) => {
   try {
-    const url = `${baseUrl}/task/get-all-event-task-by-status/${eventId}/${pageNumber}/${pageSize}`;
+    const url = `/task/get-all-event-task-by-status/${eventId}/${pageNumber}/${pageSize}`;
     const params = taskStatus ? { params: { taskStatus } } : {};
-    const res = await axios.get(url, params);
+    const res = await api.get(url, params);
     return res.data;
   } catch (err) {
     console.error("Error fetching tasks:", err);
@@ -50,7 +49,7 @@ export const getAllTasksOfEventByStatus = async (
 // Function to delete a task
 export const deleteTask = async (taskId, confirmed) => {
   try {
-    const response = await axios.delete(`${baseUrl}/task/delete-task`, {
+    const response = await api.delete(`/task/delete-task`, {
       params: {
         taskId: taskId,
         confirmed: confirmed,
@@ -71,8 +70,8 @@ export const deleteTask = async (taskId, confirmed) => {
 // Function to get all tasks of an event
 export const getAllTasksOfEvent = async (eventId, pageNumber, pageSize) => {
   try {
-    const res = await axios.get(
-      `${baseUrl}/task/get-all-task-of-event/${eventId}/${pageNumber}/${pageSize}`
+    const res = await api.get(
+      `/task/get-all-task-of-event/${eventId}/${pageNumber}/${pageSize}`
     );
     return res.data;
   } catch (err) {
@@ -84,7 +83,7 @@ export const getAllTasksOfEvent = async (eventId, pageNumber, pageSize) => {
 // Function to get a task by ID
 export const getTaskById = async (taskId) => {
   try {
-    const res = await axios.get(`${baseUrl}/task/get-a-task-by-id/${taskId}`);
+    const res = await api.get(`/task/get-a-task-by-id/${taskId}`);
     return res.data;
   } catch (err) {
     console.error("Error fetching task:", err);
@@ -93,8 +92,8 @@ export const getTaskById = async (taskId) => {
 };
 export const updateTaskStatus = async (taskId, isSuccessful) => {
   try {
-    const response = await axios.put(
-      `${baseUrl}/task/update-status-of-task`,
+    const response = await api.put(
+      `/task/update-status-of-task`,
       null,
       {
         params: {
@@ -115,8 +114,8 @@ export const updateTaskStatus = async (taskId, isSuccessful) => {
 };
 export const updateTaskForEvent = async (eventId, taskData) => {
   try {
-    const response = await axios.put(
-      `${baseUrl}/task/update-task-for-event`,
+    const response = await api.put(
+      `/task/update-task-for-event`,
       taskData
     );
     return response.data;

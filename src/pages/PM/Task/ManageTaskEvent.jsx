@@ -1,8 +1,9 @@
 import { notification } from "antd";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { getAllEvent } from "../../../api/eventApi";
+import { getAllEvent, getEventByOrganizerId } from "../../../api/eventApi";
 import { assignTaskForEvent } from "../../../api/taskApi";
+import { useSelector } from "react-redux";
 
 const ManageTaskEvent = ({ setTasks }) => {
   const {
@@ -15,11 +16,11 @@ const ManageTaskEvent = ({ setTasks }) => {
   const [error, setError] = useState(null);
   const [selectedEventId, setSelectedEventId] = useState("");
   const [events, setEvents] = useState([]);
-
+const user = useSelector((state)=> state.user.user || {})
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const eventsData = await getAllEvent(1, 100);
+        const eventsData = await getEventByOrganizerId(user.organizationId,1, 100);
         setEvents(eventsData.result.items);
       } catch (error) {
         console.error("Error fetching events:", error);

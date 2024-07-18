@@ -1,10 +1,10 @@
-import axios from "axios";
-import { baseUrl } from "./config";
+import api from "../api/config"
+
 
 export const createOrderWithPament = async (order) => {
   try {
-    const res = await axios.post(
-      `${baseUrl}/order/create-order-with-payment`,
+    const res = await api.post(
+      `/order/create-order-with-payment`,
       order
     );
     return res.data;
@@ -14,31 +14,31 @@ export const createOrderWithPament = async (order) => {
 };
 export const getAllOrderByAccountId = async (id, pageNumber, pageSize) => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/order/get-all-order-by-accountId/${id}/${pageNumber}/${pageSize}`
+    const response = await api.get(
+      `/order/get-all-order-by-accountId/${id}/${pageNumber}/${pageSize}`
     );
     return response.data;
   } catch (error) {}
 };
 export const getAllOrderDetailsByOrderId = async (id, pageNumber, pageSize) => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/order/get-all-order-detail-by-order-id/${id}/${pageNumber}/${pageSize}`
+    const response = await api.get(
+      `/order/get-all-order-detail-by-order-id/${id}/${pageNumber}/${pageSize}`
     );
     return response.data;
   } catch (error) {}
 };
 export const purchaseOrder = async (id) => {
   try {
-    const response = await axios.post(`${baseUrl}/order/purchase-order/${id}`);
+    const response = await api.post(`/order/purchase-order/${id}`);
     return response.data;
   } catch (error) {}
 };
 
 export const updateStatusOrder = async (id) => {
   try {
-    const response = await axios.put(
-      `${baseUrl}/order/update-status?orderId=${id}`
+    const response = await api.put(
+      `/order/update-status?orderId=${id}`
     );
     return response.data;
   } catch (error) {}
@@ -46,8 +46,8 @@ export const updateStatusOrder = async (id) => {
 
 export const sendTicketEmail = async (id) => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/order/send-ticket-email/${id}`
+    const response = await api.get(
+      `/order/send-ticket-email/${id}`
     );
     return response.data;
   } catch (error) {}
