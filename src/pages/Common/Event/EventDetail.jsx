@@ -64,7 +64,7 @@ const EventDetail = () => {
     return (
       <div
         className={className}
-        style={{ ...style, display: "block", background: "#0c4a6e" }}
+        style={{ ...style, display: "block" }}
         onClick={onClick}
       />
     );
@@ -75,7 +75,7 @@ const EventDetail = () => {
     return (
       <div
         className={className}
-        style={{ ...style, display: "block", background: "#0c4a6e" }}
+        style={{ ...style, display: "block" }}
         onClick={onClick}
       />
     );

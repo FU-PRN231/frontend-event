@@ -44,7 +44,8 @@ const CheckInModal = () => {
       if (checkInData?.isSuccess) {
         message.success("Check in thành công");
         setResult(checkInData.result);
-        await fetchData();
+        // await fetchData();
+        setTimeout(() => window.location.reload(), 3000); // Delay 5 seconds before reloading
       }
     }
   };
