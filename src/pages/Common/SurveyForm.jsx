@@ -109,7 +109,7 @@ const SurveyForm = () => {
           placeholder="Chọn khảo sát"
           onChange={handleSurveySelect}
         >
-          {surveys.map((survey) => (
+          {surveys?.map((survey) => (
             <Option key={survey.survey.id} value={survey.survey.id}>
               {survey.survey.name}
             </Option>
