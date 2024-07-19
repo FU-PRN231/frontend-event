@@ -15,11 +15,11 @@ const AssignRoleForm = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const roles = [
-    { value: "customer", displayName: "Khách hàng" },
-    { value: "admin", displayName: "Quản trị viên" },
-    { value: "organizer", displayName: "Nhà tổ chức" },
-    { value: "staff", displayName: "Nhân viên" },
-    { value: "pm", displayName: "Quản lý dự án" },
+    { value: "customer" || "CUSTOMER", displayName: "Khách hàng" },
+    { value: "admin" || "ADMIN", displayName: "Quản trị viên" },
+    { value: "organizer" || "ORGANIZER", displayName: "Nhà tổ chức" },
+    { value: "sponsor" || "SPONSOR", displayName: "Nhà tài trợ" },
+    { value: "pm" || "PM", displayName: "Quản lý dự án" },
   ];
 
   const onFinish = async (values) => {

@@ -12,6 +12,7 @@ import PersonalInformation from "../pages/Common/PersonalInformation";
 import SurveyForm from "../pages/Common/SurveyForm";
 import VerifyPayment from "../pages/Common/VerifyPayment";
 import Dashboard from "../pages/CommonManager/Dashboard";
+import ManageOrganization from "../pages/CommonManager/ManageOrganization";
 import ManageUser from "../pages/CommonManager/ManageUser";
 import ManagementEvent from "../pages/CommonManager/ManagementEvent";
 import CheckInModal from "../pages/Orgainization/CheckinModal";
@@ -86,6 +87,10 @@ function Routers() {
         {
           path: "event",
           element: <CensorEvent />,
+        },
+        {
+          path: "manage-orgnization",
+          element: <ManageOrganization />,
         },
       ],
     },

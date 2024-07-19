@@ -9,6 +9,7 @@ import {
   FaListAlt,
   FaMoneyBill,
   FaPlusCircle,
+  FaRegHandshake,
   FaUser,
 } from "react-icons/fa";
 import { useSelector } from "react-redux";
@@ -102,6 +103,11 @@ const SideBar = () => {
         name: "Kiểm duyệt sự kiện",
         link: "event",
         icon: <FaCalendarPlus />,
+      },
+      {
+        name: "Tổ chức",
+        link: "manage-orgnization",
+        icon: <FaRegHandshake />,
       },
     ],
   };
