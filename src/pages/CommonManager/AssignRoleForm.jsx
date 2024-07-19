@@ -25,12 +25,15 @@ const AssignRoleForm = ({
   const onFinish = async (values) => {
     setIsLoading(true);
     try {
-      await assignRoleToUser(userId, values.roleName);
-      message.success("Cập nhật vai trò thành công");
-      fetchData(currentPage); // Refresh data if needed
+      const data = await assignRoleToUser(userId, values.roleName);
+      if (data.isSuccess) {
+        message.success("Cập nhật vai trò thành công");
+        fetchData(currentPage); // Refresh data if needed
+      } else {
+        message.error("Failed to assign role.");
+      }
       onClose(); // Close modal after success
     } catch (error) {
-      message.error("Failed to assign role.");
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -39,7 +42,7 @@ const AssignRoleForm = ({
 
   return (
     <Modal
-      title="Assign Role"
+      title="Chọn vai trò"
       visible={visible}
       onCancel={onClose}
       footer={null}

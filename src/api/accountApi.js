@@ -151,16 +151,15 @@ export const assignRoleToUser = async (userId, roleName) => {
     const res = await api.post(
       `/account/assign-role?userId=${userId}&roleName=${roleName}`
     );
+    return res.data;
+  } catch (err) {}
+};
 
-    if (res.data.isSuccess) {
-      message.success("Cập nhật vai trò thành công");
-      fetchData(currentPage);
-      message.error(
-        res.data.messages.join(", ") || "Cập nhật vai trò thất bại"
-      );
-    }
-  } catch (err) {
-    message.error("Đã xảy ra lỗi, vui lòng thử lại sau");
-    console.error("Error assigning role:", err);
-  }
+export const assignUserIntoOrganization = async (userId, organizationId) => {
+  try {
+    const res = await api.post(
+      `/account/assign-user-into-organization?userId=${userId}&organizationId=${organizationId}`
+    );
+    return res.data;
+  } catch (err) {}
 };

@@ -1,8 +1,9 @@
-import { message } from "antd";
+import { Button, message } from "antd";
 import { useEffect, useState } from "react";
 import { getAllAccount } from "../../api/accountApi";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import AssignRoleForm from "./AssignRoleForm";
+import AssignUserModal from "./AssignUserModal";
 const ManageUser = () => {
   const [accounts, setAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -118,7 +119,14 @@ const ManageUser = () => {
     setIsFormVisible(false);
     setSelectedUser(null);
   };
+  const [modalVisible, setModalVisible] = useState(false);
+  const [userId, setUserId] = useState("");
 
+  const showModal = (id) => {
+    setUserId(id);
+    setModalVisible(true);
+  };
+  const hideModal = () => setModalVisible(false);
   return (
     <div>
       <LoadingComponent isLoading={isLoading} title={"Đang tải dữ liệu"} />
@@ -162,6 +170,11 @@ const ManageUser = () => {
                     )}
                   </td>
                   {/* <td>{renderPermissionButtons(item.role)}</td> */}
+                  <td>
+                    <Button onClick={() => showModal(item.id)}>
+                      Assign User to Organization
+                    </Button>
+                  </td>
                 </tr>
               ))}
           </tbody>
@@ -199,6 +212,11 @@ const ManageUser = () => {
           currentPage={currentPage}
         />
       )}
+      <AssignUserModal
+        visible={modalVisible}
+        onCancel={hideModal}
+        userId={userId}
+      />
     </div>
   );
 };
