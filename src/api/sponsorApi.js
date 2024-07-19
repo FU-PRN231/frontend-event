@@ -1,5 +1,4 @@
-import api from "../api/config"
-
+import api from "../api/config";
 
 // sponsorApi.js
 
@@ -65,18 +64,15 @@ export const getSponsorHistoryByEventId = async (
 };
 export const addSponsorMoneyToEvent = async (eventId, sponsorItems) => {
   try {
-    const response = await api.post(
-      `/sponsor/add-sponsor-money-to-event`,
-      {
-        eventId: eventId,
-        sponsorItems: sponsorItems.map((item) => ({
-          sponsorType: item.sponsorType,
-          sponsorDescription: item.sponsorDescription,
-          moneySponsorAmount: item.moneySponsorAmount,
-          sponsorId: item.sponsorId,
-        })),
-      }
-    );
+    const response = await api.post(`/sponsor/add-sponsor-money-to-event`, {
+      eventId: eventId,
+      sponsorItems: sponsorItems.map((item) => ({
+        sponsorType: item.sponsorType,
+        sponsorDescription: item.sponsorDescription,
+        moneySponsorAmount: item.moneySponsorAmount,
+        sponsorId: item.sponsorId,
+      })),
+    });
 
     return response.data;
   } catch (error) {

@@ -9,6 +9,7 @@ import {
   FaListAlt,
   FaMoneyBill,
   FaPlusCircle,
+  FaRegHandshake,
   FaUser,
 } from "react-icons/fa";
 import { useSelector } from "react-redux";
@@ -23,9 +24,9 @@ const SideBar = () => {
   const menuItems = {
     ORGANIZER: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
-      { name: "Tổng Quan", link: "sponsor-money", icon: <FaHome /> },
+      { name: "Tổng Quan", link: "sponsor-overview", icon: <FaHome /> },
       {
-        name: "Danh sách kháo sát hiện tai",
+        name: "Danh sách kháo sát hiện tại",
         link: "surveys",
         icon: <FaClipboardList />,
       },
@@ -58,7 +59,6 @@ const SideBar = () => {
         link: "add-money-sponsor",
         icon: <FaMoneyBill />,
       },
-
     ],
     // PM: [
     //   { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
@@ -87,15 +87,14 @@ const SideBar = () => {
     // ],
     SPONSOR: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
-      { name: "Tổng Quan", link: "sponsor-money", icon: <FaHome /> },
-      
+      { name: "Tổng Quan", link: "sponsor-overview", icon: <FaHome /> },
+
       {
         name: "Lịch sử dòng tiền",
         link: "money-history",
         icon: <FaEyeSlash />,
       },
       { name: "Lịch sử nhà tài trợ", link: "history", icon: <FaHistory /> },
-    
     ],
     ADMIN: [
       { name: "Thống kê", link: "dashboard", icon: <FaHome /> },
@@ -104,6 +103,11 @@ const SideBar = () => {
         name: "Kiểm duyệt sự kiện",
         link: "event",
         icon: <FaCalendarPlus />,
+      },
+      {
+        name: "Tổ chức",
+        link: "manage-orgnization",
+        icon: <FaRegHandshake />,
       },
     ],
   };

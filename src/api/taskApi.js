@@ -1,4 +1,4 @@
-import api from "../api/config"
+import api from "../api/config";
 
 // Function to get all event tasks by status
 export const getAllEventTasksByStatus = async (
@@ -19,10 +19,7 @@ export const getAllEventTasksByStatus = async (
 
 export const assignTaskForEvent = async (eventId, payload) => {
   try {
-    const response = await api.post(
-      `/task/assign-task-for-event`,
-      payload
-    );
+    const response = await api.post(`/task/assign-task-for-event`, payload);
     return response.data;
   } catch (error) {
     console.error("Error fetching tasks:", error);
@@ -92,16 +89,12 @@ export const getTaskById = async (taskId) => {
 };
 export const updateTaskStatus = async (taskId, isSuccessful) => {
   try {
-    const response = await api.put(
-      `/task/update-status-of-task`,
-      null,
-      {
-        params: {
-          taskId: taskId,
-          isSuccessful: isSuccessful,
-        },
-      }
-    );
+    const response = await api.put(`/task/update-status-of-task`, null, {
+      params: {
+        taskId: taskId,
+        isSuccessful: isSuccessful,
+      },
+    });
 
     return {
       isSuccess: response.data.isSuccess,
@@ -114,13 +107,19 @@ export const updateTaskStatus = async (taskId, isSuccessful) => {
 };
 export const updateTaskForEvent = async (eventId, taskData) => {
   try {
-    const response = await api.put(
-      `/task/update-task-for-event`,
+    const response = await axios.put(
+      `${BASE_URL}/task/update-task-for-event?eventId=${eventId}`,
       taskData
     );
-    return response.data;
+    return {
+      isSuccess: true,
+      messages: ["Task updated successfully!"],
+    };
   } catch (error) {
     console.error("Error updating task for event:", error);
-    throw error;
+    return {
+      isSuccess: false,
+      messages: [error.message || "Failed to update task. Please try again."],
+    };
   }
 };

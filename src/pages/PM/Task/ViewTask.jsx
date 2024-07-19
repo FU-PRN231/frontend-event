@@ -29,7 +29,6 @@ const ViewTask = ({ eventId }) => {
   const [isLoading, setIsLoading] = useState(false);
 const user = useSelector((state)=> state.user.user|| {})
   const TaskStatus = {
-    No_status: "--",
     NOT_YET: "Chưa bắt đầu",
     ONGOING: "Đang tiến hành",
     FINISHED: "Hoàn thành",
@@ -41,7 +40,6 @@ const user = useSelector((state)=> state.user.user|| {})
     [TaskStatus.FAILED]: false,
   };
   const TaskStatusUpdate = {
-    No_status: "--",
     NOT_YET: "Chưa bắt đầu",
     ONGOING: "Đang tiến hành",
     FINISHED: "Hoàn thành",
@@ -138,7 +136,7 @@ const user = useSelector((state)=> state.user.user|| {})
               apiStatus = "3";
               break;
             default:
-              apiStatus = "--";
+              apiStatus = "0";
               break;
           }
 
@@ -195,10 +193,8 @@ const user = useSelector((state)=> state.user.user|| {})
   const handleUpdateSuccess = async (newStatus) => {
     console.log("Updated to:", newStatus);
 
-    // Reload task data after update
     try {
       const updatedTask = await fetchTaskById(task.id);
-      // Handle updated task state or context update here
     } catch (error) {
       console.error("Error fetching updated task:", error);
     }
@@ -207,6 +203,13 @@ const user = useSelector((state)=> state.user.user|| {})
   const handleError = (errorMessage) => {
     console.error("Update error:", errorMessage);
   };
+
+  const [selectedTask, setSelectedTask] = useState(null);
+  const handleTaskDoubleClick = (task) => {
+    setSelectedTask(task);
+    setShowUpdateModal(true);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <LoadingComponent isLoading={isLoading} />
@@ -293,12 +296,16 @@ const user = useSelector((state)=> state.user.user|| {})
                 <th className="py-2 px-4 border-b">Mô tả sự kiện</th>
                 <th className="py-2 px-4 border-b">Ngày bắt đầu sự kiện</th>
                 <th className="py-2 px-4 border-b">Ngày kết thúc sự kiện</th>
-                <th className="py-2 px-4 border-b">Hành động</th>
+                <th className="py-2 px-4 border-b"></th>
               </tr>
             </thead>
             <tbody>
               {tasks.map((task) => (
-                <tr key={task.id}>
+                <tr
+                  key={task.id}
+                  className="cursor-pointer hover:bg-gray-100 transition-colors duration-200"
+                  onDoubleClick={() => handleTaskDoubleClick(task)}
+                >
                   <td className="py-2 px-4 border-b">{task.name}</td>
                   <td className="py-2 px-4 border-b">{task.description}</td>
                   <td className="py-2 px-4 border-b">

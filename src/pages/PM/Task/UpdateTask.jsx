@@ -11,7 +11,6 @@ const UpdateTask = ({ task, onClose, onUpdateSuccess, onError }) => {
   } = useForm();
 
   const TaskStatus = {
-    No_status: "--",
     0: "Chưa bắt đầu",
     1: "Đang tiến hành",
     2: "Hoàn thành",

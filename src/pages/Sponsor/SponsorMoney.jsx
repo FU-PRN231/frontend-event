@@ -1,8 +1,8 @@
 import { message, Pagination, Select, Spin, Table } from "antd";
 import React, { useEffect, useState } from "react";
-import { getAllEvent, getEventByOrganizerId } from "../../api/eventApi";
-import { getAllSponsorItemsOfEvent } from "../../api/sponsorApi";
 import { useSelector } from "react-redux";
+import { getEventByOrganizerId } from "../../api/eventApi";
+import { getAllSponsorItemsOfEvent } from "../../api/sponsorApi";
 
 const { Option } = Select;
 
@@ -14,7 +14,8 @@ const SponsorMoney = ({ eventId }) => {
   const [totalItems, setTotalItems] = useState(0);
   const [events, setEvents] = useState([]);
   const [selectedEventId, setSelectedEventId] = useState(eventId);
-const user = useSelector((state)=> state.user.user || {})
+  const user = useSelector((state) => state.user.user || {});
+
   useEffect(() => {
     fetchEvents();
   }, []);
@@ -25,25 +26,35 @@ const user = useSelector((state)=> state.user.user || {})
 
   const fetchEvents = async () => {
     try {
-      const eventsData = await getEventByOrganizerId(user.organizationId,1, 100);
+      const eventsData = await getEventByOrganizerId(
+        user.organizationId,
+        1,
+        100
+      );
       setEvents(eventsData.result.items);
     } catch (error) {
-      console.error("Lỗi tải sự kiện:", error);
+      console.error("Error loading events:", error);
     }
   };
 
   const fetchSponsorItems = async () => {
     setLoading(true);
     try {
+      if (!selectedEventId) {
+        // If selectedEventId is not defined, do not proceed with API call
+        return;
+      }
+
       const data = await getAllSponsorItemsOfEvent(
         selectedEventId,
-        pageNumber,
-        pageSize
+        pageNumber, // Ensure pageNumber is defined
+        pageSize // Ensure pageSize is defined
       );
       setSponsorItems(data.result.items);
       setTotalItems(data.result.totalPages * pageSize);
     } catch (error) {
-      message.error("Lỗi tải các mục tài trợ");
+      message.error("Error loading sponsor items");
+      console.error("Error loading sponsor items:", error);
     } finally {
       setLoading(false);
     }

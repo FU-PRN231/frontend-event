@@ -1,4 +1,4 @@
-import api from "../api/config"
+import api from "../api/config";
 
 export const loginWithEmailPass = async (email, password) => {
   try {
@@ -39,9 +39,7 @@ export const createAccount = async (
 
 export const sendOTP = async (email) => {
   try {
-    const res = await api.post(
-      `/account/send-email-for-activeCode/${email}`
-    );
+    const res = await api.post(`/account/send-email-for-activeCode/${email}`);
     return res.data;
   } catch (err) {
     return null;
@@ -61,15 +59,11 @@ export const activeAccount = async (email, code) => {
 
 export const googleCallback = async (token) => {
   try {
-    const res = await api.post(
-      `/account/google-callback`,
-      `${token}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await api.post(`/account/google-callback`, `${token}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     return res.data;
   } catch (err) {
     return null;
@@ -110,9 +104,7 @@ export const getAccountById = async (accountId, token) => {
 
 export const sendResetPassOTP = async (email) => {
   try {
-    const res = await api.post(
-      `/account/send-email-forgot-password/${email}`
-    );
+    const res = await api.post(`/account/send-email-forgot-password/${email}`);
     return res.data;
   } catch (err) {
     return null;
@@ -150,5 +142,25 @@ export const updateAccount = async (data) => {
     return res.data;
   } catch (err) {
     return null;
+  }
+};
+// Function to assign a role to a user
+
+export const assignRoleToUser = async (userId, roleName) => {
+  try {
+    const res = await api.post(
+      `/account/assign-role?userId=${userId}&roleName=${roleName}`
+    );
+
+    if (res.data.isSuccess) {
+      message.success("Cập nhật vai trò thành công");
+      fetchData(currentPage);
+      message.error(
+        res.data.messages.join(", ") || "Cập nhật vai trò thất bại"
+      );
+    }
+  } catch (err) {
+    message.error("Đã xảy ra lỗi, vui lòng thử lại sau");
+    console.error("Error assigning role:", err);
   }
 };

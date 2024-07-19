@@ -1,8 +1,8 @@
-import { message, Pagination } from "antd";
-import { getAllAccount } from "../../api/accountApi";
+import { message } from "antd";
 import { useEffect, useState } from "react";
+import { getAllAccount } from "../../api/accountApi";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-
+import AssignRoleForm from "./AssignRoleForm";
 const ManageUser = () => {
   const [accounts, setAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -107,6 +107,18 @@ const ManageUser = () => {
 
     return <div className=" flex flex-col">{permissions}</div>;
   };
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const handleDoubleClick = (user) => {
+    setSelectedUser(user);
+    setIsFormVisible(true);
+  };
+
+  const handleFormClose = () => {
+    setIsFormVisible(false);
+    setSelectedUser(null);
+  };
+
   return (
     <div>
       <LoadingComponent isLoading={isLoading} title={"Đang tải dữ liệu"} />
@@ -130,7 +142,11 @@ const ManageUser = () => {
             {accounts &&
               accounts.length > 0 &&
               accounts.map((item, index) => (
-                <tr key={index} className="h-10 hover">
+                <tr
+                  key={index}
+                  className="h-10 hover"
+                  onDoubleClick={() => handleDoubleClick(item)}
+                >
                   <td className="text-center">{index + 1}</td>
                   <td className="text-center">{`${item.firstName} ${item.lastName}`}</td>
                   <td className="text-center lowercase text-wrap">
@@ -174,6 +190,15 @@ const ManageUser = () => {
           </button>
         )}
       </div>
+      {selectedUser && (
+        <AssignRoleForm
+          visible={isFormVisible}
+          onClose={handleFormClose}
+          userId={selectedUser.id}
+          fetchData={fetchData}
+          currentPage={currentPage}
+        />
+      )}
     </div>
   );
 };
