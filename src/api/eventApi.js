@@ -80,3 +80,13 @@ export const getEventByOrganizerId = async (id, pageNumber, pageSize) => {
     return null;
   }
 };
+export const getAllEventByStatus = async (status, pageNumber, pageSize) => {
+  try {
+    const res = await api.get(
+      `/event/get-all-event-by-status/${pageNumber}/${pageSize}?status=${status}`
+    );
+    return res.data;
+  } catch (err) {
+    return null;
+  }
+};
